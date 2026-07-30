@@ -219,9 +219,29 @@ textarea {
   display: flex;
   align-items: center;
   gap: 2rem;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.marquee-item:hover {
+  color: var(--accent-gold);
+  text-shadow: 0 0 10px rgba(252, 211, 133, 0.4);
 }
 
 .marquee-item::after {
   content: "✦";
   color: var(--accent-gold);
+}
+
+.marquee-container:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+@keyframes infinite-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
