@@ -1,0 +1,77 @@
+.cursorDot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent-gold);
+  border-radius: 50%;
+  position: fixed;
+  top: -3px;
+  left: -3px;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+}
+
+.cursorRing {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(252, 211, 133, 0.45);
+  border-radius: 50%;
+  position: fixed;
+  top: -16px;
+  left: -16px;
+  pointer-events: none;
+  z-index: 9998;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              top 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              left 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              background-color 0.3s ease,
+              border-color 0.3s ease;
+}
+
+/* Hovering over standard clickable links */
+.cursorRing.hovered {
+  width: 48px;
+  height: 48px;
+  top: -24px;
+  left: -24px;
+  background-color: rgba(252, 211, 133, 0.08);
+  border-color: var(--accent-gold);
+  backdrop-filter: blur(2px);
+}
+
+/* Hovering over elements with custom badge text (e.g., PLAY or VIEW) */
+.cursorRing.hasText {
+  width: 76px;
+  height: 76px;
+  top: -38px;
+  left: -38px;
+  background-color: rgba(13, 12, 12, 0.85);
+  border-color: var(--accent-gold);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 12px rgba(252, 211, 133, 0.15);
+}
+
+.cursorText {
+  color: var(--accent-gold);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  animation: fadeIn 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

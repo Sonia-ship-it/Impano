@@ -246,6 +246,28 @@
   position: relative;
 }
 
+.serviceItem::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    800px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    rgba(252, 211, 133, 0.04),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.serviceItem:hover::before {
+  opacity: 1;
+}
+
 .serviceNum {
   font-size: 1.2rem;
   font-weight: 500;
@@ -320,15 +342,45 @@
 
 .worksGrid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(24, 1fr);
   gap: 2rem;
 }
 
 .workCard {
   position: relative;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
+  background-color: #121111;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.workCard:hover {
+  border-color: rgba(252, 211, 133, 0.25);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.workCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    rgba(252, 211, 133, 0.08),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.workCard:hover::before {
+  opacity: 1;
 }
 
 .workImg {
@@ -366,27 +418,31 @@
 }
 
 .workCard:hover .workImg {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 /* Layout spans for asymmetric grid */
 .verticalCard {
-  grid-column: span 5;
-  height: 600px;
+  grid-column: span 10;
+  grid-row: span 2;
+  height: 608px;
 }
 
 .horizontalCard {
-  grid-column: span 7;
+  grid-column: span 14;
+  grid-row: span 1;
   height: 288px;
 }
 
 .squareCard1 {
-  grid-column: span 3.5;
+  grid-column: span 7;
+  grid-row: span 1;
   height: 288px;
 }
 
 .squareCard2 {
-  grid-column: span 3.5;
+  grid-column: span 7;
+  grid-row: span 1;
   height: 288px;
 }
 
@@ -455,10 +511,12 @@
     height: 380px;
   }
   .worksGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(24, 1fr);
+    gap: 1.5rem;
   }
   .verticalCard, .horizontalCard, .squareCard1, .squareCard2 {
-    grid-column: span 12;
+    grid-column: span 24;
+    grid-row: auto;
     height: 350px;
   }
   .serviceItem {
@@ -491,4 +549,152 @@
   .ctaTitle {
     font-size: 2.2rem;
   }
+}
+
+/* Showreel Cinematic Modal HUD overlay */
+.showreelOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(15px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: modalFadeIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.showreelContent {
+  position: relative;
+  width: 90vw;
+  max-width: 1200px;
+  background-color: #0d0c0c;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(252, 211, 133, 0.15);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(252, 211, 133, 0.05);
+}
+
+.showreelClose {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(13, 12, 12, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-white);
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10003;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.showreelClose:hover {
+  background-color: var(--accent-gold);
+  color: var(--bg-black);
+  border-color: var(--accent-gold);
+  transform: scale(1.05);
+}
+
+.showreelPlayerWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background-color: #000;
+}
+
+.showreelVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Custom overlay design mimicking showreel preview monitor HUD */
+.showreelHud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 10001;
+  font-family: monospace;
+}
+
+.hudHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+}
+
+.hudLive {
+  color: #ff3b30;
+  animation: blink 1s infinite alternate;
+}
+
+.hudFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.hudTime {
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.hudWaveform {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 24px;
+}
+
+.waveBar {
+  width: 2px;
+  background-color: var(--accent-gold);
+  opacity: 0.8;
+  animation: wavePulse 1.2s infinite ease-in-out alternate;
+}
+
+.waveBar:nth-child(2) { animation-delay: 0.2s; }
+.waveBar:nth-child(3) { animation-delay: 0.4s; }
+.waveBar:nth-child(4) { animation-delay: 0.1s; }
+.waveBar:nth-child(5) { animation-delay: 0.3s; }
+.waveBar:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+}
+
+@keyframes wavePulse {
+  0% { transform: scaleY(0.3); }
+  100% { transform: scaleY(1); }
 }

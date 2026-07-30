@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import CustomCursor from "../components/CustomCursor";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <CustomCursor />
       </body>
     </html>
   );

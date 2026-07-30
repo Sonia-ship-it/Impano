@@ -1,10 +1,33 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const [showreelOpen, setShowreelOpen] = useState(false);
+
+  useEffect(() => {
+    if (showreelOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showreelOpen]);
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   const marqueeItems = [
     "Cinematography",
     "Production Design",
@@ -60,7 +83,11 @@ export default function Home() {
               documentaries, and post-production experiences. We translate bold
               concepts into memorable cinematic assets.
             </p>
-            <div className={styles.playBtn}>
+            <div
+              className={styles.playBtn}
+              onClick={() => setShowreelOpen(true)}
+              data-cursor="play"
+            >
               <div className={styles.playCircle}>
                 <div className={styles.playArrow}></div>
               </div>
@@ -137,7 +164,12 @@ export default function Home() {
           <h2 className="section-title">Production Services</h2>
           <div className={styles.servicesList}>
             {services.map((service, index) => (
-              <div key={index} className={styles.serviceItem}>
+              <div
+                key={index}
+                className={styles.serviceItem}
+                onMouseMove={handleCardMouseMove}
+                data-cursor="view"
+              >
                 <span className={styles.serviceNum}>{service.num}</span>
                 <span className={styles.serviceName}>{service.name}</span>
                 <span className={styles.serviceDesc}>{service.desc}</span>
@@ -171,7 +203,11 @@ export default function Home() {
 
           <div className={styles.worksGrid}>
             {/* Column Left (Vertical) */}
-            <div className={`${styles.workCard} ${styles.verticalCard}`}>
+            <div
+              className={`${styles.workCard} ${styles.verticalCard}`}
+              onMouseMove={handleCardMouseMove}
+              data-cursor="view"
+            >
               <Image
                 src="/images/echo_of_hills.png"
                 alt="The Echo of Hills"
@@ -186,7 +222,11 @@ export default function Home() {
             </div>
 
             {/* Column Right Top (Horizontal) */}
-            <div className={`${styles.workCard} ${styles.horizontalCard}`}>
+            <div
+              className={`${styles.workCard} ${styles.horizontalCard}`}
+              onMouseMove={handleCardMouseMove}
+              data-cursor="view"
+            >
               <Image
                 src="/images/grading_console.png"
                 alt="Impano Entertainment Studio"
@@ -201,7 +241,11 @@ export default function Home() {
             </div>
 
             {/* Column Right Bottom Left (Square) */}
-            <div className={`${styles.workCard} ${styles.squareCard1}`}>
+            <div
+              className={`${styles.workCard} ${styles.squareCard1}`}
+              onMouseMove={handleCardMouseMove}
+              data-cursor="view"
+            >
               <Image
                 src="/images/about_story.png"
                 alt="Crafted details"
@@ -216,7 +260,11 @@ export default function Home() {
             </div>
 
             {/* Column Right Bottom Right (Square) */}
-            <div className={`${styles.workCard} ${styles.squareCard2}`}>
+            <div
+              className={`${styles.workCard} ${styles.squareCard2}`}
+              onMouseMove={handleCardMouseMove}
+              data-cursor="view"
+            >
               <Image
                 src="/images/hero_bg.png"
                 alt="VFX animation work"
@@ -251,6 +299,51 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Showreel Cinematic Modal */}
+      {showreelOpen && (
+        <div className={styles.showreelOverlay} onClick={() => setShowreelOpen(false)}>
+          <div className={styles.showreelContent} onClick={(e) => e.stopPropagation()}>
+            <button
+              className={styles.showreelClose}
+              onClick={() => setShowreelOpen(false)}
+              aria-label="Close Showreel"
+            >
+              &times;
+            </button>
+
+            <div className={styles.showreelPlayerWrapper}>
+              <video
+                src="https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className={styles.showreelVideo}
+              />
+              
+              <div className={styles.showreelHud}>
+                <div className={styles.hudHeader}>
+                  <span className={styles.hudLive}>● RAW PREVIEW MONITOR</span>
+                  <span className={styles.hudResolution}>RED RAPTOR 8K</span>
+                </div>
+                
+                <div className={styles.hudFooter}>
+                  <span className={styles.hudTime}>TC 01:24:09:12</span>
+                  <div className={styles.hudWaveform}>
+                    <div className={styles.waveBar} style={{ height: "40%" }} />
+                    <div className={styles.waveBar} style={{ height: "70%" }} />
+                    <div className={styles.waveBar} style={{ height: "90%" }} />
+                    <div className={styles.waveBar} style={{ height: "50%" }} />
+                    <div className={styles.waveBar} style={{ height: "30%" }} />
+                    <div className={styles.waveBar} style={{ height: "80%" }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
