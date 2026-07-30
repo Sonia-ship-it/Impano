@@ -175,8 +175,8 @@ export default function ContactPage() {
                   <span className={styles.cardIcon}>@</span>
                   <span className={styles.cardTitle}>Email Us</span>
                 </div>
-                <a href="mailto:hello@impano.studio" className={styles.cardValue}>
-                  hello@impano.studio
+                <a href="mailto:impanoent@gmail.com" className={styles.cardValue}>
+                  impanoent@gmail.com
                 </a>
               </div>
 
@@ -188,8 +188,8 @@ export default function ContactPage() {
                   </svg>
                   <span className={styles.cardTitle}>Call Us</span>
                 </div>
-                <a href="tel:+250788000000" className={styles.cardValue}>
-                  +250 788 000 000
+                <a href="tel:0780124489" className={styles.cardValue}>
+                  0780124489
                 </a>
               </div>
             </div>
@@ -197,37 +197,70 @@ export default function ContactPage() {
             {/* Social Links Panel */}
             <div className={styles.socialConnect}>
               <span className={styles.socialsTitle}>Connect Digitally</span>
-              <div className={styles.socialIconsList}>
-                {/* Globe/Web */}
-                <a href="https://impano.studio" target="_blank" rel="noopener noreferrer" className={styles.iconButton} aria-label="Website">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                  </svg>
+              <div className={styles.socialsList} style={{ display: "flex", flexDirection: "column", gap: "1.25rem", marginTop: "1.5rem" }}>
+                
+                {/* Instagram */}
+                <a 
+                  href="https://instagram.com/Impano_Entertainment" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className={styles.socialLinkItem}
+                  style={{ display: "flex", alignItems: "center", gap: "1rem", color: "var(--text-white)", textDecoration: "none" }}
+                >
+                  <span className={styles.iconButton} style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.02)" }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                    </svg>
+                  </span>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-grey)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Instagram</span>
+                    <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "var(--accent-gold)" }}>@Impano_Entertainment</span>
+                  </div>
                 </a>
-                {/* Video/Play */}
-                <a href="https://vimeo.com" target="_blank" rel="noopener noreferrer" className={styles.iconButton} aria-label="Vimeo">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="23 7 16 12 23 17 23 7" />
-                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-                  </svg>
+
+                {/* X / Twitter */}
+                <a 
+                  href="https://x.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className={styles.socialLinkItem}
+                  style={{ display: "flex", alignItems: "center", gap: "1rem", color: "var(--text-white)", textDecoration: "none" }}
+                >
+                  <span className={styles.iconButton} style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.02)" }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                      <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                    </svg>
+                  </span>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-grey)", textTransform: "uppercase", letterSpacing: "0.1em" }}>X (Twitter)</span>
+                    <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "var(--accent-gold)" }}>@Impano Entertainment</span>
+                  </div>
                 </a>
-                {/* Briefcase/Portfolio */}
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className={styles.iconButton} aria-label="LinkedIn">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                  </svg>
+
+                {/* LinkedIn */}
+                <a 
+                  href="https://linkedin.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className={styles.socialLinkItem}
+                  style={{ display: "flex", alignItems: "center", gap: "1rem", color: "var(--text-white)", textDecoration: "none" }}
+                >
+                  <span className={styles.iconButton} style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.02)" }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                      <rect x="2" y="9" width="4" height="12" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
+                  </span>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-grey)", textTransform: "uppercase", letterSpacing: "0.1em" }}>LinkedIn</span>
+                    <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "var(--accent-gold)" }}>@impano ent</span>
+                  </div>
                 </a>
-                {/* Megaphone/Announce */}
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className={styles.iconButton} aria-label="Twitter">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                  </svg>
-                </a>
+
               </div>
             </div>
           </div>
