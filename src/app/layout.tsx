@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: "Elevating Rwandan creative expression to the global stage through cinematic excellence and innovative storytelling. Master-class production and advanced post-production services in Kigali, Rwanda.",
   keywords: ["Cinematography", "Production Design", "Post-Production", "VFX", "Rwandan Film", "Impano Studio", "Kigali", "Color Grading"],
   icons: {
-    icon: "/icon.svg",
+    icon: "/images/logo.png",
   },
 };
 
