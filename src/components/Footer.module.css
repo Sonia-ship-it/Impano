@@ -1,0 +1,205 @@
+.footer {
+  background-color: var(--bg-black);
+  padding: 6rem 0 3rem 0;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+.brandCol {
+  flex: 1 1 350px;
+}
+
+.brandName {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.brandDesc {
+  color: var(--text-grey);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+.linksCol {
+  display: flex;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.colTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-gold);
+  margin-bottom: 1.25rem;
+}
+
+.linksList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.linksList li a {
+  font-size: 0.95rem;
+  color: var(--text-grey);
+}
+
+.linksList li a:hover {
+  color: var(--accent-gold);
+  padding-left: 4px;
+}
+
+.addressText {
+  color: var(--text-grey);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 2rem;
+}
+
+.copyright {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.socialsRow {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.socialLink {
+  color: var(--text-grey);
+  font-size: 0.9rem;
+}
+
+.socialLink:hover {
+  color: var(--accent-gold);
+}
+
+/* Innovative Watermarked Background Text */
+.innovativeWatermark {
+  position: absolute;
+  bottom: -1rem;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4rem;
+  user-select: none;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.watermarkLetter {
+  font-size: 15vw;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.05);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: inline-block;
+  animation: float 6s ease-in-out infinite alternate;
+  pointer-events: auto;
+  cursor: default;
+}
+
+.watermarkLetter:hover {
+  color: var(--accent-gold);
+  text-shadow: 0 0 35px rgba(252, 211, 133, 0.7);
+  opacity: 0.4;
+}
+
+.watermarkLetterOutline {
+  font-size: 15vw;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(252, 211, 133, 0.12);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: inline-block;
+  animation: float-reverse 6s ease-in-out infinite alternate;
+  pointer-events: auto;
+  cursor: default;
+}
+
+.watermarkLetterOutline:hover {
+  color: var(--accent-gold);
+  -webkit-text-stroke-color: var(--accent-gold);
+  text-shadow: 0 0 35px rgba(252, 211, 133, 0.7);
+  opacity: 0.5;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+@keyframes float-reverse {
+  0% {
+    transform: translateY(-10px) rotate(-1deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 4rem 0 2rem 0;
+  }
+  
+  .topRow {
+    margin-bottom: 2.5rem;
+  }
+  
+  .linksCol {
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .innovativeWatermark {
+    padding: 0 1rem;
+    bottom: -0.5rem;
+  }
+  
+  .watermarkLetter, .watermarkLetterOutline {
+    font-size: 17vw;
+  }
+}

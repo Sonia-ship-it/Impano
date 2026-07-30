@@ -1,0 +1,494 @@
+.hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(to bottom, rgba(13, 12, 12, 0.4), rgba(13, 12, 12, 0.95)), url('/images/hero_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 6rem 0;
+  overflow: hidden;
+}
+
+.heroContainer {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.heroTag {
+  color: var(--accent-gold);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.heroTitle {
+  font-size: 6rem;
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--text-white);
+}
+
+.outlineText {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--text-white);
+}
+
+.goldText {
+  color: var(--accent-gold);
+}
+
+.heroRight {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.heroDesc {
+  color: var(--text-grey);
+  font-size: 1.25rem;
+  line-height: 1.6;
+  font-weight: 300;
+  max-width: 500px;
+}
+
+.playBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.playCircle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.playCircle::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 50%;
+  border: 1px solid rgba(252, 211, 133, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.playArrow {
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 14px solid var(--accent-gold);
+  margin-left: 4px;
+}
+
+.playText {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.playBtn:hover .playCircle {
+  background-color: var(--accent-gold);
+}
+
+.playBtn:hover .playArrow {
+  border-left-color: var(--bg-black);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+/* Philosophy Section */
+.philosophy {
+  padding: 8rem 0;
+  background-color: var(--bg-dark);
+}
+
+.philosophyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+.philosophyImageWrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.philosophyImg {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  transition: var(--transition-slow);
+}
+
+.philosophyImageWrapper:hover .philosophyImg {
+  transform: scale(1.03);
+}
+
+.philosophyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.philosophyHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 2rem;
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.statNum {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-grey);
+}
+
+.philosophyText {
+  color: var(--text-grey);
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.lensCard {
+  border-radius: 8px;
+  overflow: hidden;
+  height: 180px;
+  margin-top: 1rem;
+}
+
+.lensImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Production Services Preview */
+.servicesSection {
+  padding: 8rem 0;
+  background-color: var(--bg-black);
+}
+
+.servicesList {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4rem;
+  border-top: 1px solid var(--border-color-light);
+}
+
+.serviceItem {
+  display: grid;
+  grid-template-columns: 80px 1.5fr 1fr 200px;
+  align-items: center;
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--border-color-light);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.serviceNum {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.serviceName {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-grey);
+  transition: var(--transition-smooth);
+}
+
+.serviceDesc {
+  color: var(--text-grey);
+  font-size: 0.95rem;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: var(--transition-smooth);
+}
+
+.serviceImageCol {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: var(--transition-smooth);
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100px;
+  width: 160px;
+  justify-self: flex-end;
+}
+
+.serviceThumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Service Item Hover Effects */
+.serviceItem:hover {
+  padding-left: 1.5rem;
+}
+
+.serviceItem:hover .serviceName {
+  color: var(--accent-gold);
+}
+
+.serviceItem:hover .serviceDesc {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.serviceItem:hover .serviceImageCol {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Selected Works Grid */
+.works {
+  padding: 8rem 0;
+  background-color: var(--bg-dark);
+}
+
+.worksHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 4rem;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.worksGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2rem;
+}
+
+.workCard {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.workImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-slow);
+}
+
+.workOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 2.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.workCategory {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-gold);
+}
+
+.workTitle {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-white);
+}
+
+.workCard:hover .workImg {
+  transform: scale(1.05);
+}
+
+/* Layout spans for asymmetric grid */
+.verticalCard {
+  grid-column: span 5;
+  height: 600px;
+}
+
+.horizontalCard {
+  grid-column: span 7;
+  height: 288px;
+}
+
+.squareCard1 {
+  grid-column: span 3.5;
+  height: 288px;
+}
+
+.squareCard2 {
+  grid-column: span 3.5;
+  height: 288px;
+}
+
+/* Closing CTA */
+.cta {
+  padding: 10rem 0;
+  background: linear-gradient(to bottom, var(--bg-dark), var(--bg-black));
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(252, 211, 133, 0.05) 0%, transparent 70%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ctaContainer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Responsive Rules */
+@media (max-width: 992px) {
+  .heroContainer {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .heroTitle {
+    font-size: 4.5rem;
+  }
+  .philosophyGrid {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+  .philosophyImg {
+    height: 380px;
+  }
+  .worksGrid {
+    grid-template-columns: 1fr;
+  }
+  .verticalCard, .horizontalCard, .squareCard1, .squareCard2 {
+    grid-column: span 12;
+    height: 350px;
+  }
+  .serviceItem {
+    grid-template-columns: 50px 1.5fr 100px;
+    padding: 1.5rem 0;
+  }
+  .serviceDesc {
+    display: none;
+  }
+  .ctaTitle {
+    font-size: 2.8rem;
+  }
+  .ctaButtons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .heroTitle {
+    font-size: 3rem;
+  }
+  .serviceItem {
+    grid-template-columns: 40px 1fr;
+  }
+  .serviceImageCol {
+    display: none;
+  }
+  .ctaTitle {
+    font-size: 2.2rem;
+  }
+}

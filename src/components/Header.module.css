@@ -1,0 +1,233 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  transition: var(--transition-smooth);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.logoCircleWrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  background-color: rgba(13, 12, 12, 0.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.logoCircleWrapper:hover {
+  border-color: var(--accent-gold);
+  transform: scale(1.03);
+}
+
+/* Floating Pill Navbar Capsule */
+.navbarPill {
+  display: flex;
+  align-items: center;
+  background-color: rgba(13, 12, 12, 0.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 100px;
+  padding: 0.45rem 0.45rem 0.45rem 1.75rem;
+  gap: 1.75rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: var(--transition-smooth);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.navLink {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-grey);
+  padding: 0.55rem 1.25rem;
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.navLink:hover {
+  color: var(--text-white);
+}
+
+.navLinkActive {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--accent-gold);
+  font-weight: 600;
+  padding-bottom: 0.7rem; /* Make room for active dot */
+}
+
+.navLinkActive::after {
+  content: "•";
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  line-height: 1;
+  color: var(--accent-gold);
+}
+
+/* Icons block */
+.iconsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-grey);
+}
+
+.iconLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.iconLink:hover {
+  color: var(--accent-gold);
+}
+
+/* Vertical divider */
+.divider {
+  width: 1px;
+  height: 22px;
+  background-color: rgba(255, 255, 255, 0.12);
+  margin: 0 0.25rem;
+}
+
+/* Rounded CTA Button */
+.ctaButton {
+  background-color: var(--accent-gold);
+  color: var(--bg-black);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.65rem 1.6rem;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ctaButton:hover {
+  background-color: var(--text-white);
+  color: var(--bg-black);
+  transform: translateY(-1px);
+}
+
+/* Mobile Hamburger Menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  cursor: pointer;
+  z-index: 1001;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--text-white);
+  transition: var(--transition-smooth);
+  border-radius: 2px;
+}
+
+.hamburgerActive span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburgerActive span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburgerActive span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Mobile slide menu overlay */
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 280px;
+  height: 100vh;
+  background-color: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem;
+  gap: 2rem;
+  border-left: 1px solid var(--border-color);
+  transform: translateX(100%);
+  transition: var(--transition-slow);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.mobileMenuOpen {
+  transform: translateX(0);
+}
+
+.mobileNavLink {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-grey);
+}
+
+.mobileNavLinkActive {
+  color: var(--accent-gold);
+}
+
+.mobileMenuCta {
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+/* Responsive Rules */
+@media (max-width: 992px) {
+  .navbarPill {
+    display: none; /* Hide pill on tablet/mobile */
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
