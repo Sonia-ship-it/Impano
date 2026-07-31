@@ -24,11 +24,11 @@ export default function Footer() {
           <div className={styles.brandCol}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
               <Logo size={36} />
-              <div className={styles.brandName} style={{ marginBottom: 0 }}>Impano Studio</div>
+              <div className={styles.brandName} style={{ marginBottom: 0 }}>Impano Entertainment</div>
             </div>
             <p className={styles.brandDesc}>
               Elevating Rwandan creative expression to the global stage through
-              cinematic excellence and innovative storytelling. We don't just
+              cinematic excellence and innovative storytelling. We don&apos;t just
               record; we curate visual legacies.
             </p>
           </div>
@@ -46,6 +46,9 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link href="/about">About</Link>
+                </li>
+                <li>
+                  <Link href="/team">Team</Link>
                 </li>
                 <li>
                   <Link href="/contact">Contact</Link>
@@ -95,7 +98,7 @@ export default function Footer() {
 
         <div className={styles.bottomRow}>
           <div className={styles.copyright}>
-            © {new Date().getFullYear()} Impano Studio. All Rights Reserved.
+            © {new Date().getFullYear()} Impano Entertainment. All Rights Reserved.
           </div>
           <div className={styles.socialsRow}>
             <a href="https://instagram.com" className={styles.socialLink} target="_blank" rel="noopener noreferrer">

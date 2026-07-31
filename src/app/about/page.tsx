@@ -4,27 +4,26 @@ import styles from "./about.module.css";
 import GeometricPattern from "../../components/GeometricPattern";
 
 export const metadata = {
-  title: "About Us | Impano Studio",
-  description: "Learn about the team behind Impano Studio, our filmmaking principles, and our commitment to bringing Rwandan creative expression to the global stage.",
+  title: "About Us | Impano Entertainment",
+  description: "Learn about the team behind Impano Entertainment, our filmmaking principles, and our commitment to bringing Rwandan creative expression to the global stage.",
 };
 
 export default function AboutPage() {
-  const principles = [
-    {
-      num: "01",
-      title: "Cultural Pride",
-      desc: "Authentic narratives that honor traditions while framing them for modern audiences. We believe in the power of local stories to reach global heights, serving as a cultural bridge.",
-    },
-    {
-      num: "02",
-      title: "Innovation",
-      desc: "Harnessing the latest tools in production, color science, and camera systems to deliver world-class content without compromising on organic creative vision.",
-    },
-    {
-      num: "03",
-      title: "Expressive Rigor",
-      desc: "Every frame, edit point, and sound wave is crafted with meticulous intent. We maintain high standards, ensuring that each project is a masterpiece in its own right.",
-    },
+  const values = [
+    { name: "Professionalism", desc: "Executing every project with absolute dedication and top-tier standards." },
+    { name: "Creativity", desc: "Pushing creative boundaries to deliver unique, inspiring outcomes." },
+    { name: "Integrity", desc: "Building honest, transparent relations based on trust and quality." },
+    { name: "Innovation", desc: "Harnessing modern media technologies to drive the creative industry." },
+    { name: "Customer Satisfaction", desc: "Committed to delivering beyond expectations for all clients." },
+    { name: "Teamwork", desc: "Combining our diverse skill sets to unlock extraordinary results." }
+  ];
+
+  const objectives = [
+    "Deliver world-class entertainment and media services.",
+    "Promote innovation in Rwanda's creative industry.",
+    "Build long-term partnerships with our clients.",
+    "Invest in modern technology and skilled professionals.",
+    "Expand our services across Rwanda and the East African region."
   ];
 
   return (
@@ -55,23 +54,22 @@ export default function AboutPage() {
             <span className="section-tag">Our Story</span>
             <h2 className="section-title">Who We Are</h2>
             <p className={styles.storyText}>
-              <span className={styles.dropCap}>B</span>orn out of a desire to see
-              African narratives captured with world-class production values,
-              Impano Studio emerged as a sanctuary for professional storytellers. Our
-              journey began in the hills of Kigali, driven by a raw passion for
-              cultural depth and global standards.
+              <span className={styles.dropCap}>I</span>mpano Entertainment Ltd. is a Rwandan
+              creative and entertainment company established in 2019. Since our establishment,
+              we have been committed to delivering professional entertainment and media services
+              that inspire creativity, promote brands, and create unforgettable experiences
+              for our clients across Rwanda.
             </p>
             <p className={styles.storyText}>
-              We hold ourselves to strict standards, ensuring that each frame
-              captures the raw textures of life, the subtle warmth of lights, and
-              the precise rhythm of the edit. Every choice serves the story.
+              Our team combines creativity, technology, and professionalism to provide high-quality
+              services tailored to businesses, organizations, institutions, and individuals.
             </p>
             <div className={styles.yearsBadge}>
-              <span className={styles.yearsNum}>10+</span>
+              <span className={styles.yearsNum}>2019</span>
               <span className={styles.yearsText}>
-                Years of
+                Established
                 <br />
-                Film Making
+                in Kigali
               </span>
             </div>
           </div>
@@ -99,28 +97,71 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Core Principles Section */}
-      <section className={styles.principlesSection}>
-        <div className={styles.principlesWatermark}>No Stories</div>
+      {/* Mission & Vision Section */}
+      <section className={styles.mvSection}>
+        <div className="container">
+          <div className={styles.mvGrid}>
+            <div className={styles.mvCard}>
+              <div className={styles.mvTag}>Our Mission</div>
+              <p className={styles.mvText}>
+                To deliver innovative, creative, and professional entertainment and media solutions that
+                exceed our clients&apos; expectations while contributing to the growth of Rwanda&apos;s
+                creative industry.
+              </p>
+            </div>
+            <div className={styles.mvCard}>
+              <div className={styles.mvTag}>Our Vision</div>
+              <p className={styles.mvText}>
+                To become one of Rwanda&apos;s leading entertainment and creative media companies,
+                recognized across East Africa for excellence, innovation, and outstanding customer service.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <div className={`${styles.principlesContainer} container`}>
-          <div className={styles.principlesHeader}>
-            <h2 className="section-title" style={{ marginBottom: 0 }}>
-              Crafted with
-              <br />
-              Precision
-            </h2>
-            <span className={styles.principlesSub}>Core Principles</span>
+      {/* Our Commitment Section */}
+      <section className={styles.commitmentSection}>
+        <div className="container">
+          <div className={styles.commitmentBanner}>
+            <span className="section-tag">Our Commitment</span>
+            <h2 className={styles.commitmentTitle}>Exceptional Service</h2>
+            <p className={styles.commitmentText}>
+              At Impano Entertainment Ltd., every project is treated with professionalism, creativity, and
+              dedication. We work closely with our clients to understand their goals and deliver results
+              that reflect their vision and create lasting value. Our commitment is to build long-term
+              relationships based on trust, quality, and exceptional service.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Values & Objectives Section */}
+      <section className={styles.valuesSection}>
+        <div className={`${styles.valuesContainer} container`}>
+          <div className={styles.valuesLeft}>
+            <span className="section-tag">Directives</span>
+            <h2 className="section-title">Core Values</h2>
+            <div className={styles.valuesGrid}>
+              {values.map((value, index) => (
+                <div key={index} className={styles.valueCard}>
+                  <h3 className={styles.valueTitle}>{value.name}</h3>
+                  <p className={styles.valueDesc}>{value.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className={styles.principlesGrid}>
-            {principles.map((principle, index) => (
-              <div key={index} className={styles.principleCard}>
-                <span className={styles.principleNum}>{principle.num}</span>
-                <h3 className={styles.principleTitle}>{principle.title}</h3>
-                <p className={styles.principleDesc}>{principle.desc}</p>
-              </div>
-            ))}
+          <div className={styles.valuesRight}>
+            <h2 className="section-title">Objectives</h2>
+            <ul className={styles.objectivesList}>
+              {objectives.map((obj, index) => (
+                <li key={index} className={styles.objectiveItem}>
+                  <span className={styles.objIcon}>✓</span>
+                  <span className={styles.objText}>{obj}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>

@@ -1,0 +1,226 @@
+.hero {
+  padding: 8rem 0 5rem 0;
+  background-image: linear-gradient(to bottom, rgba(13, 12, 12, 0.6), rgba(13, 12, 12, 0.95)), url('/images/hero_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.heroTitle {
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.outlineText {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--text-white);
+  text-transform: uppercase;
+}
+
+.goldText {
+  color: var(--accent-gold);
+  text-transform: uppercase;
+}
+
+.heroDesc {
+  color: var(--text-grey);
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+
+/* Team Grid Section */
+.teamSection {
+  padding: 8rem 0;
+  background-color: var(--bg-dark);
+  position: relative;
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+}
+
+.teamCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.teamCard:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent-gold);
+  box-shadow: 0 20px 40px rgba(255, 167, 81, 0.08);
+}
+
+.imageWrapper {
+  position: relative;
+  height: 360px;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--bg-black);
+}
+
+.teamImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-slow);
+  filter: grayscale(100%);
+}
+
+.teamImgTopAlign {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: var(--transition-slow);
+  filter: grayscale(100%);
+}
+
+.teamCard:hover .teamImg,
+.teamCard:hover .teamImgTopAlign {
+  transform: scale(1.04);
+  filter: grayscale(0%);
+}
+
+.cardGradientOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
+  pointer-events: none;
+}
+
+.info {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.role {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-white);
+  line-height: 1.2;
+}
+
+.bio {
+  font-size: 0.95rem;
+  color: var(--text-grey);
+  line-height: 1.6;
+  margin-top: 0.25rem;
+}
+
+/* CTA Section */
+.ctaHero {
+  padding: 8rem 0;
+  background-color: var(--bg-black);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ctaContent {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.ctaTitle {
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.ctaDesc {
+  color: var(--text-grey);
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Responsive Rules */
+@media (max-width: 1200px) {
+  .teamGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .heroTitle {
+    font-size: 4rem;
+  }
+  .ctaTitle {
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .teamGrid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .heroTitle {
+    font-size: 3rem;
+  }
+  .ctaTitle {
+    font-size: 2.8rem;
+  }
+  .ctaButtons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+}

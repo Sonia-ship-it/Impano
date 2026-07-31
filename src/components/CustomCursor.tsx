@@ -18,6 +18,7 @@ export default function CustomCursor() {
   useEffect(() => {
     // Detect touch device
     const touchCheck = window.matchMedia("(pointer: coarse)").matches;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsTouch(touchCheck);
     if (touchCheck) return;
 

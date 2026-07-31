@@ -29,7 +29,7 @@ export default function ContactPage() {
         <div className="container">
           <span className={styles.heroTag}>Connect with us</span>
           <h1 className={styles.heroTitle}>
-            Let's Create <span>Impact</span>
+            Let&apos;s Create <span>Impact</span>
             <br />
             Together
           </h1>
@@ -147,7 +147,7 @@ export default function ContactPage() {
             <div className={styles.mapCard}>
               <Image
                 src="/images/kigali_map_mock.png"
-                alt="Impano Studio Location Map Kigali"
+                alt="Impano Entertainment Location Map Kigali"
                 className={styles.mapImg}
                 fill
                 sizes="(max-width: 992px) 100vw, 40vw"

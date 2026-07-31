@@ -12,9 +12,9 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Impano Studio | Cinematic Production & Post-Production",
+  title: "Impano Entertainment | Cinematic Production & Post-Production",
   description: "Elevating Rwandan creative expression to the global stage through cinematic excellence and innovative storytelling. Master-class production and advanced post-production services in Kigali, Rwanda.",
-  keywords: ["Cinematography", "Production Design", "Post-Production", "VFX", "Rwandan Film", "Impano Studio", "Kigali", "Color Grading"],
+  keywords: ["Cinematography", "Production Design", "Post-Production", "VFX", "Rwandan Film", "Impano Entertainment", "Kigali", "Color Grading"],
   icons: {
     icon: "/images/logo.png",
   },

@@ -34,32 +34,43 @@ export default function Home() {
     "Creative Direction",
     "Post-Production",
     "VFX",
+    "Drone",
     "Cinematography",
     "Production Design",
     "Creative Direction",
     "Post-Production",
     "VFX",
+    "Drone",
   ];
 
   const services = [
     {
       num: "01",
-      name: "Cinematic Commercials",
-      desc: "High-impact visual campaigns that captivate audiences and elevate brands. Crafted for modern formats and global appeal.",
+      name: "Production Services",
+      desc: "Producing and Directing, Camera Crews, Drone Visuals, Multi Cameras, Live Stream, Professional Interviews, Motion Graphics, 3D animation, Script Writing, StoryBoard.",
       image: "/images/hero_bg.png",
     },
     {
       num: "02",
-      name: "Documentary & Narrative",
-      desc: "Raw, authentic stories that move hearts. We manage everything from field producing to cinematic capture and direction.",
-      image: "/images/about_crew.png",
+      name: "Post-Production Services",
+      desc: "Offline / Online Edit, Color Correction, and Sound Design services optimizing raw captures into visual legacies.",
+      image: "/images/grading_console.png",
     },
     {
       num: "03",
-      name: "Post-Production & VFX",
-      desc: "Premium color grading, editing, and sound design. Our suite is optimized to refine raw captures into visual legacies.",
-      image: "/images/grading_console.png",
+      name: "Creative Development & Strategy",
+      desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience to transform information and ideas into authentic work.",
+      image: "/images/about_story.png",
     },
+  ];
+
+  const clients = [
+    { name: "Kigali Film Commission", niche: "Cultural Promotion", focus: "Cinematic Archives" },
+    { name: "Rwanda Broadcasting Agency", niche: "National Television", focus: "Post-Production" },
+    { name: "Africa Screen Works", niche: "Co-Production", focus: "Production Logistics" },
+    { name: "Legacy Media Group", niche: "Global Commercials", focus: "8K HDR Campaigns" },
+    { name: "Vivid Ventures", niche: "Corporate Impact", focus: "Documentary Films" },
+    { name: "Volcano Creative Hub", niche: "Creative Arts", focus: "VFX & Sound Design" },
   ];
 
   return (
@@ -96,7 +107,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+ 
       {/* Infinite Scrolling Marquee */}
       <div className="marquee-container">
         <div className="marquee-content">
@@ -108,51 +119,48 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Philosophy Section */}
-      <section className={styles.philosophy}>
-        <div className={`${styles.philosophyGrid} container`}>
-          <div className={styles.philosophyImageWrapper}>
-            <Image
-              src="/images/about_crew.png"
-              alt="Filmmakers on set"
-              className={styles.philosophyImg}
-              width={600}
-              height={480}
-              priority
-            />
-          </div>
-          <div className={styles.philosophyContent}>
-            <div className={styles.philosophyHeader}>
-              <span className="section-tag">Our Philosophy</span>
+      {/* Clients Section */}
+      <section className={styles.clients}>
+        <div className={`${styles.clientsGrid} container`}>
+          <div className={styles.clientsContent}>
+            <div className={styles.clientsHeader}>
+              <span className="section-tag">Our Clients</span>
               <h2 className="section-title">
-                The Narrative is the <span>Soul of Vision.</span>
+                Trusted by <span>Industry Leaders.</span>
               </h2>
             </div>
+            <p className={styles.clientsText}>
+              We collaborate with forward-thinking brands, national agencies, and
+              co-production partners to push the boundaries of cinematic storytelling.
+              Each partnership is built on precision, technical execution, and artistic integrity.
+            </p>
             <div className={styles.statsRow}>
               <div className={styles.statCard}>
                 <span className={styles.statNum}>50+</span>
-                <span className={styles.statLabel}>Projects Delivered</span>
+                <span className={styles.statLabel}>Global Partners</span>
               </div>
               <div className={styles.statCard}>
-                <span className={styles.statNum}>10+</span>
-                <span className={styles.statLabel}>International Awards</span>
+                <span className={styles.statNum}>100%</span>
+                <span className={styles.statLabel}>Cinematic Rigor</span>
               </div>
             </div>
-            <p className={styles.philosophyText}>
-              At our core, the narrative transcends frames. We capture stories
-              with cultural depth, technical precision, and world-class scale.
-              Every camera move, lighting setup, and sound edit is crafted to
-              serve the emotional truth of your vision.
-            </p>
-            <div className={styles.lensCard}>
-              <Image
-                src="/images/lens_close_up.png"
-                alt="Cinema lens details"
-                className={styles.lensImg}
-                width={600}
-                height={180}
-              />
-            </div>
+          </div>
+
+          <div className={styles.clientsListGrid}>
+            {clients.map((client, index) => (
+              <div
+                key={index}
+                className={styles.clientCard}
+                onMouseMove={handleCardMouseMove}
+                data-cursor="view"
+              >
+                <div className={styles.clientCardInner}>
+                  <div className={styles.clientNiche}>{client.niche}</div>
+                  <h3 className={styles.clientName}>{client.name}</h3>
+                  <span className={styles.clientFocus}>{client.focus}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

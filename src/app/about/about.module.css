@@ -148,87 +148,160 @@
   transform: scale(1.05);
 }
 
-/* Core Principles Section */
-.principlesSection {
-  padding: 8rem 0 14rem 0;
+/* Mission & Vision Section */
+.mvSection {
+  padding: 6rem 0;
   background-color: var(--bg-black);
-  position: relative;
-  overflow: hidden;
 }
 
-.principlesContainer {
-  position: relative;
-  z-index: 2;
-}
-
-.principlesHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 6rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 1.5rem;
-}
-
-.principlesSub {
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--accent-gold);
-  margin-bottom: 0.5rem;
-}
-
-.principlesGrid {
+.mvGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 3rem;
 }
 
-.principleCard {
-  border-top: 2px solid var(--border-color);
-  padding-top: 2rem;
+.mvCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  padding: 3rem;
+  transition: var(--transition-smooth);
+}
+
+.mvCard:hover {
+  border-color: var(--accent-gold);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 15px 35px rgba(255, 167, 81, 0.05);
+}
+
+.mvTag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+
+.mvText {
+  color: var(--text-white);
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+
+/* Our Commitment Section */
+.commitmentSection {
+  padding: 6rem 0;
+  background-color: var(--bg-dark);
+}
+
+.commitmentBanner {
+  background: linear-gradient(135deg, rgba(255, 167, 81, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 167, 81, 0.15);
+  border-radius: 16px;
+  padding: 4rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.commitmentTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--text-white);
+}
+
+.commitmentText {
+  color: var(--text-grey);
+  font-size: 1.15rem;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Core Values & Objectives Section */
+.valuesSection {
+  padding: 8rem 0;
+  background-color: var(--bg-black);
+}
+
+.valuesContainer {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 6rem;
+  align-items: flex-start;
+}
+
+.valuesLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.valueCard {
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: 0 8px 8px 0;
+  padding: 1.5rem 2rem;
+  transition: var(--transition-smooth);
+}
+
+.valueCard:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.valueTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.5rem;
+}
+
+.valueDesc {
+  font-size: 0.9rem;
+  color: var(--text-grey);
+  line-height: 1.5;
+}
+
+.valuesRight {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 3rem;
+  position: sticky;
+  top: 120px;
+}
+
+.objectivesList {
+  list-style: none;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  transition: var(--transition-smooth);
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
-  border-radius: 4px;
+  margin-top: 2.5rem;
 }
 
-.principleCard:nth-child(2) {
-  transform: translateY(3rem);
+.objectiveItem {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
 }
 
-.principleCard:nth-child(3) {
-  transform: translateY(6rem);
-}
-
-.principleCard:hover {
-  border-top-color: var(--accent-gold);
-  background-color: rgba(252, 211, 133, 0.02);
-}
-
-.principleNum {
-  font-size: 0.9rem;
-  font-weight: 600;
+.objIcon {
   color: var(--accent-gold);
-  letter-spacing: 0.1em;
+  font-weight: bold;
 }
 
-.principleTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-white);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.principleDesc {
+.objText {
   color: var(--text-grey);
   font-size: 0.95rem;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .dropCap {
@@ -242,40 +315,8 @@
   margin-top: 0.2rem;
 }
 
-/* Watermark */
-.principlesWatermark {
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 17vw;
-  font-weight: 900;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.015);
-  line-height: 0.8;
-  letter-spacing: 0.05em;
-  user-select: none;
-  pointer-events: none;
-  z-index: 1;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
 /* Responsive Styles */
 @media (max-width: 992px) {
-  .principlesSection {
-    padding: 6rem 0;
-  }
-
-  .principleCard:nth-child(2), .principleCard:nth-child(3) {
-    transform: translateY(0);
-  }
-
-  .principlesHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
   .heroTitle {
     font-size: 3.5rem;
   }
@@ -288,9 +329,32 @@
     max-width: 500px;
     margin: 0 auto;
   }
-  .principlesGrid {
+  .mvGrid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2rem;
+  }
+  .commitmentBanner {
+    padding: 2.5rem 1.5rem;
+  }
+  .commitmentTitle {
+    font-size: 2rem;
+  }
+  .commitmentText {
+    font-size: 1.05rem;
+  }
+  .valuesContainer {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+  .valuesRight {
+    position: static;
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .valuesGrid {
+    grid-template-columns: 1fr;
   }
 }
 
