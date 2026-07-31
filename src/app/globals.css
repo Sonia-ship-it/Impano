@@ -245,3 +245,45 @@ textarea {
     transform: translateX(-50%);
   }
 }
+
+/* Cinematic Page Entrance Transitions */
+@keyframes cinematicSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered load targets */
+.heroTitle,
+.heroDesc,
+.heroButtons,
+.section-tag,
+.section-title {
+  opacity: 0;
+  animation: cinematicSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.heroTitle {
+  animation-delay: 0.25s;
+}
+
+.heroDesc {
+  animation-delay: 0.45s;
+}
+
+.heroButtons {
+  animation-delay: 0.65s;
+}
+
+.section-tag {
+  animation-delay: 0.1s;
+}
+
+.section-title {
+  animation-delay: 0.2s;
+}

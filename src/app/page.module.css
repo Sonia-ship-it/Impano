@@ -279,7 +279,7 @@
   bottom: 0;
   background: radial-gradient(
     800px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(252, 211, 133, 0.04),
+    rgba(255, 167, 81, 0.05),
     transparent 50%
   );
   opacity: 0;
@@ -394,7 +394,7 @@
   bottom: 0;
   background: radial-gradient(
     600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(252, 211, 133, 0.08),
+    rgba(255, 167, 81, 0.1),
     transparent 40%
   );
   opacity: 0;

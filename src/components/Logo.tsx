@@ -17,10 +17,18 @@ export default function Logo({ size = 48 }: LogoProps) {
       <defs>
         {/* Metallic gold gradient for the 3D shiny effect */}
         <linearGradient id="gold-metallic" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFE259" />
-          <stop offset="30%" stopColor="#FCD385" />
-          <stop offset="70%" stopColor="#FFA751" />
-          <stop offset="100%" stopColor="#EA8D24" />
+          <stop offset="0%" stopColor="#FFE259">
+            <animate attributeName="stop-color" values="#FFE259;#FCD385;#FFA751;#EA8D24;#FFE259" dur="8s" repeatCount="indefinite" />
+          </stop>
+          <stop offset="30%" stopColor="#FCD385">
+            <animate attributeName="stop-color" values="#FCD385;#FFA751;#EA8D24;#FFE259;#FCD385" dur="8s" repeatCount="indefinite" />
+          </stop>
+          <stop offset="70%" stopColor="#FFA751">
+            <animate attributeName="stop-color" values="#FFA751;#EA8D24;#FFE259;#FCD385;#FFA751" dur="8s" repeatCount="indefinite" />
+          </stop>
+          <stop offset="100%" stopColor="#EA8D24">
+            <animate attributeName="stop-color" values="#EA8D24;#FFE259;#FCD385;#FFA751;#EA8D24" dur="8s" repeatCount="indefinite" />
+          </stop>
         </linearGradient>
         
         {/* Glow and bevel shadow filter */}

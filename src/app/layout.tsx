@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import CustomCursor from "../components/CustomCursor";
+import SplashLoader from "../components/SplashLoader";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={outfit.variable}>
       <body>
+        <SplashLoader />
         <Header />
         {children}
         <Footer />

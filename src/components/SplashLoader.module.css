@@ -1,0 +1,47 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0D0C0C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+              transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform, opacity;
+  pointer-events: all;
+}
+
+.logoWrapper {
+  animation: logoPulse 1.8s infinite ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fadeOut {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+
+@keyframes logoPulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+    filter: drop-shadow(0 0 15px rgba(255, 167, 81, 0.15));
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.8;
+  }
+}

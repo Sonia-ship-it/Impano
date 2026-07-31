@@ -63,6 +63,24 @@ export default function GeometricPattern() {
               floodOpacity="0.7"
             />
           </filter>
+
+          <style>{`
+            @keyframes slow-drift {
+              0% { transform: translate(0px, 0px); }
+              100% { transform: translate(15px, -15px); }
+            }
+            @keyframes breathe {
+              0% { opacity: 0.15; }
+              50% { opacity: 0.6; }
+              100% { opacity: 0.15; }
+            }
+            .drift-group {
+              animation: slow-drift 24s infinite alternate ease-in-out;
+            }
+            .breathe-rect {
+              animation: breathe 8s infinite alternate ease-in-out;
+            }
+          `}</style>
         </defs>
 
         {/* 1. Large broad diagonal panels matching the user's reference layout */}
@@ -90,25 +108,28 @@ export default function GeometricPattern() {
           filter="url(#shadow-effect)"
         />
 
-        {/* 2. Groups of fine parallel lines matching the reference pattern */}
-        <g transform="translate(100, 150) rotate(-45)">
-          <line x1="0" y1="0" x2="300" y2="0" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
-          <line x1="0" y1="12" x2="300" y2="12" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
-          <line x1="0" y1="24" x2="300" y2="24" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
-          <line x1="0" y1="36" x2="300" y2="36" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
-          <line x1="0" y1="48" x2="300" y2="48" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
+        {/* 2. Groups of fine parallel lines matching the reference pattern (drift-group) */}
+        <g className="drift-group">
+          <g transform="translate(100, 150) rotate(-45)">
+            <line x1="0" y1="0" x2="300" y2="0" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
+            <line x1="0" y1="12" x2="300" y2="12" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
+            <line x1="0" y1="24" x2="300" y2="24" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
+            <line x1="0" y1="36" x2="300" y2="36" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
+            <line x1="0" y1="48" x2="300" y2="48" stroke="rgba(255, 255, 255, 0.035)" strokeWidth="1" />
+          </g>
+
+          <g transform="translate(700, 500) rotate(-45)">
+            <line x1="0" y1="0" x2="400" y2="0" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
+            <line x1="0" y1="12" x2="400" y2="12" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
+            <line x1="0" y1="24" x2="400" y2="24" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
+            <line x1="0" y1="36" x2="400" y2="36" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
+            <line x1="0" y1="48" x2="400" y2="48" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
+          </g>
         </g>
 
-        <g transform="translate(700, 500) rotate(-45)">
-          <line x1="0" y1="0" x2="400" y2="0" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
-          <line x1="0" y1="12" x2="400" y2="12" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
-          <line x1="0" y1="24" x2="400" y2="24" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
-          <line x1="0" y1="36" x2="400" y2="36" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
-          <line x1="0" y1="48" x2="400" y2="48" stroke="rgba(252, 211, 133, 0.025)" strokeWidth="1" />
-        </g>
-
-        {/* 3. Areas filled with the diagonal stripes texture */}
+        {/* 3. Areas filled with the diagonal stripes texture (breathe-rect) */}
         <rect
+          className="breathe-rect"
           x="35%"
           y="20%"
           width="120"
@@ -117,6 +138,7 @@ export default function GeometricPattern() {
           transform="rotate(15 400 300)"
         />
         <rect
+          className="breathe-rect"
           x="75%"
           y="40%"
           width="180"
