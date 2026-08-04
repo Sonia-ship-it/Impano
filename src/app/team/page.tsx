@@ -42,7 +42,7 @@ async function getTeamData() {
         name: "MUGISHA ALLY",
         role: "Assistant Production",
         bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
-        image: "/images/Ally.jpeg",
+        image: "/images/Ally.png",
       },
     ];
   }
