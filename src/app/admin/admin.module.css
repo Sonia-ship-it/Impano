@@ -445,3 +445,30 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.fileUploadWrapper {
+  display: inline-block;
+}
+
+.uploadLabel {
+  background: rgba(255, 173, 17, 0.08);
+  border: 1px solid rgba(255, 173, 17, 0.3);
+  color: var(--accent-gold);
+  padding: 0.9rem 1.4rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.uploadLabel:hover {
+  background: var(--accent-gold);
+  color: #000000;
+  border-color: var(--accent-gold);
+  box-shadow: 0 4px 12px rgba(255, 173, 17, 0.15);
+}

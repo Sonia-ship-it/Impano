@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./admin.module.css";
 import Logo from "../../components/Logo";
 import GeometricPattern from "../../components/GeometricPattern";
@@ -8,6 +9,7 @@ import GeometricPattern from "../../components/GeometricPattern";
 type Tab = "hero" | "clients" | "team" | "services";
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [passcode, setPasscode] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,6 +82,7 @@ export default function AdminDashboard() {
     setIsAuthenticated(false);
     setPasscode("");
     setContent(null);
+    router.push("/");
   };
 
   const handleSave = async () => {
@@ -104,6 +107,36 @@ export default function AdminDashboard() {
       }
     } catch (err) {
       setSaveStatus({ success: false, message: "Network error. Failed to save changes." });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onUploadSuccess: (url: string) => void
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok && data.url) {
+        onUploadSuccess(data.url);
+      } else {
+        alert(data.error || "Failed to upload image.");
+      }
+    } catch (err) {
+      alert("Failed to upload image. Server connection error.");
     } finally {
       setIsLoading(false);
     }
@@ -400,12 +433,24 @@ export default function AdminDashboard() {
                         </div>
                         <div className={styles.formGroup}>
                           <label className={styles.label}>Cover Image Path</label>
-                          <input
-                            type="text"
-                            className={styles.input}
-                            value={service.image}
-                            onChange={(e) => updateService(index, "image", e.target.value)}
-                          />
+                          <div style={{ display: "flex", gap: "0.5rem" }}>
+                            <input
+                              type="text"
+                              className={styles.input}
+                              style={{ flex: 1 }}
+                              value={service.image}
+                              onChange={(e) => updateService(index, "image", e.target.value)}
+                            />
+                            <label className={styles.uploadLabel}>
+                              Upload
+                              <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={(e) => handleImageUpload(e, (url) => updateService(index, "image", url))}
+                              />
+                            </label>
+                          </div>
                         </div>
                         <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
                           <label className={styles.label}>Service Description</label>
@@ -446,12 +491,24 @@ export default function AdminDashboard() {
                         </div>
                         <div className={styles.formGroup}>
                           <label className={styles.label}>Logo File Path</label>
-                          <input
-                            type="text"
-                            className={styles.input}
-                            value={client.logo}
-                            onChange={(e) => updateClient(index, "logo", e.target.value)}
-                          />
+                          <div style={{ display: "flex", gap: "0.5rem" }}>
+                            <input
+                              type="text"
+                              className={styles.input}
+                              style={{ flex: 1 }}
+                              value={client.logo}
+                              onChange={(e) => updateClient(index, "logo", e.target.value)}
+                            />
+                            <label className={styles.uploadLabel}>
+                              Upload
+                              <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={(e) => handleImageUpload(e, (url) => updateClient(index, "logo", url))}
+                              />
+                            </label>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -498,12 +555,24 @@ export default function AdminDashboard() {
                         </div>
                         <div className={styles.formGroup}>
                           <label className={styles.label}>Portrait Image Path</label>
-                          <input
-                            type="text"
-                            className={styles.input}
-                            value={member.image}
-                            onChange={(e) => updateTeam(index, "image", e.target.value)}
-                          />
+                          <div style={{ display: "flex", gap: "0.5rem" }}>
+                            <input
+                              type="text"
+                              className={styles.input}
+                              style={{ flex: 1 }}
+                              value={member.image}
+                              onChange={(e) => updateTeam(index, "image", e.target.value)}
+                            />
+                            <label className={styles.uploadLabel}>
+                              Upload
+                              <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={(e) => handleImageUpload(e, (url) => updateTeam(index, "image", url))}
+                              />
+                            </label>
+                          </div>
                         </div>
                         <div className={styles.formGroup} style={{ visibility: "hidden" }} />
                         <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
