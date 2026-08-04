@@ -12,13 +12,13 @@ export default function TeamPage() {
   const teamMembers = [
     {
       name: "ISHIMWE CHRISPIN",
-      role: "CEO",
+      role: "Founder & Drone Pilot",
       bio: "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
       image: "/images/chrispin.jpeg",
     },
     {
       name: "UWASE SONIA",
-      role: "IT Support",
+      role: "Co-Founder, Project Manager",
       bio: "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
       image: "/images/sonia.png",
     },
