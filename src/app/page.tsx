@@ -43,7 +43,7 @@ export default function Home() {
     "Drone",
   ];
 
-  const services = [
+  const initialServices = [
     {
       num: "01",
       name: "Production Services",
@@ -64,7 +64,7 @@ export default function Home() {
     },
   ];
 
-  const clients = [
+  const initialClients = [
     { name: "Kigali Film Commission", logo: "/images/logo_kfc.png" },
     { name: "Rwanda Broadcasting Agency", logo: "/images/logo_rba.png" },
     { name: "Africa Screen Works", logo: "/images/logo_asw.png" },
@@ -73,26 +73,50 @@ export default function Home() {
     { name: "Volcano Creative Hub", logo: "/images/logo_vch.png" },
   ];
 
+  const [services, setServices] = useState(initialServices);
+  const [clients, setClients] = useState(initialClients);
+  const [hero, setHero] = useState({
+    tagline: "Connect with us",
+    titlePart1: "Crafting",
+    titleOutline: "Visual",
+    titleGold: "Legacies.",
+    description: "From the heart of Kigali, we craft premium commercial films, documentaries, and post-production experiences. We translate bold concepts into memorable cinematic assets.",
+    playText: "Watch Showreel",
+    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
+  });
+
+  useEffect(() => {
+    fetch("/api/content")
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then((data) => {
+        if (data.hero) setHero(data.hero);
+        if (data.services) setServices(data.services);
+        if (data.clients) setClients(data.clients);
+      })
+      .catch((err) => console.warn("Failed to load CMS content, using static fallback."));
+  }, []);
+
   return (
     <div style={{ overflow: "hidden" }}>
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={`${styles.heroContainer} container`}>
           <div className={styles.heroLeft}>
-            <span className={styles.heroTag}>Connect with us</span>
+            <span className={styles.heroTag}>{hero.tagline}</span>
             <h1 className={styles.heroTitle}>
-              Crafting
+              {hero.titlePart1}
               <br />
-              <span className={styles.outlineText}>Visual</span>
+              <span className={styles.outlineText}>{hero.titleOutline}</span>
               <br />
-              <span className={styles.goldText}>Legacies.</span>
+              <span className={styles.goldText}>{hero.titleGold}</span>
             </h1>
           </div>
           <div className={styles.heroRight}>
             <p className={styles.heroDesc}>
-              From the heart of Kigali, we craft premium commercial films,
-              documentaries, and post-production experiences. We translate bold
-              concepts into memorable cinematic assets.
+              {hero.description}
             </p>
             <div
               className={styles.playBtn}
@@ -102,7 +126,7 @@ export default function Home() {
               <div className={styles.playCircle}>
                 <div className={styles.playArrow}></div>
               </div>
-              <span className={styles.playText}>Watch Showreel</span>
+              <span className={styles.playText}>{hero.playText}</span>
             </div>
           </div>
         </div>
@@ -329,7 +353,7 @@ export default function Home() {
 
             <div className={styles.showreelPlayerWrapper}>
               <video
-                src="https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
+                src={hero.videoUrl}
                 autoPlay
                 loop
                 muted
