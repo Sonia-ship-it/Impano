@@ -120,7 +120,7 @@ export default function ContactPage() {
                     <input
                       type="text"
                       id="budget"
-                      placeholder="$5,000 - $15,000"
+                      placeholder="5,000,000 - 15,000,000 RWF"
                       className={styles.input}
                       value={formData.budget}
                       onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
