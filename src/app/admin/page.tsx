@@ -20,6 +20,20 @@ export default function AdminDashboard() {
   const [content, setContent] = useState<any>(null);
   const [saveStatus, setSaveStatus] = useState<{ success?: boolean; message?: string } | null>(null);
 
+  // Toast notification states
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
+
+  const showToast = (message: string, type: "success" | "error" | "info" = "info") => {
+    setToast({ message, type });
+  };
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   // States for passcode reset form
   const [oldPasscode, setOldPasscode] = useState("");
   const [newPasscode, setNewPasscode] = useState("");
@@ -127,6 +141,7 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (res.ok && data.success) {
         setSaveStatus({ success: true, message: "Content updated successfully! Changes are live." });
+        showToast("Content updated successfully! Changes are live.", "success");
         
         // Sync passcode local state and localStorage if reset
         if (content.passcode && content.passcode !== passcode) {
@@ -137,9 +152,11 @@ export default function AdminDashboard() {
         setTimeout(() => setSaveStatus(null), 5000);
       } else {
         setSaveStatus({ success: false, message: data.error || "Failed to save content changes." });
+        showToast(data.error || "Failed to save content changes.", "error");
       }
     } catch (err) {
       setSaveStatus({ success: false, message: "Network error. Failed to save changes." });
+      showToast("Network error. Failed to save changes.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -147,19 +164,19 @@ export default function AdminDashboard() {
 
   const handleResetPasscodeSubmit = async () => {
     if (!oldPasscode) {
-      alert("Please enter your current passcode.");
+      showToast("Please enter your current passcode.", "error");
       return;
     }
     if (oldPasscode !== passcode) {
-      alert("The current passcode you entered is incorrect.");
+      showToast("The current passcode you entered is incorrect.", "error");
       return;
     }
     if (!newPasscode.trim()) {
-      alert("New passcode cannot be empty.");
+      showToast("New passcode cannot be empty.", "error");
       return;
     }
     if (newPasscode !== confirmPasscode) {
-      alert("New passcodes do not match.");
+      showToast("New passcodes do not match.", "error");
       return;
     }
 
@@ -183,12 +200,12 @@ export default function AdminDashboard() {
         setOldPasscode("");
         setNewPasscode("");
         setConfirmPasscode("");
-        alert("Passcode updated successfully!");
+        showToast("Passcode updated successfully!", "success");
       } else {
-        alert(data.error || "Failed to update passcode.");
+        showToast(data.error || "Failed to update passcode.", "error");
       }
     } catch (err) {
-      alert("Network error. Failed to update passcode.");
+      showToast("Network error. Failed to update passcode.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -214,11 +231,12 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (res.ok && data.url) {
         onUploadSuccess(data.url);
+        showToast("Image uploaded successfully!", "success");
       } else {
-        alert(data.error || "Failed to upload image.");
+        showToast(data.error || "Failed to upload image.", "error");
       }
     } catch (err) {
-      alert("Failed to upload image. Server connection error.");
+      showToast("Failed to upload image. Server connection error.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -402,25 +420,50 @@ export default function AdminDashboard() {
               className={`${styles.tabBtn} ${activeTab === "hero" ? styles.tabBtnActive : ""}`}
               onClick={() => setActiveTab("hero")}
             >
-              🎬 Hero & Settings
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+              Hero & Settings
             </button>
             <button
               className={`${styles.tabBtn} ${activeTab === "services" ? styles.tabBtnActive : ""}`}
               onClick={() => setActiveTab("services")}
             >
-              🎥 Studio Services
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+                <line x1="7" y1="2" x2="7" y2="22" />
+                <line x1="17" y1="2" x2="17" y2="22" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <line x1="2" y1="7" x2="7" y2="7" />
+                <line x1="2" y1="17" x2="7" y2="17" />
+                <line x1="17" y1="17" x2="22" y2="17" />
+                <line x1="17" y1="7" x2="22" y2="7" />
+              </svg>
+              Studio Services
             </button>
             <button
               className={`${styles.tabBtn} ${activeTab === "clients" ? styles.tabBtnActive : ""}`}
               onClick={() => setActiveTab("clients")}
             >
-              💼 Client Showcase
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+              Client Showcase
             </button>
             <button
               className={`${styles.tabBtn} ${activeTab === "team" ? styles.tabBtnActive : ""}`}
               onClick={() => setActiveTab("team")}
             >
-              👥 Team Roster
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              Team Roster
             </button>
           </aside>
 
@@ -794,6 +837,31 @@ export default function AdminDashboard() {
           </main>
         </div>
       </div>
+
+      {/* Dynamic Custom Toast Notification System */}
+      {toast && (
+        <div className={`${styles.toast} ${styles[`toast_${toast.type}`]}`}>
+          {toast.type === "success" && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          )}
+          {toast.type === "error" && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          )}
+          {toast.type === "info" && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+          )}
+          <span>{toast.message}</span>
+          <button className={styles.toastCloseBtn} onClick={() => setToast(null)} aria-label="Dismiss notification">
+            &times;
+          </button>
+        </div>
+      )}
     </div>
   );
 }
