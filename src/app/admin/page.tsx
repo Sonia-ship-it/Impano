@@ -66,6 +66,7 @@ export default function AdminDashboard() {
         
         // Ensure all sections are structured to prevent rendering crashes
         const safeData = {
+          passcode: data.passcode || passcode,
           hero: data.hero || {
             tagline: "Connect with us",
             titlePart1: "Crafting",
@@ -118,6 +119,13 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (res.ok && data.success) {
         setSaveStatus({ success: true, message: "Content updated successfully! Changes are live." });
+        
+        // Sync passcode local state and localStorage if reset
+        if (content.passcode && content.passcode !== passcode) {
+          setPasscode(content.passcode);
+          localStorage.setItem("impano_admin_passcode", content.passcode);
+        }
+        
         setTimeout(() => setSaveStatus(null), 5000);
       } else {
         setSaveStatus({ success: false, message: data.error || "Failed to save content changes." });
@@ -168,6 +176,10 @@ export default function AdminDashboard() {
         [key]: value,
       },
     });
+  };
+
+  const updatePasscode = (value: string) => {
+    setContent({ ...content, passcode: value });
   };
 
   const updateClient = (index: number, key: string, value: string) => {
@@ -424,6 +436,25 @@ export default function AdminDashboard() {
                       value={content.hero.description}
                       onChange={(e) => updateHero("description", e.target.value)}
                     />
+                  </div>
+                  
+                  <div className={`${styles.formGroup} ${styles.formGroupFull}`} style={{ borderTop: "1px solid var(--border-color-light)", paddingTop: "2rem", marginTop: "2.5rem" }}>
+                    <h4 className={styles.panelTitle} style={{ fontSize: "1.1rem", borderBottom: "none", marginBottom: "1rem", paddingBottom: 0 }}>Reset Admin Passcode</h4>
+                    <div className={styles.formGrid}>
+                      <div className={styles.formGroup}>
+                        <label className={styles.label}>New Passcode</label>
+                        <input
+                          type="text"
+                          className={styles.input}
+                          placeholder="Enter new admin passcode"
+                          value={content.passcode || ""}
+                          onChange={(e) => updatePasscode(e.target.value)}
+                        />
+                        <span style={{ color: "var(--text-grey)", fontSize: "0.8rem", marginTop: "0.25rem" }}>
+                          Changing this will update the passcode required to access this dashboard.
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
