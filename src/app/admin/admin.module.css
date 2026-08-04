@@ -337,3 +337,111 @@
     padding: 2rem;
   }
 }
+
+.lockLogoWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  animation: floatLogo 4s infinite alternate ease-in-out;
+}
+
+@keyframes floatLogo {
+  0% { transform: translateY(0px) scale(1); }
+  100% { transform: translateY(-8px) scale(1.03); }
+}
+
+.passcodeFieldWrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.lockInput {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 173, 17, 0.18);
+  border-radius: 8px;
+  padding: 1.1rem 3.5rem 1.1rem 1.5rem;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1.05rem;
+  text-align: center;
+  letter-spacing: 0.12em;
+  transition: var(--transition-smooth);
+}
+
+.lockInput:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+  background: rgba(255, 173, 17, 0.03);
+  box-shadow: 0 0 25px rgba(255, 173, 17, 0.12);
+}
+
+.toggleVisibilityBtn {
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-grey);
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.65;
+  transition: var(--transition-smooth);
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggleVisibilityBtn:hover {
+  opacity: 1;
+  color: var(--accent-gold);
+}
+
+.lockSubmitBtn {
+  background: var(--accent-gold);
+  border: none;
+  color: #000000;
+  padding: 1.1rem 2.2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  width: 100%;
+  box-shadow: 0 5px 20px rgba(255, 173, 17, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.lockSubmitBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 173, 17, 0.35);
+  background: #ffb82e;
+}
+
+.lockSubmitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(0, 0, 0, 0.15);
+  border-top-color: #000000;
+  border-radius: 50%;
+  animation: spin 0.8s infinite linear;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

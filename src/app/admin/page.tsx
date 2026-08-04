@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import styles from "./admin.module.css";
+import Logo from "../../components/Logo";
+import GeometricPattern from "../../components/GeometricPattern";
 
 type Tab = "hero" | "clients" | "team" | "services";
 
@@ -10,6 +12,7 @@ export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [showPasscode, setShowPasscode] = useState(false);
   
   const [activeTab, setActiveTab] = useState<Tab>("hero");
   const [content, setContent] = useState<any>(null);
@@ -169,27 +172,44 @@ export default function AdminDashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className={styles.adminWrapper}>
-        <div className={styles.lockScreen}>
+      <div className={styles.adminWrapper} style={{ position: "relative", minHeight: "100vh", overflow: "hidden" }}>
+        <GeometricPattern />
+        <div className={styles.lockScreen} style={{ position: "relative", zIndex: 10 }}>
           <form className={styles.lockCard} onSubmit={handleLoginSubmit}>
-            <div className={styles.lockIcon}>🔐</div>
-            <h2 className={styles.lockTitle}>Admin Portal</h2>
-            <p className={styles.lockDesc}>Enter your administrative passcode to configure site settings.</p>
-            <div className={styles.formGroup} style={{ marginBottom: "2rem" }}>
+            <div className={styles.lockLogoWrapper}>
+              <Logo size={64} />
+            </div>
+            <h2 className={styles.lockTitle}>IMPANO CMS</h2>
+            <p className={styles.lockDesc}>Enter administrative passcode to unlock editing controls.</p>
+            
+            <div className={styles.passcodeFieldWrapper}>
               <input
-                type="password"
-                placeholder="Passcode (default: admin123)"
-                className={styles.input}
-                style={{ textAlign: "center", fontSize: "1.1rem" }}
+                type={showPasscode ? "text" : "password"}
+                placeholder="Enter Passcode"
+                className={styles.lockInput}
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
                 required
                 disabled={isLoading}
               />
+              <button 
+                type="button" 
+                className={styles.toggleVisibilityBtn}
+                onClick={() => setShowPasscode(!showPasscode)}
+                aria-label="Toggle passcode visibility"
+              >
+                {showPasscode ? "👁️" : "👁️‍🗨️"}
+              </button>
             </div>
-            <button type="submit" className={styles.saveBtn} style={{ width: "100%" }} disabled={isLoading}>
-              {isLoading ? "Verifying..." : "Access Dashboard"}
+
+            <button type="submit" className={styles.lockSubmitBtn} disabled={isLoading}>
+              {isLoading ? (
+                <span className={styles.spinner}></span>
+              ) : (
+                "Unlock Dashboard"
+              )}
             </button>
+            
             {authError && (
               <div className={`${styles.statusMessage} ${styles.statusError}`} style={{ justifyContent: "center" }}>
                 ⚠️ {authError}
