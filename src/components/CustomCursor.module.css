@@ -14,7 +14,7 @@
 .cursorRing {
   width: 32px;
   height: 32px;
-  border: 1px solid rgba(255, 167, 81, 0.4);
+  border: 1px solid rgba(255, 173, 17, 0.4);
   border-radius: 50%;
   position: fixed;
   top: -16px;
@@ -39,7 +39,7 @@
   height: 48px;
   top: -24px;
   left: -24px;
-  background-color: rgba(255, 167, 81, 0.06);
+  background-color: rgba(255, 173, 17, 0.06);
   border-color: var(--accent-gold);
   backdrop-filter: blur(2px);
 }
@@ -53,7 +53,7 @@
   background-color: rgba(13, 12, 12, 0.88);
   border-color: var(--accent-gold);
   backdrop-filter: blur(5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(255, 167, 81, 0.15);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(255, 173, 17, 0.15);
 }
 
 .cursorText {

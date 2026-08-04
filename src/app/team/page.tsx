@@ -11,34 +11,28 @@ export const metadata = {
 export default function TeamPage() {
   const teamMembers = [
     {
-      name: "Sonia Impano",
-      role: "Founder & Executive Producer",
-      bio: "Guiding the creative heartbeat of Rwandan cinema, translating local stories into global masterworks with production excellence.",
-      image: "/images/about_crew.png",
+      name: "ISHIMWE CHRISPIN",
+      role: "CEO",
+      bio: "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
+      image: "/images/chrispin.jpeg",
     },
     {
-      name: "Christian Gakombe",
-      role: "Creative Director & Lead Filmmaker",
-      bio: "Sculpting visual narratives with a precise eye for framing, pacing, and emotional depth. Over a decade of directorial experience.",
-      image: "/images/lens_close_up.png",
+      name: "UWASE SONIA",
+      role: "IT Support",
+      bio: "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
+      image: "/images/sonia.png",
     },
     {
-      name: "Moses Kamasa",
-      role: "Director of Photography",
-      bio: "Harnessing light and advanced RED & ARRI optical systems to compose unforgettable frames that define our signature aesthetic.",
-      image: "/images/about_story.png",
+      name: "ISHIMWE FISTON",
+      role: "Editor",
+      bio: "Master of rhythm and pacing, weaving raw cinematic footage into cohesive, powerful stories with precision editing and dynamic audio integration.",
+      image: "/images/Fiston.jpeg",
     },
     {
-      name: "Divine Ineza",
-      role: "Lead Colorist & Post Supervisor",
-      bio: "Manipulating color science, shadows, and HDR specifications to establish the precise mood and visual legacy of each film.",
-      image: "/images/grading_console.png",
-    },
-    {
-      name: "Jean Luc Nsengimana",
-      role: "VFX Supervisor & Animator",
-      bio: "Integrating high-end digital artistry, advanced 3D compositing, and visual effects to build expansive cinematic worlds.",
-      image: "/images/hero_bg.png",
+      name: "MUGISHA ALLY",
+      role: "Assistant Production",
+      bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
+      image: "/images/Ally.jpeg",
     },
   ];
 
@@ -75,16 +69,18 @@ export default function TeamPage() {
                   <Image
                     src={member.image}
                     alt={`${member.name} - ${member.role}`}
-                    className={member.name === "Sonia Impano" ? styles.teamImgTopAlign : styles.teamImg}
+                    className={styles.teamImg}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
                     priority={index < 2}
                   />
                   <div className={styles.cardGradientOverlay} />
                 </div>
                 <div className={styles.info}>
-                  <span className={styles.role}>{member.role}</span>
-                  <h3 className={styles.name}>{member.name}</h3>
+                  <div className={styles.infoTop}>
+                    <span className={styles.role}>{member.role}</span>
+                    <h3 className={styles.name}>{member.name}</h3>
+                  </div>
                   <p className={styles.bio}>{member.bio}</p>
                 </div>
               </div>

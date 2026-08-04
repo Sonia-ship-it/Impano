@@ -171,7 +171,7 @@
 .mvCard:hover {
   border-color: var(--accent-gold);
   background: rgba(255, 255, 255, 0.03);
-  box-shadow: 0 15px 35px rgba(255, 167, 81, 0.05);
+  box-shadow: 0 15px 35px rgba(255, 173, 17, 0.05);
 }
 
 .mvTag {
@@ -197,8 +197,8 @@
 }
 
 .commitmentBanner {
-  background: linear-gradient(135deg, rgba(255, 167, 81, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-  border: 1px solid rgba(255, 167, 81, 0.15);
+  background: linear-gradient(135deg, rgba(255, 173, 17, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 173, 17, 0.15);
   border-radius: 16px;
   padding: 4rem;
   text-align: center;

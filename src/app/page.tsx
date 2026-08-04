@@ -65,12 +65,12 @@ export default function Home() {
   ];
 
   const clients = [
-    { name: "Kigali Film Commission", niche: "Cultural Promotion", focus: "Cinematic Archives" },
-    { name: "Rwanda Broadcasting Agency", niche: "National Television", focus: "Post-Production" },
-    { name: "Africa Screen Works", niche: "Co-Production", focus: "Production Logistics" },
-    { name: "Legacy Media Group", niche: "Global Commercials", focus: "8K HDR Campaigns" },
-    { name: "Vivid Ventures", niche: "Corporate Impact", focus: "Documentary Films" },
-    { name: "Volcano Creative Hub", niche: "Creative Arts", focus: "VFX & Sound Design" },
+    { name: "Kigali Film Commission", logo: "/images/logo_kfc.png" },
+    { name: "Rwanda Broadcasting Agency", logo: "/images/logo_rba.png" },
+    { name: "Africa Screen Works", logo: "/images/logo_asw.png" },
+    { name: "Legacy Media Group", logo: "/images/logo_lmg.png" },
+    { name: "Vivid Ventures", logo: "/images/logo_vv.png" },
+    { name: "Volcano Creative Hub", logo: "/images/logo_vch.png" },
   ];
 
   return (
@@ -155,9 +155,16 @@ export default function Home() {
                 data-cursor="view"
               >
                 <div className={styles.clientCardInner}>
-                  <div className={styles.clientNiche}>{client.niche}</div>
+                  <div className={styles.clientLogoContainer}>
+                    <Image
+                      src={client.logo}
+                      alt={`${client.name} Logo`}
+                      width={140}
+                      height={70}
+                      className={styles.clientLogoImg}
+                    />
+                  </div>
                   <h3 className={styles.clientName}>{client.name}</h3>
-                  <span className={styles.clientFocus}>{client.focus}</span>
                 </div>
               </div>
             ))}

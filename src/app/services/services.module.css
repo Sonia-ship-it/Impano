@@ -127,7 +127,7 @@
 }
 
 .tagItem:hover {
-  background-color: rgba(255, 167, 81, 0.04);
+  background-color: rgba(255, 173, 17, 0.04);
   border-color: var(--accent-gold);
   transform: translateX(3px);
 }

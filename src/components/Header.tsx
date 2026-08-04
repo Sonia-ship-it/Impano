@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./Header.module.css";
@@ -9,6 +9,19 @@ import Logo from "./Logo";
 export default function Header() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -27,7 +40,7 @@ export default function Header() {
   ];
 
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${scrolled ? styles.headerScrolled : ""}`}>
       <div className={`${styles.container} container`}>
         {/* Logo (Far Left Circular Capsule) */}
         <Link href="/" className={styles.logoCircleWrapper} onClick={closeMenu}>
@@ -56,9 +69,9 @@ export default function Header() {
 
 
 
-          {/* CTA Inquire Now Button */}
+          {/* CTA Get in Touch Button */}
           <Link href="/contact" className={styles.ctaButton}>
-            Inquire Now
+            Get in Touch
           </Link>
         </div>
 
@@ -69,6 +82,7 @@ export default function Header() {
           }`}
           onClick={toggleMenu}
           aria-label="Toggle navigation menu"
+          id="menu-trigger"
         >
           <span></span>
           <span></span>
@@ -103,7 +117,7 @@ export default function Header() {
               className="btn-primary"
               style={{ width: "100%", display: "flex" }}
             >
-              Inquire Now
+              Get in Touch
             </Link>
           </div>
         </div>

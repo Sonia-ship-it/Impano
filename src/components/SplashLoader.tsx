@@ -19,7 +19,7 @@ export default function SplashLoader() {
         setVisible(false);
       }, 800); // Duration of fadeOut transition
       return () => clearTimeout(removeTimer);
-    }, 1500); // Duration to show animated pulsing logo
+    }, 2800); // Duration to show animated pulsing logo
 
     return () => clearTimeout(timer);
   }, []);

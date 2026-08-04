@@ -38,7 +38,7 @@
   50% {
     transform: scale(1.05);
     opacity: 1;
-    filter: drop-shadow(0 0 15px rgba(255, 167, 81, 0.15));
+    filter: drop-shadow(0 0 15px rgba(255, 173, 17, 0.15));
   }
   100% {
     transform: scale(0.92);

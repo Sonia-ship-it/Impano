@@ -121,7 +121,7 @@ export default function ContactPage() {
                 </div>
 
                 <button type="submit" className="btn-primary" style={{ alignSelf: "flex-start" }}>
-                  Send Inquiry
+                  Send Message
                 </button>
               </form>
             ) : (
@@ -129,9 +129,9 @@ export default function ContactPage() {
                 <div className={styles.successCircle}>
                   <div className={styles.successCheck}></div>
                 </div>
-                <h3 className={styles.successTitle}>Inquiry Sent!</h3>
+                <h3 className={styles.successTitle}>Message Sent!</h3>
                 <p className={styles.successDesc}>
-                  Thank you for reaching out, <strong>{formData.name}</strong>. We have received your inquiry
+                  Thank you for reaching out, <strong>{formData.name}</strong>. We have received your message
                   about <strong>{formData.projectType}</strong> and will get back to you within 24 hours.
                 </p>
                 <button className="btn-outline" onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", projectType: "Cinematography", budget: "", message: "" }); }}>

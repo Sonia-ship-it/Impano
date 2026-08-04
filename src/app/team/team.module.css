@@ -55,32 +55,47 @@
 
 .teamGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4rem;
 }
 
 .teamCard {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
   overflow: hidden;
-  transition: var(--transition-smooth);
+  transition: var(--transition-slow);
   position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  height: 540px; /* Cinematic poster aspect ratio */
+  cursor: pointer;
+}
+
+.teamCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  transition: var(--transition-slow);
+  pointer-events: none;
+  z-index: 12;
 }
 
 .teamCard:hover {
-  transform: translateY(-8px);
+  transform: translateY(-12px);
+  border-color: rgba(255, 173, 17, 0.3);
+  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 173, 17, 0.08);
+}
+
+.teamCard:hover::after {
   border-color: var(--accent-gold);
-  box-shadow: 0 20px 40px rgba(255, 167, 81, 0.08);
 }
 
 .imageWrapper {
-  position: relative;
-  height: 360px;
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
   overflow: hidden;
   background-color: var(--bg-black);
 }
@@ -89,63 +104,93 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: var(--transition-slow);
-  filter: grayscale(100%);
-}
-
-.teamImgTopAlign {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   object-position: top;
   transition: var(--transition-slow);
-  filter: grayscale(100%);
+  filter: grayscale(100%) contrast(1.1) brightness(0.9);
 }
 
-.teamCard:hover .teamImg,
-.teamCard:hover .teamImgTopAlign {
-  transform: scale(1.04);
-  filter: grayscale(0%);
+.teamCard:hover .teamImg {
+  transform: scale(1.06);
+  filter: grayscale(0%) contrast(1.02) brightness(0.95);
 }
 
 .cardGradientOverlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.6) 65%, rgba(0, 0, 0, 0.95) 100%);
   pointer-events: none;
+  z-index: 2;
+  transition: var(--transition-slow);
+}
+
+.teamCard:hover .cardGradientOverlay {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0.98) 100%);
 }
 
 .info {
-  padding: 2rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 3rem 2.5rem;
+  z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  flex-grow: 1;
+  gap: 1.25rem;
+  transform: translateY(70px); /* Stash the bio content out of frame initially */
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.teamCard:hover .info {
+  transform: translateY(0);
+}
+
+.infoTop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1.25rem;
 }
 
 .role {
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--accent-gold);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.2em;
+  transition: var(--transition-smooth);
 }
 
 .name {
-  font-size: 1.6rem;
+  font-size: 1.9rem;
   font-weight: 700;
   color: var(--text-white);
   line-height: 1.2;
+  transition: var(--transition-smooth);
+}
+
+.teamCard:hover .name {
+  color: var(--text-white);
+  text-shadow: 0 0 15px rgba(255, 173, 17, 0.1);
 }
 
 .bio {
   font-size: 0.95rem;
-  color: var(--text-grey);
+  color: rgba(255, 255, 255, 0);
   line-height: 1.6;
-  margin-top: 0.25rem;
+  font-weight: 300;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
+}
+
+.teamCard:hover .bio {
+  opacity: 1;
+  transform: translateY(0);
+  color: rgba(255, 255, 255, 0.8);
+  transition-delay: 0.15s; /* Smooth stagger for text readability */
 }
 
 /* CTA Section */
@@ -211,6 +256,17 @@
     grid-template-columns: 1fr;
     max-width: 480px;
     margin: 0 auto;
+    gap: 2.5rem;
+  }
+  .teamCard {
+    height: 480px;
+  }
+  .info {
+    padding: 2rem 1.75rem;
+    transform: translateY(50px);
+  }
+  .name {
+    font-size: 1.6rem;
   }
   .heroTitle {
     font-size: 3rem;
