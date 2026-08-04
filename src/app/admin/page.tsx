@@ -63,7 +63,24 @@ export default function AdminDashboard() {
       const res = await fetch("/api/content");
       if (res.ok) {
         const data = await res.json();
-        setContent(data);
+        
+        // Ensure all sections are structured to prevent rendering crashes
+        const safeData = {
+          hero: data.hero || {
+            tagline: "Connect with us",
+            titlePart1: "Crafting",
+            titleOutline: "Visual",
+            titleGold: "Legacies.",
+            description: "From the heart of Kigali, we craft premium commercial films, documentaries, and post-production experiences. We translate bold concepts into memorable cinematic assets.",
+            playText: "WATCH SHOWREEL",
+            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
+          },
+          services: data.services || [],
+          clients: data.clients || [],
+          team: data.team || []
+        };
+        
+        setContent(safeData);
       }
     } catch (err) {
       console.error("Failed to load content database.");
