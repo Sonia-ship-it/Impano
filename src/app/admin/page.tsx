@@ -20,6 +20,14 @@ export default function AdminDashboard() {
   const [content, setContent] = useState<any>(null);
   const [saveStatus, setSaveStatus] = useState<{ success?: boolean; message?: string } | null>(null);
 
+  // States for passcode reset form
+  const [oldPasscode, setOldPasscode] = useState("");
+  const [newPasscode, setNewPasscode] = useState("");
+  const [confirmPasscode, setConfirmPasscode] = useState("");
+  const [showOldPasscode, setShowOldPasscode] = useState(false);
+  const [showNewPasscode, setShowNewPasscode] = useState(false);
+  const [showConfirmPasscode, setShowConfirmPasscode] = useState(false);
+
   // Check if passcode is saved in localStorage
   useEffect(() => {
     const savedPasscode = localStorage.getItem("impano_admin_passcode");
@@ -137,6 +145,55 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleResetPasscodeSubmit = async () => {
+    if (!oldPasscode) {
+      alert("Please enter your current passcode.");
+      return;
+    }
+    if (oldPasscode !== passcode) {
+      alert("The current passcode you entered is incorrect.");
+      return;
+    }
+    if (!newPasscode.trim()) {
+      alert("New passcode cannot be empty.");
+      return;
+    }
+    if (newPasscode !== confirmPasscode) {
+      alert("New passcodes do not match.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const updatedContent = { ...content, passcode: newPasscode };
+      const res = await fetch("/api/content", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": passcode,
+        },
+        body: JSON.stringify(updatedContent),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setPasscode(newPasscode);
+        localStorage.setItem("impano_admin_passcode", newPasscode);
+        setContent(updatedContent);
+        setOldPasscode("");
+        setNewPasscode("");
+        setConfirmPasscode("");
+        alert("Passcode updated successfully!");
+      } else {
+        alert(data.error || "Failed to update passcode.");
+      }
+    } catch (err) {
+      alert("Network error. Failed to update passcode.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
     onUploadSuccess: (url: string) => void
@@ -178,9 +235,7 @@ export default function AdminDashboard() {
     });
   };
 
-  const updatePasscode = (value: string) => {
-    setContent({ ...content, passcode: value });
-  };
+
 
   const updateClient = (index: number, key: string, value: string) => {
     const updatedClients = [...content.clients];
@@ -438,21 +493,100 @@ export default function AdminDashboard() {
                     />
                   </div>
                   
-                  <div className={`${styles.formGroup} ${styles.formGroupFull}`} style={{ borderTop: "1px solid var(--border-color-light)", paddingTop: "2rem", marginTop: "2.5rem" }}>
-                    <h4 className={styles.panelTitle} style={{ fontSize: "1.1rem", borderBottom: "none", marginBottom: "1rem", paddingBottom: 0 }}>Reset Admin Passcode</h4>
+                  <div className={`${styles.formGroup} ${styles.formGroupFull}`} style={{ borderTop: "1px solid var(--border-color-light)", paddingTop: "2.5rem", marginTop: "2.5rem" }}>
+                    <h4 className={styles.panelTitle} style={{ fontSize: "1.1rem", borderBottom: "none", marginBottom: "0.25rem", paddingBottom: 0 }}>Reset Admin Passcode</h4>
+                    <p style={{ color: "var(--text-grey)", fontSize: "0.85rem", marginBottom: "1.5rem" }}>
+                      To update your security passcode, enter your current passcode and confirm the new one below.
+                    </p>
                     <div className={styles.formGrid}>
                       <div className={styles.formGroup}>
+                        <label className={styles.label}>Current Passcode</label>
+                        <div className={styles.passcodeFieldWrapper} style={{ marginBottom: 0 }}>
+                          <input
+                            type={showOldPasscode ? "text" : "password"}
+                            className={styles.input}
+                            style={{ width: "100%", paddingRight: "3rem" }}
+                            placeholder="Enter current passcode"
+                            value={oldPasscode}
+                            onChange={(e) => setOldPasscode(e.target.value)}
+                          />
+                          <button
+                            type="button"
+                            className={styles.toggleVisibilityBtn}
+                            onClick={() => setShowOldPasscode(!showOldPasscode)}
+                            aria-label="Toggle current passcode visibility"
+                          >
+                            {showOldPasscode ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className={styles.formGroup}>
                         <label className={styles.label}>New Passcode</label>
-                        <input
-                          type="text"
-                          className={styles.input}
-                          placeholder="Enter new admin passcode"
-                          value={content.passcode || ""}
-                          onChange={(e) => updatePasscode(e.target.value)}
-                        />
-                        <span style={{ color: "var(--text-grey)", fontSize: "0.8rem", marginTop: "0.25rem" }}>
-                          Changing this will update the passcode required to access this dashboard.
-                        </span>
+                        <div className={styles.passcodeFieldWrapper} style={{ marginBottom: 0 }}>
+                          <input
+                            type={showNewPasscode ? "text" : "password"}
+                            className={styles.input}
+                            style={{ width: "100%", paddingRight: "3rem" }}
+                            placeholder="Enter new passcode"
+                            value={newPasscode}
+                            onChange={(e) => setNewPasscode(e.target.value)}
+                          />
+                          <button
+                            type="button"
+                            className={styles.toggleVisibilityBtn}
+                            onClick={() => setShowNewPasscode(!showNewPasscode)}
+                            aria-label="Toggle new passcode visibility"
+                          >
+                            {showNewPasscode ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label className={styles.label}>Confirm New Passcode</label>
+                        <div className={styles.passcodeFieldWrapper} style={{ marginBottom: 0 }}>
+                          <input
+                            type={showConfirmPasscode ? "text" : "password"}
+                            className={styles.input}
+                            style={{ width: "100%", paddingRight: "3rem" }}
+                            placeholder="Confirm new passcode"
+                            value={confirmPasscode}
+                            onChange={(e) => setConfirmPasscode(e.target.value)}
+                          />
+                          <button
+                            type="button"
+                            className={styles.toggleVisibilityBtn}
+                            onClick={() => setShowConfirmPasscode(!showConfirmPasscode)}
+                            aria-label="Toggle confirm passcode visibility"
+                          >
+                            {showConfirmPasscode ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className={styles.formGroup} style={{ justifyContent: "flex-end", paddingTop: "1.7rem" }}>
+                        <button
+                          type="button"
+                          className={styles.saveBtn}
+                          style={{ background: "transparent", border: "1px solid var(--accent-gold)", color: "var(--accent-gold)", padding: "0.8rem 1.8rem" }}
+                          onClick={handleResetPasscodeSubmit}
+                          disabled={isLoading}
+                        >
+                          {isLoading ? "Updating..." : "Update Passcode"}
+                        </button>
                       </div>
                     </div>
                   </div>
