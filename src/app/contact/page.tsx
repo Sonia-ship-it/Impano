@@ -6,6 +6,8 @@ import styles from "./contact.module.css";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,11 +16,31 @@ export default function ContactPage() {
     message: "",
   });
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.message) {
-      // Simulate API submit
-      setSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMsg("");
+
+    try {
+      const response = await fetch("/api/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMsg(data.error || "Failed to send message. Please try again.");
+      }
+    } catch (err: any) {
+      setErrorMsg("Failed to send message. Please check your internet connection.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -120,9 +142,21 @@ export default function ContactPage() {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="btn-primary" style={{ alignSelf: "flex-start" }}>
-                  Send Message
-                </button>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignSelf: "flex-start" }}>
+                  <button 
+                    type="submit" 
+                    className="btn-primary" 
+                    disabled={isSubmitting}
+                    style={{ opacity: isSubmitting ? 0.65 : 1, cursor: isSubmitting ? "not-allowed" : "pointer" }}
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </button>
+                  {errorMsg && (
+                    <span style={{ color: "#ff6b6b", fontSize: "0.9rem", fontWeight: "500" }}>
+                      {errorMsg}
+                    </span>
+                  )}
+                </div>
               </form>
             ) : (
               <div className={styles.successContainer}>
