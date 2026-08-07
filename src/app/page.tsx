@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./page.module.css";
+import Logo from "../components/Logo";
 
 export default function Home() {
   const [showreelOpen, setShowreelOpen] = useState(false);
@@ -188,28 +189,46 @@ export default function Home() {
             <span className="section-tag">Our Clients</span>
           </div>
 
-          <div className={styles.clientsListGrid}>
-            {clients.map((client, index) => (
-              <div
-                key={index}
-                className={styles.clientCard}
-                onMouseMove={handleCardMouseMove}
-                onMouseLeave={handleCardMouseLeave}
-                data-cursor="view"
-              >
-                <div className={styles.clientCardInner}>
-                  <div className={styles.clientLogoContainer}>
-                    <Image
-                      src={client.logo}
-                      alt={`${client.name} Logo`}
-                      width={140}
-                      height={70}
-                      className={styles.clientLogoImg}
-                    />
+          <div className={styles.orbitContainer}>
+            {/* Ambient Background Circles */}
+            <div className={styles.orbitBackground}>
+              <div className={styles.orbitCircleLine} style={{ width: "360px", height: "360px" }} />
+              <div className={styles.orbitCircleLine} style={{ width: "520px", height: "520px" }} />
+            </div>
+
+            {/* Central Studio Node */}
+            <div className={styles.centerNode}>
+              <Logo size={42} />
+            </div>
+
+            {/* Rotating Cards */}
+            {clients.map((client, index) => {
+              const startAngle = `${(360 / clients.length) * index}deg`;
+              return (
+                <div
+                  key={index}
+                  className={styles.orbitCard}
+                  style={{
+                    ["--start-angle" as any]: startAngle,
+                  }}
+                  onMouseMove={handleCardMouseMove}
+                  onMouseLeave={handleCardMouseLeave}
+                  data-cursor="view"
+                >
+                  <div className={styles.clientCardInner}>
+                    <div className={styles.clientLogoContainer}>
+                      <Image
+                        src={client.logo}
+                        alt={`${client.name} Logo`}
+                        width={140}
+                        height={70}
+                        className={styles.clientLogoImg}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
