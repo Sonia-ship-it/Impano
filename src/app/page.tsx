@@ -26,6 +26,19 @@ export default function Home() {
     const y = e.clientY - rect.top;
     card.style.setProperty("--mouse-x", `${x}px`);
     card.style.setProperty("--mouse-y", `${y}px`);
+
+    // Calculate 3D tilt angles based on cursor offset from card center
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg tilt
+    const rotateY = ((x - centerX) / centerX) * 10;  // Max 10 deg tilt
+
+    card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+  };
+
+  const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    card.style.transform = `perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
   };
 
   const marqueeItems = [
@@ -156,7 +169,7 @@ export default function Home() {
           </div>
         </div>
       </section>
- 
+
       {/* Infinite Scrolling Marquee */}
       <div className="marquee-container">
         <div className="marquee-content">
@@ -170,13 +183,38 @@ export default function Home() {
 
       {/* Clients Section */}
       <section className={styles.clients}>
-        <div className="container">
+        <div className={`${styles.clientsGrid} container`}>
+          <div className={styles.clientsContent}>
+            <div className={styles.clientsHeader}>
+              <span className="section-tag">Our Clients</span>
+              <h2 className="section-title">
+                Trusted by <span>Industry Leaders.</span>
+              </h2>
+            </div>
+            <p className={styles.clientsText}>
+              We collaborate with forward-thinking brands, national agencies, and
+              co-production partners to push the boundaries of cinematic storytelling.
+              Each partnership is built on precision, technical execution, and artistic integrity.
+            </p>
+            <div className={styles.statsRow}>
+              <div className={styles.statCard}>
+                <span className={styles.statNum}>50+</span>
+                <span className={styles.statLabel}>Global Partners</span>
+              </div>
+              <div className={styles.statCard}>
+                <span className={styles.statNum}>100%</span>
+                <span className={styles.statLabel}>Cinematic Rigor</span>
+              </div>
+            </div>
+          </div>
+
           <div className={styles.clientsListGrid}>
             {clients.map((client, index) => (
               <div
                 key={index}
                 className={styles.clientCard}
                 onMouseMove={handleCardMouseMove}
+                onMouseLeave={handleCardMouseLeave}
                 data-cursor="view"
               >
                 <div className={styles.clientCardInner}>
@@ -368,13 +406,13 @@ export default function Home() {
                 playsInline
                 className={styles.showreelVideo}
               />
-              
+
               <div className={styles.showreelHud}>
                 <div className={styles.hudHeader}>
                   <span className={styles.hudLive}>● RAW PREVIEW MONITOR</span>
                   <span className={styles.hudResolution}>RED RAPTOR 8K</span>
                 </div>
-                
+
                 <div className={styles.hudFooter}>
                   <span className={styles.hudTime}>TC 01:24:09:12</span>
                   <div className={styles.hudWaveform}>
