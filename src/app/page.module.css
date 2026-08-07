@@ -265,7 +265,7 @@
 
 .orbitCard {
   position: absolute;
-  width: 155px;
+  width: 175px;
   height: 95px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -322,7 +322,7 @@
 }
 
 .clientLogoContainer {
-  width: 120px;
+  width: 140px;
   height: 60px;
   transition: transform 0.4s ease;
   display: flex;

@@ -196,11 +196,6 @@ export default function Home() {
               <div className={styles.orbitCircleLine} style={{ width: "520px", height: "520px" }} />
             </div>
 
-            {/* Central Studio Node */}
-            <div className={styles.centerNode}>
-              <Logo size={42} />
-            </div>
-
             {/* Rotating Cards */}
             {clients.map((client, index) => {
               const startAngle = `${(360 / clients.length) * index}deg`;
