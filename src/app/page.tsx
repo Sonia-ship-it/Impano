@@ -73,8 +73,32 @@ export default function Home() {
     { name: "Volcano Creative Hub", logo: "/images/logo_vch.png" },
   ];
 
+  const initialWorks = [
+    {
+      title: "The Echo of Hills",
+      category: "Narrative Film",
+      image: "/images/echo_of_hills.png"
+    },
+    {
+      title: "Impano Entertainment",
+      category: "Studio Showcase",
+      image: "/images/grading_console.png"
+    },
+    {
+      title: "Commercials",
+      category: "Crafted",
+      image: "/images/about_story.png"
+    },
+    {
+      title: "VFX Composites",
+      category: "Animation",
+      image: "/images/hero_bg.png"
+    }
+  ];
+
   const [services, setServices] = useState(initialServices);
   const [clients, setClients] = useState(initialClients);
+  const [works, setWorks] = useState(initialWorks);
   const [hero, setHero] = useState({
     tagline: "Connect with us",
     titlePart1: "Crafting",
@@ -95,6 +119,7 @@ export default function Home() {
         if (data.hero) setHero(data.hero);
         if (data.services) setServices(data.services);
         if (data.clients) setClients(data.clients);
+        if (data.works) setWorks(data.works);
       })
       .catch((err) => console.warn("Failed to load CMS content, using static fallback."));
   }, []);
@@ -145,31 +170,7 @@ export default function Home() {
 
       {/* Clients Section */}
       <section className={styles.clients}>
-        <div className={`${styles.clientsGrid} container`}>
-          <div className={styles.clientsContent}>
-            <div className={styles.clientsHeader}>
-              <span className="section-tag">Our Clients</span>
-              <h2 className="section-title">
-                Trusted by <span>Industry Leaders.</span>
-              </h2>
-            </div>
-            <p className={styles.clientsText}>
-              We collaborate with forward-thinking brands, national agencies, and
-              co-production partners to push the boundaries of cinematic storytelling.
-              Each partnership is built on precision, technical execution, and artistic integrity.
-            </p>
-            <div className={styles.statsRow}>
-              <div className={styles.statCard}>
-                <span className={styles.statNum}>50+</span>
-                <span className={styles.statLabel}>Global Partners</span>
-              </div>
-              <div className={styles.statCard}>
-                <span className={styles.statNum}>100%</span>
-                <span className={styles.statLabel}>Cinematic Rigor</span>
-              </div>
-            </div>
-          </div>
-
+        <div className="container">
           <div className={styles.clientsListGrid}>
             {clients.map((client, index) => (
               <div
@@ -188,7 +189,6 @@ export default function Home() {
                       className={styles.clientLogoImg}
                     />
                   </div>
-                  <h3 className={styles.clientName}>{client.name}</h3>
                 </div>
               </div>
             ))}
@@ -242,80 +242,88 @@ export default function Home() {
 
           <div className={styles.worksGrid}>
             {/* Column Left (Vertical) */}
-            <div
-              className={`${styles.workCard} ${styles.verticalCard}`}
-              onMouseMove={handleCardMouseMove}
-              data-cursor="view"
-            >
-              <Image
-                src="/images/echo_of_hills.png"
-                alt="The Echo of Hills"
-                className={styles.workImg}
-                fill
-                sizes="(max-width: 992px) 100vw, 40vw"
-              />
-              <div className={styles.workOverlay}>
-                <span className={styles.workCategory}>Narrative Film</span>
-                <h3 className={styles.workTitle}>The Echo of Hills</h3>
+            {works[0] && (
+              <div
+                className={`${styles.workCard} ${styles.verticalCard}`}
+                onMouseMove={handleCardMouseMove}
+                data-cursor="view"
+              >
+                <Image
+                  src={works[0].image}
+                  alt={works[0].title}
+                  className={styles.workImg}
+                  fill
+                  sizes="(max-width: 992px) 100vw, 40vw"
+                />
+                <div className={styles.workOverlay}>
+                  <span className={styles.workCategory}>{works[0].category}</span>
+                  <h3 className={styles.workTitle}>{works[0].title}</h3>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Column Right Top (Horizontal) */}
-            <div
-              className={`${styles.workCard} ${styles.horizontalCard}`}
-              onMouseMove={handleCardMouseMove}
-              data-cursor="view"
-            >
-              <Image
-                src="/images/grading_console.png"
-                alt="Impano Entertainment Studio"
-                className={styles.workImg}
-                fill
-                sizes="(max-width: 992px) 100vw, 60vw"
-              />
-              <div className={styles.workOverlay}>
-                <span className={styles.workCategory}>Studio Showcase</span>
-                <h3 className={styles.workTitle}>Impano Entertainment</h3>
+            {works[1] && (
+              <div
+                className={`${styles.workCard} ${styles.horizontalCard}`}
+                onMouseMove={handleCardMouseMove}
+                data-cursor="view"
+              >
+                <Image
+                  src={works[1].image}
+                  alt={works[1].title}
+                  className={styles.workImg}
+                  fill
+                  sizes="(max-width: 992px) 100vw, 60vw"
+                />
+                <div className={styles.workOverlay}>
+                  <span className={styles.workCategory}>{works[1].category}</span>
+                  <h3 className={styles.workTitle}>{works[1].title}</h3>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Column Right Bottom Left (Square) */}
-            <div
-              className={`${styles.workCard} ${styles.squareCard1}`}
-              onMouseMove={handleCardMouseMove}
-              data-cursor="view"
-            >
-              <Image
-                src="/images/about_story.png"
-                alt="Crafted details"
-                className={styles.workImg}
-                fill
-                sizes="(max-width: 992px) 100vw, 30vw"
-              />
-              <div className={styles.workOverlay}>
-                <span className={styles.workCategory}>Crafted</span>
-                <h3 className={styles.workTitle}>Commercials</h3>
+            {works[2] && (
+              <div
+                className={`${styles.workCard} ${styles.squareCard1}`}
+                onMouseMove={handleCardMouseMove}
+                data-cursor="view"
+              >
+                <Image
+                  src={works[2].image}
+                  alt={works[2].title}
+                  className={styles.workImg}
+                  fill
+                  sizes="(max-width: 992px) 100vw, 30vw"
+                />
+                <div className={styles.workOverlay}>
+                  <span className={styles.workCategory}>{works[2].category}</span>
+                  <h3 className={styles.workTitle}>{works[2].title}</h3>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Column Right Bottom Right (Square) */}
-            <div
-              className={`${styles.workCard} ${styles.squareCard2}`}
-              onMouseMove={handleCardMouseMove}
-              data-cursor="view"
-            >
-              <Image
-                src="/images/hero_bg.png"
-                alt="VFX animation work"
-                className={styles.workImg}
-                fill
-                sizes="(max-width: 992px) 100vw, 30vw"
-              />
-              <div className={styles.workOverlay}>
-                <span className={styles.workCategory}>Animation</span>
-                <h3 className={styles.workTitle}>VFX Composites</h3>
+            {works[3] && (
+              <div
+                className={`${styles.workCard} ${styles.squareCard2}`}
+                onMouseMove={handleCardMouseMove}
+                data-cursor="view"
+              >
+                <Image
+                  src={works[3].image}
+                  alt={works[3].title}
+                  className={styles.workImg}
+                  fill
+                  sizes="(max-width: 992px) 100vw, 30vw"
+                />
+                <div className={styles.workOverlay}>
+                  <span className={styles.workCategory}>{works[3].category}</span>
+                  <h3 className={styles.workTitle}>{works[3].title}</h3>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

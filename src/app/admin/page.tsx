@@ -6,7 +6,7 @@ import styles from "./admin.module.css";
 import Logo from "../../components/Logo";
 import GeometricPattern from "../../components/GeometricPattern";
 
-type Tab = "hero" | "clients" | "team" | "services";
+type Tab = "works" | "clients" | "team" | "services";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   const [authError, setAuthError] = useState("");
   const [showPasscode, setShowPasscode] = useState(false);
   
-  const [activeTab, setActiveTab] = useState<Tab>("hero");
+  const [activeTab, setActiveTab] = useState<Tab>("works");
   const [content, setContent] = useState<any>(null);
   const [saveStatus, setSaveStatus] = useState<{ success?: boolean; message?: string } | null>(null);
 
@@ -98,6 +98,28 @@ export default function AdminDashboard() {
             playText: "WATCH SHOWREEL",
             videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
           },
+          works: data.works || [
+            {
+              title: "The Echo of Hills",
+              category: "Narrative Film",
+              image: "/images/echo_of_hills.png"
+            },
+            {
+              title: "Impano Entertainment",
+              category: "Studio Showcase",
+              image: "/images/grading_console.png"
+            },
+            {
+              title: "Commercials",
+              category: "Crafted",
+              image: "/images/about_story.png"
+            },
+            {
+              title: "VFX Composites",
+              category: "Animation",
+              image: "/images/hero_bg.png"
+            }
+          ],
           services: data.services || [],
           clients: data.clients || [],
           team: data.team || []
@@ -243,14 +265,10 @@ export default function AdminDashboard() {
   };
 
   // Content state mutators
-  const updateHero = (key: string, value: string) => {
-    setContent({
-      ...content,
-      hero: {
-        ...content.hero,
-        [key]: value,
-      },
-    });
+  const updateWork = (index: number, key: string, value: string) => {
+    const updatedWorks = [...content.works];
+    updatedWorks[index] = { ...updatedWorks[index], [key]: value };
+    setContent({ ...content, works: updatedWorks });
   };
 
 
@@ -417,15 +435,15 @@ export default function AdminDashboard() {
           {/* Sidebar */}
           <aside className={styles.tabList}>
             <button
-              className={`${styles.tabBtn} ${activeTab === "hero" ? styles.tabBtnActive : ""}`}
-              onClick={() => setActiveTab("hero")}
+              className={`${styles.tabBtn} ${activeTab === "works" ? styles.tabBtnActive : ""}`}
+              onClick={() => setActiveTab("works")}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                <line x1="8" y1="21" x2="16" y2="21" />
-                <line x1="12" y1="17" x2="12" y2="21" />
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
               </svg>
-              Hero & Settings
+              Selected Works
             </button>
             <button
               className={`${styles.tabBtn} ${activeTab === "services" ? styles.tabBtnActive : ""}`}
@@ -469,168 +487,160 @@ export default function AdminDashboard() {
 
           {/* Panel Card */}
           <main className={styles.panelCard}>
-            {activeTab === "hero" && (
+            {activeTab === "works" && (
               <div>
-                <h3 className={styles.panelTitle}>Homepage Hero Settings</h3>
-                <div className={styles.formGrid}>
-                  <div className={styles.formGroup}>
-                    <label className={styles.label}>Tagline</label>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={content.hero.tagline}
-                      onChange={(e) => updateHero("tagline", e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.label}>Watch Video Text</label>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={content.hero.playText}
-                      onChange={(e) => updateHero("playText", e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.label}>Hero Title - Line 1 (White)</label>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={content.hero.titlePart1}
-                      onChange={(e) => updateHero("titlePart1", e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.label}>Hero Title - Line 2 (Outline)</label>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={content.hero.titleOutline}
-                      onChange={(e) => updateHero("titleOutline", e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.label}>Hero Title - Line 3 (Gold Accent)</label>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={content.hero.titleGold}
-                      onChange={(e) => updateHero("titleGold", e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.label}>Showreel Video URL (Vimeo/YouTube Embed)</label>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={content.hero.videoUrl}
-                      onChange={(e) => updateHero("videoUrl", e.target.value)}
-                    />
-                  </div>
-                  <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
-                    <label className={styles.label}>Hero Paragraph Description</label>
-                    <textarea
-                      className={styles.textarea}
-                      value={content.hero.description}
-                      onChange={(e) => updateHero("description", e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className={`${styles.formGroup} ${styles.formGroupFull}`} style={{ borderTop: "1px solid var(--border-color-light)", paddingTop: "2.5rem", marginTop: "2.5rem" }}>
-                    <h4 className={styles.panelTitle} style={{ fontSize: "1.1rem", borderBottom: "none", marginBottom: "0.25rem", paddingBottom: 0 }}>Reset Admin Passcode</h4>
-                    <p style={{ color: "var(--text-grey)", fontSize: "0.85rem", marginBottom: "1.5rem" }}>
-                      To update your security passcode, enter your current passcode and confirm the new one below.
-                    </p>
-                    <div className={styles.formGrid}>
-                      <div className={styles.formGroup}>
-                        <label className={styles.label}>Current Passcode</label>
-                        <div className={styles.passcodeFieldWrapper} style={{ marginBottom: 0 }}>
+                <h3 className={styles.panelTitle}>Manage Selected Works</h3>
+                <div className={styles.listGrid}>
+                  {content.works.map((work: any, index: number) => (
+                    <div key={index} className={styles.itemCard}>
+                      <div className={styles.cardHeader}>
+                        <span className={styles.cardTitle}>Project #{index + 1}: {work.title || "Untitled"}</span>
+                      </div>
+                      <div className={styles.formGrid}>
+                        <div className={styles.formGroup}>
+                          <label className={styles.label}>Project Title</label>
                           <input
-                            type={showOldPasscode ? "text" : "password"}
+                            type="text"
                             className={styles.input}
-                            style={{ width: "100%", paddingRight: "3rem" }}
-                            placeholder="Enter current passcode"
-                            value={oldPasscode}
-                            onChange={(e) => setOldPasscode(e.target.value)}
+                            value={work.title || ""}
+                            onChange={(e) => updateWork(index, "title", e.target.value)}
                           />
-                          <button
-                            type="button"
-                            className={styles.toggleVisibilityBtn}
-                            onClick={() => setShowOldPasscode(!showOldPasscode)}
-                            aria-label="Toggle current passcode visibility"
-                          >
-                            {showOldPasscode ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+                        </div>
+                        <div className={styles.formGroup}>
+                          <label className={styles.label}>Category</label>
+                          <input
+                            type="text"
+                            className={styles.input}
+                            value={work.category || ""}
+                            onChange={(e) => updateWork(index, "category", e.target.value)}
+                          />
+                        </div>
+                        <div className={`${styles.logoUploadGroup} ${styles.formGroupFull}`}>
+                          <label className={styles.label}>Project Cover Image</label>
+                          <div className={styles.logoUploadContainer}>
+                            {work.image ? (
+                              <div className={styles.logoPreviewWrapper} style={{ width: "160px", height: "90px" }}>
+                                <img
+                                  src={work.image}
+                                  alt={work.title || "Project Image"}
+                                  className={styles.logoPreview}
+                                />
+                              </div>
                             ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                              <div className={styles.logoPlaceholder} style={{ width: "160px", height: "90px" }}>
+                                No Image Uploaded
+                              </div>
                             )}
-                          </button>
+                            <label className={styles.uploadLabel}>
+                              {work.image ? "Change Image" : "Upload Image"}
+                              <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={(e) => handleImageUpload(e, (url) => updateWork(index, "image", url))}
+                              />
+                            </label>
+                          </div>
                         </div>
                       </div>
+                    </div>
+                  ))}
+                </div>
 
-                      <div className={styles.formGroup}>
-                        <label className={styles.label}>New Passcode</label>
-                        <div className={styles.passcodeFieldWrapper} style={{ marginBottom: 0 }}>
-                          <input
-                            type={showNewPasscode ? "text" : "password"}
-                            className={styles.input}
-                            style={{ width: "100%", paddingRight: "3rem" }}
-                            placeholder="Enter new passcode"
-                            value={newPasscode}
-                            onChange={(e) => setNewPasscode(e.target.value)}
-                          />
-                          <button
-                            type="button"
-                            className={styles.toggleVisibilityBtn}
-                            onClick={() => setShowNewPasscode(!showNewPasscode)}
-                            aria-label="Toggle new passcode visibility"
-                          >
-                            {showNewPasscode ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className={styles.formGroup}>
-                        <label className={styles.label}>Confirm New Passcode</label>
-                        <div className={styles.passcodeFieldWrapper} style={{ marginBottom: 0 }}>
-                          <input
-                            type={showConfirmPasscode ? "text" : "password"}
-                            className={styles.input}
-                            style={{ width: "100%", paddingRight: "3rem" }}
-                            placeholder="Confirm new passcode"
-                            value={confirmPasscode}
-                            onChange={(e) => setConfirmPasscode(e.target.value)}
-                          />
-                          <button
-                            type="button"
-                            className={styles.toggleVisibilityBtn}
-                            onClick={() => setShowConfirmPasscode(!showConfirmPasscode)}
-                            aria-label="Toggle confirm passcode visibility"
-                          >
-                            {showConfirmPasscode ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                      
-                      <div className={styles.formGroup} style={{ justifyContent: "flex-end", paddingTop: "1.7rem" }}>
+                <div className={`${styles.formGroup} ${styles.formGroupFull}`} style={{ borderTop: "1px solid var(--border-color-light)", paddingTop: "2.5rem", marginTop: "2.5rem" }}>
+                  <h4 className={styles.panelTitle} style={{ fontSize: "1.1rem", borderBottom: "none", marginBottom: "0.25rem", paddingBottom: 0 }}>Reset Admin Passcode</h4>
+                  <p style={{ color: "var(--text-grey)", fontSize: "0.85rem", marginBottom: "1.5rem" }}>
+                    To update your security passcode, enter your current passcode and confirm the new one below.
+                  </p>
+                  <div className={styles.formGrid}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.label}>Current Passcode</label>
+                      <div className={styles.passcodeFieldWrapper} style={{ marginBottom: 0 }}>
+                        <input
+                          type={showOldPasscode ? "text" : "password"}
+                          className={styles.input}
+                          style={{ width: "100%", paddingRight: "3rem" }}
+                          placeholder="Enter current passcode"
+                          value={oldPasscode}
+                          onChange={(e) => setOldPasscode(e.target.value)}
+                        />
                         <button
                           type="button"
-                          className={styles.saveBtn}
-                          style={{ background: "transparent", border: "1px solid var(--accent-gold)", color: "var(--accent-gold)", padding: "0.8rem 1.8rem" }}
-                          onClick={handleResetPasscodeSubmit}
-                          disabled={isLoading}
+                          className={styles.toggleVisibilityBtn}
+                          onClick={() => setShowOldPasscode(!showOldPasscode)}
+                          aria-label="Toggle current passcode visibility"
                         >
-                          {isLoading ? "Updating..." : "Update Passcode"}
+                          {showOldPasscode ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+                          ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                          )}
                         </button>
                       </div>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label className={styles.label}>New Passcode</label>
+                      <div className={styles.passcodeFieldWrapper} style={{ marginBottom: 0 }}>
+                        <input
+                          type={showNewPasscode ? "text" : "password"}
+                          className={styles.input}
+                          style={{ width: "100%", paddingRight: "3rem" }}
+                          placeholder="Enter new passcode"
+                          value={newPasscode}
+                          onChange={(e) => setNewPasscode(e.target.value)}
+                        />
+                        <button
+                          type="button"
+                          className={styles.toggleVisibilityBtn}
+                          onClick={() => setShowNewPasscode(!showNewPasscode)}
+                          aria-label="Toggle new passcode visibility"
+                        >
+                          {showNewPasscode ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+                          ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                      <label className={styles.label}>Confirm New Passcode</label>
+                      <div className={styles.passcodeFieldWrapper} style={{ marginBottom: 0 }}>
+                        <input
+                          type={showConfirmPasscode ? "text" : "password"}
+                          className={styles.input}
+                          style={{ width: "100%", paddingRight: "3rem" }}
+                          placeholder="Confirm new passcode"
+                          value={confirmPasscode}
+                          onChange={(e) => setConfirmPasscode(e.target.value)}
+                        />
+                        <button
+                          type="button"
+                          className={styles.toggleVisibilityBtn}
+                          onClick={() => setShowConfirmPasscode(!showConfirmPasscode)}
+                          aria-label="Toggle confirm passcode visibility"
+                        >
+                          {showConfirmPasscode ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+                          ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className={styles.formGroup} style={{ justifyContent: "flex-end", paddingTop: "1.7rem" }}>
+                      <button
+                        type="button"
+                        className={styles.saveBtn}
+                        style={{ background: "transparent", border: "1px solid var(--accent-gold)", color: "var(--accent-gold)", padding: "0.8rem 1.8rem" }}
+                        onClick={handleResetPasscodeSubmit}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? "Updating..." : "Update Passcode"}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -714,18 +724,24 @@ export default function AdminDashboard() {
                             onChange={(e) => updateClient(index, "name", e.target.value)}
                           />
                         </div>
-                        <div className={styles.formGroup}>
-                          <label className={styles.label}>Logo File Path</label>
-                          <div style={{ display: "flex", gap: "0.5rem" }}>
-                            <input
-                              type="text"
-                              className={styles.input}
-                              style={{ flex: 1 }}
-                              value={client.logo}
-                              onChange={(e) => updateClient(index, "logo", e.target.value)}
-                            />
+                        <div className={styles.logoUploadGroup}>
+                          <label className={styles.label}>Client Logo Image</label>
+                          <div className={styles.logoUploadContainer}>
+                            {client.logo ? (
+                              <div className={styles.logoPreviewWrapper}>
+                                <img
+                                  src={client.logo}
+                                  alt={client.name || "Client Logo"}
+                                  className={styles.logoPreview}
+                                />
+                              </div>
+                            ) : (
+                              <div className={styles.logoPlaceholder}>
+                                No Logo Uploaded
+                              </div>
+                            )}
                             <label className={styles.uploadLabel}>
-                              Upload
+                              {client.logo ? "Change Image" : "Upload Image"}
                               <input
                                 type="file"
                                 accept="image/*"

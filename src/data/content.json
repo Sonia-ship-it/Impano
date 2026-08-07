@@ -9,6 +9,28 @@
     "playText": "WATCH SHOWREEL",
     "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
   },
+  "works": [
+    {
+      "title": "The Echo of Hills",
+      "category": "Narrative Film",
+      "image": "/images/echo_of_hills.png"
+    },
+    {
+      "title": "Impano Entertainment",
+      "category": "Studio Showcase",
+      "image": "/images/grading_console.png"
+    },
+    {
+      "title": "Commercials",
+      "category": "Crafted",
+      "image": "/images/about_story.png"
+    },
+    {
+      "title": "VFX Composites",
+      "category": "Animation",
+      "image": "/images/hero_bg.png"
+    }
+  ],
   "services": [
     {
       "num": "01",
