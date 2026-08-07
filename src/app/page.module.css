@@ -206,13 +206,13 @@
 .orbitContainer {
   position: relative;
   width: 100%;
-  height: 750px;
+  height: 480px;
   display: flex;
   align-items: center;
   justify-content: center;
   perspective: 1200px;
   transform-style: preserve-3d;
-  margin: 3rem auto 4rem;
+  margin: 1.5rem auto 2.5rem;
   overflow: visible;
 }
 
@@ -354,17 +354,17 @@
 
 @keyframes orbitAnimation {
   from {
-    transform: rotateX(-15deg) rotateY(var(--start-angle)) translateZ(var(--orbit-radius)) rotateY(calc(-1 * var(--start-angle))) rotateX(15deg);
+    transform: rotateX(-22deg) rotateY(var(--start-angle)) translateZ(var(--orbit-radius)) rotateY(calc(-1 * var(--start-angle))) rotateX(22deg);
   }
   to {
-    transform: rotateX(-15deg) rotateY(calc(var(--start-angle) + 360deg)) translateZ(var(--orbit-radius)) rotateY(calc(-1 * (var(--start-angle) + 360deg))) rotateX(15deg);
+    transform: rotateX(-22deg) rotateY(calc(var(--start-angle) + 360deg)) translateZ(var(--orbit-radius)) rotateY(calc(-1 * (var(--start-angle) + 360deg))) rotateX(22deg);
   }
 }
 
 @media (max-width: 768px) {
   .orbitContainer {
-    height: 420px;
-    margin: 2rem auto;
+    height: 320px;
+    margin: 1rem auto;
   }
   .orbitCard {
     width: 130px;
@@ -385,10 +385,10 @@
   }
   @keyframes orbitAnimation {
     from {
-      transform: rotateX(-12deg) rotateY(var(--start-angle)) translateZ(var(--orbit-radius)) rotateY(calc(-1 * var(--start-angle))) rotateX(12deg);
+      transform: rotateX(-18deg) rotateY(var(--start-angle)) translateZ(var(--orbit-radius)) rotateY(calc(-1 * var(--start-angle))) rotateX(18deg);
     }
     to {
-      transform: rotateX(-12deg) rotateY(calc(var(--start-angle) + 360deg)) translateZ(var(--orbit-radius)) rotateY(calc(-1 * (var(--start-angle) + 360deg))) rotateX(12deg);
+      transform: rotateX(-18deg) rotateY(calc(var(--start-angle) + 360deg)) translateZ(var(--orbit-radius)) rotateY(calc(-1 * (var(--start-angle) + 360deg))) rotateX(18deg);
     }
   }
 }
