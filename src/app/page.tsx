@@ -183,29 +183,9 @@ export default function Home() {
 
       {/* Clients Section */}
       <section className={styles.clients}>
-        <div className={`${styles.clientsGrid} container`}>
-          <div className={styles.clientsContent}>
-            <div className={styles.clientsHeader}>
-              <span className="section-tag">Our Clients</span>
-              <h2 className="section-title">
-                Trusted by <span>Industry Leaders.</span>
-              </h2>
-            </div>
-            <p className={styles.clientsText}>
-              We collaborate with forward-thinking brands, national agencies, and
-              co-production partners to push the boundaries of cinematic storytelling.
-              Each partnership is built on precision, technical execution, and artistic integrity.
-            </p>
-            <div className={styles.statsRow}>
-              <div className={styles.statCard}>
-                <span className={styles.statNum}>50+</span>
-                <span className={styles.statLabel}>Global Partners</span>
-              </div>
-              <div className={styles.statCard}>
-                <span className={styles.statNum}>100%</span>
-                <span className={styles.statLabel}>Cinematic Rigor</span>
-              </div>
-            </div>
+        <div className="container">
+          <div className={styles.clientsSectionHeader}>
+            <span className="section-tag">Our Clients</span>
           </div>
 
           <div className={styles.clientsListGrid}>
