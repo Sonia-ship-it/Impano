@@ -14,8 +14,16 @@ export const metadata = {
 
 async function getTeamData() {
   try {
-    const dataFilePath = path.join(process.cwd(), "src/data/content.json");
-    const fileContent = await fs.readFile(dataFilePath, "utf8");
+    const tmpFilePath = "/tmp/content.json";
+    const originalFilePath = path.join(process.cwd(), "src/data/content.json");
+    let filePath = originalFilePath;
+    try {
+      await fs.access(tmpFilePath);
+      filePath = tmpFilePath;
+    } catch {
+      filePath = originalFilePath;
+    }
+    const fileContent = await fs.readFile(filePath, "utf8");
     const data = JSON.parse(fileContent);
     return data.team;
   } catch (error) {
