@@ -240,7 +240,10 @@ export default function AdminDashboard() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const inputTarget = e.target;
     setIsLoading(true);
+    showToast("Uploading image to Cloudinary...", "info");
+
     const formData = new FormData();
     formData.append("file", file);
 
@@ -250,17 +253,24 @@ export default function AdminDashboard() {
         body: formData,
       });
 
-      const data = await res.json();
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error(`Upload server error (Status ${res.status})`);
+      }
+
       if (res.ok && data.url) {
         onUploadSuccess(data.url);
-        showToast("Image uploaded successfully!", "success");
+        showToast("Image uploaded to Cloudinary successfully!", "success");
       } else {
-        showToast(data.error || "Failed to upload image.", "error");
+        showToast(data.error || `Upload failed (Status ${res.status})`, "error");
       }
-    } catch (err) {
-      showToast("Failed to upload image. Server connection error.", "error");
+    } catch (err: any) {
+      showToast(err.message || "Failed to upload image. Please try again.", "error");
     } finally {
       setIsLoading(false);
+      if (inputTarget) inputTarget.value = "";
     }
   };
 
@@ -528,18 +538,27 @@ export default function AdminDashboard() {
                               </div>
                             ) : (
                               <div className={styles.logoPlaceholder} style={{ width: "160px", height: "90px" }}>
-                                No Image Uploaded
+                                No Image
                               </div>
                             )}
-                            <label className={styles.uploadLabel}>
-                              {work.image ? "Change Image" : "Upload Image"}
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
                               <input
-                                type="file"
-                                accept="image/*"
-                                style={{ display: "none" }}
-                                onChange={(e) => handleImageUpload(e, (url) => updateWork(index, "image", url))}
+                                type="text"
+                                className={styles.input}
+                                placeholder="Image URL or upload file..."
+                                value={work.image || ""}
+                                onChange={(e) => updateWork(index, "image", e.target.value)}
                               />
-                            </label>
+                              <label className={styles.uploadLabel}>
+                                {work.image ? "Change Image File" : "Upload Image File"}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  style={{ display: "none" }}
+                                  onChange={(e) => handleImageUpload(e, (url) => updateWork(index, "image", url))}
+                                />
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -666,25 +685,40 @@ export default function AdminDashboard() {
                             onChange={(e) => updateService(index, "name", e.target.value)}
                           />
                         </div>
-                        <div className={styles.formGroup}>
-                          <label className={styles.label}>Cover Image Path</label>
-                          <div style={{ display: "flex", gap: "0.5rem" }}>
-                            <input
-                              type="text"
-                              className={styles.input}
-                              style={{ flex: 1 }}
-                              value={service.image}
-                              onChange={(e) => updateService(index, "image", e.target.value)}
-                            />
-                            <label className={styles.uploadLabel}>
-                              Upload
+                        <div className={`${styles.logoUploadGroup} ${styles.formGroupFull}`}>
+                          <label className={styles.label}>Service Cover Image</label>
+                          <div className={styles.logoUploadContainer}>
+                            {service.image ? (
+                              <div className={styles.logoPreviewWrapper} style={{ width: "160px", height: "90px" }}>
+                                <img
+                                  src={service.image}
+                                  alt={service.name || "Service Image"}
+                                  className={styles.logoPreview}
+                                />
+                              </div>
+                            ) : (
+                              <div className={styles.logoPlaceholder} style={{ width: "160px", height: "90px" }}>
+                                No Image
+                              </div>
+                            )}
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
                               <input
-                                type="file"
-                                accept="image/*"
-                                style={{ display: "none" }}
-                                onChange={(e) => handleImageUpload(e, (url) => updateService(index, "image", url))}
+                                type="text"
+                                className={styles.input}
+                                placeholder="Image URL or upload file..."
+                                value={service.image || ""}
+                                onChange={(e) => updateService(index, "image", e.target.value)}
                               />
-                            </label>
+                              <label className={styles.uploadLabel}>
+                                {service.image ? "Change Image File" : "Upload Image File"}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  style={{ display: "none" }}
+                                  onChange={(e) => handleImageUpload(e, (url) => updateService(index, "image", url))}
+                                />
+                              </label>
+                            </div>
                           </div>
                         </div>
                         <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
@@ -737,18 +771,27 @@ export default function AdminDashboard() {
                               </div>
                             ) : (
                               <div className={styles.logoPlaceholder}>
-                                No Logo Uploaded
+                                No Logo
                               </div>
                             )}
-                            <label className={styles.uploadLabel}>
-                              {client.logo ? "Change Image" : "Upload Image"}
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
                               <input
-                                type="file"
-                                accept="image/*"
-                                style={{ display: "none" }}
-                                onChange={(e) => handleImageUpload(e, (url) => updateClient(index, "logo", url))}
+                                type="text"
+                                className={styles.input}
+                                placeholder="Logo URL or upload file..."
+                                value={client.logo || ""}
+                                onChange={(e) => updateClient(index, "logo", e.target.value)}
                               />
-                            </label>
+                              <label className={styles.uploadLabel}>
+                                {client.logo ? "Change Logo File" : "Upload Logo File"}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  style={{ display: "none" }}
+                                  onChange={(e) => handleImageUpload(e, (url) => updateClient(index, "logo", url))}
+                                />
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -794,28 +837,43 @@ export default function AdminDashboard() {
                             onChange={(e) => updateTeam(index, "role", e.target.value)}
                           />
                         </div>
-                        <div className={styles.formGroup}>
-                          <label className={styles.label}>Portrait Image Path</label>
-                          <div style={{ display: "flex", gap: "0.5rem" }}>
-                            <input
-                              type="text"
-                              className={styles.input}
-                              style={{ flex: 1 }}
-                              value={member.image}
-                              onChange={(e) => updateTeam(index, "image", e.target.value)}
-                            />
-                            <label className={styles.uploadLabel}>
-                              Upload
+                        <div className={`${styles.logoUploadGroup} ${styles.formGroupFull}`}>
+                          <label className={styles.label}>Team Member Portrait</label>
+                          <div className={styles.logoUploadContainer}>
+                            {member.image ? (
+                              <div className={styles.logoPreviewWrapper} style={{ width: "90px", height: "110px" }}>
+                                <img
+                                  src={member.image}
+                                  alt={member.name || "Team Portrait"}
+                                  className={styles.logoPreview}
+                                  style={{ objectFit: "cover", width: "100%", height: "100%" }}
+                                />
+                              </div>
+                            ) : (
+                              <div className={styles.logoPlaceholder} style={{ width: "90px", height: "110px" }}>
+                                No Portrait
+                              </div>
+                            )}
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
                               <input
-                                type="file"
-                                accept="image/*"
-                                style={{ display: "none" }}
-                                onChange={(e) => handleImageUpload(e, (url) => updateTeam(index, "image", url))}
+                                type="text"
+                                className={styles.input}
+                                placeholder="Portrait URL or upload file..."
+                                value={member.image || ""}
+                                onChange={(e) => updateTeam(index, "image", e.target.value)}
                               />
-                            </label>
+                              <label className={styles.uploadLabel}>
+                                {member.image ? "Change Portrait File" : "Upload Portrait File"}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  style={{ display: "none" }}
+                                  onChange={(e) => handleImageUpload(e, (url) => updateTeam(index, "image", url))}
+                                />
+                              </label>
+                            </div>
                           </div>
                         </div>
-                        <div className={styles.formGroup} style={{ visibility: "hidden" }} />
                         <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
                           <label className={styles.label}>Bio Biography</label>
                           <textarea
