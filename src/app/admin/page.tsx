@@ -242,32 +242,58 @@ export default function AdminDashboard() {
 
     const inputTarget = e.target;
     setIsLoading(true);
-    showToast("Uploading image to Cloudinary...", "info");
+    showToast("Uploading image directly to Cloudinary...", "info");
 
-    const formData = new FormData();
-    formData.append("file", file);
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dztttzycr";
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "dztttzycr";
 
     try {
-      const res = await fetch("/api/upload", {
+      // 1. Direct High-Speed CDN Upload to Cloudinary (bypasses Next.js 4MB size limits)
+      const directFormData = new FormData();
+      directFormData.append("file", file);
+      directFormData.append("upload_preset", uploadPreset);
+
+      const cloudinaryRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: "POST",
+          body: directFormData,
+        }
+      );
+
+      if (cloudinaryRes.ok) {
+        const data = await cloudinaryRes.json();
+        if (data.secure_url) {
+          onUploadSuccess(data.secure_url);
+          showToast("Image uploaded to Cloudinary successfully!", "success");
+          return;
+        }
+      }
+
+      // 2. Fallback to /api/upload Route Handler if direct upload is blocked by network/CORS
+      const fallbackFormData = new FormData();
+      fallbackFormData.append("file", file);
+
+      const apiRes = await fetch("/api/upload", {
         method: "POST",
-        body: formData,
+        body: fallbackFormData,
       });
 
-      let data: any = {};
+      let apiData: any = {};
       try {
-        data = await res.json();
+        apiData = await apiRes.json();
       } catch {
-        throw new Error(`Upload server error (Status ${res.status})`);
+        throw new Error(`Server payload limit exceeded (Status ${apiRes.status})`);
       }
 
-      if (res.ok && data.url) {
-        onUploadSuccess(data.url);
-        showToast("Image uploaded to Cloudinary successfully!", "success");
+      if (apiRes.ok && apiData.url) {
+        onUploadSuccess(apiData.url);
+        showToast("Image uploaded successfully!", "success");
       } else {
-        showToast(data.error || `Upload failed (Status ${res.status})`, "error");
+        showToast(apiData.error || `Upload error (Status ${apiRes.status})`, "error");
       }
     } catch (err: any) {
-      showToast(err.message || "Failed to upload image. Please try again.", "error");
+      showToast(err.message || "Upload error. Please select a slightly smaller image file.", "error");
     } finally {
       setIsLoading(false);
       if (inputTarget) inputTarget.value = "";
