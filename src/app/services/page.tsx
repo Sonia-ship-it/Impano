@@ -1,75 +1,49 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./services.module.css";
 import GeometricPattern from "../../components/GeometricPattern";
-import fs from "fs/promises";
-import path from "path";
 
-export const dynamic = "force-dynamic";
-
-export const metadata = {
-  title: "Services | Impano Entertainment",
-  description: "Explore our production and post-production solutions, from 8K RAW acquisition to high-end color grading and immersive spatial sound design.",
-};
-
-async function getServicesData() {
-  try {
-    const tmpFilePath = "/tmp/content.json";
-    const originalFilePath = path.join(process.cwd(), "src/data/content.json");
-    let filePath = originalFilePath;
-    try {
-      await fs.access(tmpFilePath);
-      filePath = tmpFilePath;
-    } catch {
-      filePath = originalFilePath;
-    }
-    const fileContent = await fs.readFile(filePath, "utf8");
-    const data = JSON.parse(fileContent);
-    return data.services || [];
-  } catch (error) {
-    return [
-      {
-        num: "01",
-        name: "Production Services",
-        desc: "From concept to capture, we manage the intricate choreography of cameras, lighting, and sound.",
-        image: "/images/lens_close_up.png",
-      },
-      {
-        num: "02",
-        name: "Post-Production Services",
-        desc: "Offline / Online Edit, Color Correction, and Sound Design services optimizing raw captures into visual legacies.",
-        image: "/images/grading_console.png",
-      },
-      {
-        num: "03",
-        name: "Creative Development & Strategy",
-        desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience to transform information and ideas into authentic work.",
-        image: "/images/about_story.png",
-      },
-    ];
-  }
-}
-
-export default async function ServicesPage() {
-  const services = await getServicesData();
-
-  const service1 = services[0] || {
+const defaultServices = [
+  {
+    num: "01",
     name: "Production Services",
     desc: "From concept to capture, we manage the intricate choreography of cameras, lighting, and sound. Our creative crews combine cutting-edge technology and professionalism to deliver high-quality, world-class content tailored to your goals.",
     image: "/images/lens_close_up.png",
-  };
-
-  const service2 = services[1] || {
+  },
+  {
+    num: "02",
     name: "Post-Production Services",
     desc: "We shape raw footage into cinematic masterworks. Our refined post-production suite is optimized to deliver exceptional results that serve the emotional depth of the narrative.",
     image: "/images/grading_console.png",
-  };
-
-  const service3 = services[2] || {
-    name: "Creative Development, Ideation & Strategy",
+  },
+  {
+    num: "03",
+    name: "Creative Development & Strategy",
     desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience. This allows us to transform raw information and abstract ideas into authentic, high-impact creative work.",
     image: "/images/about_story.png",
-  };
+  },
+];
+
+export default function ServicesPage() {
+  const [services, setServices] = useState(defaultServices);
+
+  useEffect(() => {
+    fetch("/api/content")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.services && Array.isArray(data.services) && data.services.length > 0) {
+          setServices(data.services);
+        }
+      })
+      .catch((err) => console.error("Failed to load dynamic content for Services page", err));
+  }, []);
+
+  const service1 = services[0] || defaultServices[0];
+  const service2 = services[1] || defaultServices[1];
+  const service3 = services[2] || defaultServices[2];
 
   const stats = [
     { num: "500+", label: "Global Projects" },
@@ -115,7 +89,7 @@ export default async function ServicesPage() {
               <h2 className={styles.sectionTitle}>{service1.name}</h2>
             </div>
             <p className={styles.description}>
-              {service1.desc || "From concept to capture, we manage the intricate choreography of cameras, lighting, and sound."}
+              {service1.desc || defaultServices[0].desc}
             </p>
 
             <div className={styles.tagsGrid}>
@@ -138,7 +112,7 @@ export default async function ServicesPage() {
 
           <div className={styles.imageCol}>
             <Image
-              src={service1.image || "/images/lens_close_up.png"}
+              src={service1.image || defaultServices[0].image}
               alt={service1.name}
               className={styles.sectionImg}
               fill
@@ -159,7 +133,7 @@ export default async function ServicesPage() {
         <div className={`${styles.sectionGridReverse} container`}>
           <div className={styles.imageCol}>
             <Image
-              src={service2.image || "/images/grading_console.png"}
+              src={service2.image || defaultServices[1].image}
               alt={service2.name}
               className={styles.sectionImg}
               fill
@@ -173,7 +147,7 @@ export default async function ServicesPage() {
               <h2 className={styles.sectionTitle}>{service2.name}</h2>
             </div>
             <p className={styles.description}>
-              {service2.desc || "We shape raw footage into cinematic masterworks."}
+              {service2.desc || defaultServices[1].desc}
             </p>
 
             <div className={styles.featuresBlock}>
@@ -239,7 +213,7 @@ export default async function ServicesPage() {
               <h2 className={styles.sectionTitle}>{service3.name}</h2>
             </div>
             <p className={styles.description}>
-              {service3.desc || "Our reputable approach to design thinking combines creative, critical thinking, and experience."}
+              {service3.desc || defaultServices[2].desc}
             </p>
 
             <Link href="/contact" className="btn-primary" style={{ alignSelf: "flex-start", marginTop: "1rem" }}>
@@ -249,7 +223,7 @@ export default async function ServicesPage() {
 
           <div className={styles.imageCol}>
             <Image
-              src={service3.image || "/images/about_story.png"}
+              src={service3.image || defaultServices[2].image}
               alt={service3.name}
               className={styles.sectionImg}
               fill
