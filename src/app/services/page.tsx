@@ -2,13 +2,75 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "./services.module.css";
 import GeometricPattern from "../../components/GeometricPattern";
+import fs from "fs/promises";
+import path from "path";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Services | Impano Entertainment",
   description: "Explore our production and post-production solutions, from 8K RAW acquisition to high-end color grading and immersive spatial sound design.",
 };
 
-export default function ServicesPage() {
+async function getServicesData() {
+  try {
+    const tmpFilePath = "/tmp/content.json";
+    const originalFilePath = path.join(process.cwd(), "src/data/content.json");
+    let filePath = originalFilePath;
+    try {
+      await fs.access(tmpFilePath);
+      filePath = tmpFilePath;
+    } catch {
+      filePath = originalFilePath;
+    }
+    const fileContent = await fs.readFile(filePath, "utf8");
+    const data = JSON.parse(fileContent);
+    return data.services || [];
+  } catch (error) {
+    return [
+      {
+        num: "01",
+        name: "Production Services",
+        desc: "From concept to capture, we manage the intricate choreography of cameras, lighting, and sound.",
+        image: "/images/lens_close_up.png",
+      },
+      {
+        num: "02",
+        name: "Post-Production Services",
+        desc: "Offline / Online Edit, Color Correction, and Sound Design services optimizing raw captures into visual legacies.",
+        image: "/images/grading_console.png",
+      },
+      {
+        num: "03",
+        name: "Creative Development & Strategy",
+        desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience to transform information and ideas into authentic work.",
+        image: "/images/about_story.png",
+      },
+    ];
+  }
+}
+
+export default async function ServicesPage() {
+  const services = await getServicesData();
+
+  const service1 = services[0] || {
+    name: "Production Services",
+    desc: "From concept to capture, we manage the intricate choreography of cameras, lighting, and sound. Our creative crews combine cutting-edge technology and professionalism to deliver high-quality, world-class content tailored to your goals.",
+    image: "/images/lens_close_up.png",
+  };
+
+  const service2 = services[1] || {
+    name: "Post-Production Services",
+    desc: "We shape raw footage into cinematic masterworks. Our refined post-production suite is optimized to deliver exceptional results that serve the emotional depth of the narrative.",
+    image: "/images/grading_console.png",
+  };
+
+  const service3 = services[2] || {
+    name: "Creative Development, Ideation & Strategy",
+    desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience. This allows us to transform raw information and abstract ideas into authentic, high-impact creative work.",
+    image: "/images/about_story.png",
+  };
+
   const stats = [
     { num: "500+", label: "Global Projects" },
     { num: "12K", label: "Max Resolution" },
@@ -50,12 +112,10 @@ export default function ServicesPage() {
           <div className={styles.contentCol}>
             <div className={styles.sectionHeader}>
               <span className={styles.sectionNum}>01 —— Execution</span>
-              <h2 className={styles.sectionTitle}>Production Services</h2>
+              <h2 className={styles.sectionTitle}>{service1.name}</h2>
             </div>
             <p className={styles.description}>
-              From concept to capture, we manage the intricate choreography of cameras, lighting, and sound.
-              Our creative crews combine cutting-edge technology and professionalism to deliver high-quality,
-              world-class content tailored to your goals.
+              {service1.desc || "From concept to capture, we manage the intricate choreography of cameras, lighting, and sound."}
             </p>
 
             <div className={styles.tagsGrid}>
@@ -78,11 +138,12 @@ export default function ServicesPage() {
 
           <div className={styles.imageCol}>
             <Image
-              src="/images/lens_close_up.png"
-              alt="Cinema Camera Lens"
+              src={service1.image || "/images/lens_close_up.png"}
+              alt={service1.name}
               className={styles.sectionImg}
               fill
               sizes="(max-width: 992px) 100vw, 50vw"
+              priority
             />
             <div className={styles.badgesOverlay}>
               <span className={styles.badge}>RED V-RAPTOR</span>
@@ -98,8 +159,8 @@ export default function ServicesPage() {
         <div className={`${styles.sectionGridReverse} container`}>
           <div className={styles.imageCol}>
             <Image
-              src="/images/grading_console.png"
-              alt="Color grading console"
+              src={service2.image || "/images/grading_console.png"}
+              alt={service2.name}
               className={styles.sectionImg}
               fill
               sizes="(max-width: 992px) 100vw, 50vw"
@@ -109,11 +170,10 @@ export default function ServicesPage() {
           <div className={styles.contentCol}>
             <div className={styles.sectionHeader}>
               <span className={styles.sectionNum}>02 —— Refinement</span>
-              <h2 className={styles.sectionTitle}>Post-Production Services</h2>
+              <h2 className={styles.sectionTitle}>{service2.name}</h2>
             </div>
             <p className={styles.description}>
-              We shape raw footage into cinematic masterworks. Our refined post-production suite is
-              optimized to deliver exceptional results that serve the emotional depth of the narrative.
+              {service2.desc || "We shape raw footage into cinematic masterworks."}
             </p>
 
             <div className={styles.featuresBlock}>
@@ -176,11 +236,10 @@ export default function ServicesPage() {
           <div className={styles.contentCol}>
             <div className={styles.sectionHeader}>
               <span className={styles.sectionNum}>03 —— Conception</span>
-              <h2 className={styles.sectionTitle}>Creative Development, Ideation & Strategy</h2>
+              <h2 className={styles.sectionTitle}>{service3.name}</h2>
             </div>
             <p className={styles.description}>
-              Our reputable approach to design thinking combines creative, critical thinking, and experience.
-              This allows us to transform raw information and abstract ideas into authentic, high-impact creative work.
+              {service3.desc || "Our reputable approach to design thinking combines creative, critical thinking, and experience."}
             </p>
 
             <Link href="/contact" className="btn-primary" style={{ alignSelf: "flex-start", marginTop: "1rem" }}>
@@ -190,8 +249,8 @@ export default function ServicesPage() {
 
           <div className={styles.imageCol}>
             <Image
-              src="/images/about_story.png"
-              alt="Creative ideation board and details"
+              src={service3.image || "/images/about_story.png"}
+              alt={service3.name}
               className={styles.sectionImg}
               fill
               sizes="(max-width: 992px) 100vw, 50vw"
