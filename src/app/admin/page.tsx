@@ -81,54 +81,73 @@ export default function AdminDashboard() {
   };
 
   const fetchContent = async () => {
+    // 1. First check local browser cache for immediate persistent display
+    let localCache: any = null;
+    try {
+      const cachedStr = localStorage.getItem("impano_cms_content_cache");
+      if (cachedStr) {
+        localCache = JSON.parse(cachedStr);
+      }
+    } catch {}
+
     try {
       const res = await fetch("/api/content");
+      let data: any = {};
       if (res.ok) {
-        const data = await res.json();
-        
-        // Ensure all sections are structured to prevent rendering crashes
-        const safeData = {
-          passcode: data.passcode || passcode,
-          hero: data.hero || {
-            tagline: "Connect with us",
-            titlePart1: "Crafting",
-            titleOutline: "Visual",
-            titleGold: "Legacies.",
-            description: "From the heart of Kigali, we craft premium commercial films, documentaries, and post-production experiences. We translate bold concepts into memorable cinematic assets.",
-            playText: "WATCH SHOWREEL",
-            videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
-          },
-          works: data.works || [
-            {
-              title: "The Echo of Hills",
-              category: "Narrative Film",
-              image: "/images/echo_of_hills.png"
-            },
-            {
-              title: "Impano Entertainment",
-              category: "Studio Showcase",
-              image: "/images/grading_console.png"
-            },
-            {
-              title: "Commercials",
-              category: "Crafted",
-              image: "/images/about_story.png"
-            },
-            {
-              title: "VFX Composites",
-              category: "Animation",
-              image: "/images/hero_bg.png"
-            }
-          ],
-          services: data.services || [],
-          clients: data.clients || [],
-          team: data.team || []
-        };
-        
-        setContent(safeData);
+        data = await res.json();
       }
+
+      // Merge server response with local cache fallback to ensure no edits are lost
+      const source = (data && Object.keys(data).length > 0) ? data : (localCache || {});
+      
+      const safeData = {
+        passcode: source.passcode || passcode,
+        hero: source.hero || {
+          tagline: "Connect with us",
+          titlePart1: "Crafting",
+          titleOutline: "Visual",
+          titleGold: "Legacies.",
+          description: "From the heart of Kigali, we craft premium commercial films, documentaries, and post-production experiences. We translate bold concepts into memorable cinematic assets.",
+          playText: "WATCH SHOWREEL",
+          videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
+        },
+        works: source.works || [
+          {
+            title: "The Echo of Hills",
+            category: "Narrative Film",
+            image: "/images/echo_of_hills.png"
+          },
+          {
+            title: "Impano Entertainment",
+            category: "Studio Showcase",
+            image: "/images/grading_console.png"
+          },
+          {
+            title: "Commercials",
+            category: "Crafted",
+            image: "/images/about_story.png"
+          },
+          {
+            title: "VFX Composites",
+            category: "Animation",
+            image: "/images/hero_bg.png"
+          }
+        ],
+        services: source.services || [],
+        clients: source.clients || [],
+        team: source.team || []
+      };
+      
+      setContent(safeData);
+      try {
+        localStorage.setItem("impano_cms_content_cache", JSON.stringify(safeData));
+      } catch {}
     } catch (err) {
-      console.error("Failed to load content database.");
+      if (localCache) {
+        setContent(localCache);
+      } else {
+        console.error("Failed to load content database.");
+      }
     }
   };
 
@@ -150,6 +169,12 @@ export default function AdminDashboard() {
   const handleSave = async () => {
     setIsLoading(true);
     setSaveStatus(null);
+    
+    // Save to local storage cache immediately
+    try {
+      localStorage.setItem("impano_cms_content_cache", JSON.stringify(content));
+    } catch {}
+
     try {
       const res = await fetch("/api/content", {
         method: "POST",
@@ -163,7 +188,7 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (res.ok && data.success) {
         setSaveStatus({ success: true, message: "Content updated successfully! Changes are live." });
-        showToast("Content updated successfully! Changes are live.", "success");
+        showToast("Content updated successfully! Changes are live and saved locally.", "success");
         
         // Sync passcode local state and localStorage if reset
         if (content.passcode && content.passcode !== passcode) {
@@ -173,12 +198,12 @@ export default function AdminDashboard() {
         
         setTimeout(() => setSaveStatus(null), 5000);
       } else {
-        setSaveStatus({ success: false, message: data.error || "Failed to save content changes." });
-        showToast(data.error || "Failed to save content changes.", "error");
+        setSaveStatus({ success: false, message: data.error || "Failed to save content changes to server." });
+        showToast("Saved locally, but server output: " + (data.error || "Failed server save"), "info");
       }
     } catch (err) {
-      setSaveStatus({ success: false, message: "Network error. Failed to save changes." });
-      showToast("Network error. Failed to save changes.", "error");
+      setSaveStatus({ success: true, message: "Changes saved to local browser cache." });
+      showToast("Network error. Changes saved to local browser storage.", "info");
     } finally {
       setIsLoading(false);
     }

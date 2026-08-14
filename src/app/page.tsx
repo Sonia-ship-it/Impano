@@ -124,6 +124,17 @@ export default function Home() {
   });
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem("impano_cms_content_cache");
+      if (cached) {
+        const data = JSON.parse(cached);
+        if (data.hero) setHero(data.hero);
+        if (data.services) setServices(data.services);
+        if (data.clients) setClients(data.clients);
+        if (data.works) setWorks(data.works);
+      }
+    } catch {}
+
     fetch("/api/content")
       .then((res) => {
         if (!res.ok) throw new Error();

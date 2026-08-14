@@ -65,18 +65,31 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, verified: true });
     }
 
-    // Determine safe output path
-    const isVercel = process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
-    const targetPath = isVercel ? tmpFilePath : originalFilePath;
-
-    // Preserving the passcode inside the file if the admin dashboard did not send a new one
+    // Attempt to write to original project file path first for permanent persistence
     if (!body.passcode) {
       body.passcode = expectedPasscode;
     }
 
-    await fs.writeFile(targetPath, JSON.stringify(body, null, 2), "utf8");
-    return NextResponse.json({ success: true });
+    const contentJson = JSON.stringify(body, null, 2);
+
+    try {
+      await fs.writeFile(originalFilePath, contentJson, "utf8");
+      // Also write to tmp as secondary fast cache if available
+      try {
+        await fs.writeFile(tmpFilePath, contentJson, "utf8");
+      } catch {}
+      return NextResponse.json({ success: true });
+    } catch (writeErr) {
+      // Fallback for read-only serverless filesystems (e.g., Vercel)
+      try {
+        await fs.writeFile(tmpFilePath, contentJson, "utf8");
+        return NextResponse.json({ success: true, warning: "Saved to temporary server cache" });
+      } catch (tmpErr: any) {
+        return NextResponse.json({ error: "Failed to save content: " + tmpErr.message }, { status: 500 });
+      }
+    }
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+

@@ -31,6 +31,16 @@ export default function ServicesPage() {
   const [services, setServices] = useState(defaultServices);
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem("impano_cms_content_cache");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.services && Array.isArray(parsed.services) && parsed.services.length > 0) {
+          setServices(parsed.services);
+        }
+      }
+    } catch {}
+
     fetch("/api/content")
       .then((res) => res.json())
       .then((data) => {
