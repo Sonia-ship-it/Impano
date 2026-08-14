@@ -167,7 +167,8 @@ export default function AdminDashboard() {
   };
 
   const handleSave = async (contentToSave?: any) => {
-    const targetContent = contentToSave || content;
+    const isEvent = contentToSave && typeof contentToSave === "object" && ("nativeEvent" in contentToSave || "preventDefault" in contentToSave || "target" in contentToSave);
+    const targetContent = (!isEvent && contentToSave && typeof contentToSave === "object") ? contentToSave : content;
     if (!targetContent) return;
 
     setIsLoading(true);
@@ -965,7 +966,7 @@ export default function AdminDashboard() {
 
             {/* Save Buttons */}
             <div className={styles.actionRow}>
-              <button className={styles.saveBtn} onClick={handleSave} disabled={isLoading}>
+              <button type="button" className={styles.saveBtn} onClick={() => handleSave()} disabled={isLoading}>
                 {isLoading ? "Saving changes..." : "Save Changes"}
               </button>
             </div>
