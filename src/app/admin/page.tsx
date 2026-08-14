@@ -99,7 +99,64 @@ export default function AdminDashboard() {
 
       // Merge server response with local cache fallback to ensure no edits are lost
       const source = (data && Object.keys(data).length > 0) ? data : (localCache || {});
-      
+
+      const defaultClients = [
+        { name: "Kigali Film Commission", logo: "/images/logo_kfc.png" },
+        { name: "Rwanda Broadcasting Agency", logo: "/images/logo_rba.png" },
+        { name: "Africa Screen Works", logo: "/images/logo_asw.png" },
+        { name: "Legacy Media Group", logo: "/images/logo_lmg.png" },
+        { name: "Vivid Ventures", logo: "/images/logo_vv.png" },
+        { name: "Volcano Creative Hub", logo: "/images/logo_vch.png" }
+      ];
+
+      const defaultServices = [
+        {
+          num: "01",
+          name: "Production Services",
+          desc: "Producing and Directing, Camera Crews, Drone Visuals, Multi Cameras, Live Stream, Professional Interviews, Motion Graphics, 3D animation, Script Writing, StoryBoard.",
+          image: "/images/lens_close_up.png",
+        },
+        {
+          num: "02",
+          name: "Post-Production Services",
+          desc: "Offline / Online Edit, Color Correction, and Sound Design services optimizing raw captures into visual legacies.",
+          image: "/images/grading_console.png",
+        },
+        {
+          num: "03",
+          name: "Creative Development & Strategy",
+          desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience to transform information and ideas into authentic work.",
+          image: "/images/about_story.png",
+        }
+      ];
+
+      const defaultTeam = [
+        {
+          name: "ISHIMWE CHRISPIN",
+          role: "Founder & Drone Pilot",
+          bio: "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
+          image: "/images/chrispin.jpeg",
+        },
+        {
+          name: "UWASE SONIA",
+          role: "Co-Founder, Project Manager",
+          bio: "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
+          image: "/images/sonia.png",
+        },
+        {
+          name: "ISHIMWE FISTON",
+          role: "Editor",
+          bio: "Master of rhythm and pacing, weaving raw cinematic footage into cohesive, powerful stories with precision editing and dynamic audio integration.",
+          image: "/images/Fiston.jpeg",
+        },
+        {
+          name: "MUGISHA ALLY",
+          role: "Assistant Production",
+          bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
+          image: "/images/Ally.png",
+        }
+      ];
+
       const safeData = {
         passcode: source.passcode || passcode,
         hero: source.hero || {
@@ -111,7 +168,7 @@ export default function AdminDashboard() {
           playText: "WATCH SHOWREEL",
           videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
         },
-        works: source.works || [
+        works: (source.works && source.works.length > 0) ? source.works : [
           {
             title: "The Echo of Hills",
             category: "Narrative Film",
@@ -133,9 +190,9 @@ export default function AdminDashboard() {
             image: "/images/hero_bg.png"
           }
         ],
-        services: source.services || [],
-        clients: source.clients || [],
-        team: source.team || []
+        services: (source.services && source.services.length > 0) ? source.services : defaultServices,
+        clients: (source.clients && source.clients.length > 0) ? source.clients : defaultClients,
+        team: (source.team && source.team.length > 0) ? source.team : defaultTeam
       };
       
       setContent(safeData);
