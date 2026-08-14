@@ -166,13 +166,16 @@ export default function AdminDashboard() {
     router.push("/");
   };
 
-  const handleSave = async () => {
+  const handleSave = async (contentToSave?: any) => {
+    const targetContent = contentToSave || content;
+    if (!targetContent) return;
+
     setIsLoading(true);
     setSaveStatus(null);
     
     // Save to local storage cache immediately
     try {
-      localStorage.setItem("impano_cms_content_cache", JSON.stringify(content));
+      localStorage.setItem("impano_cms_content_cache", JSON.stringify(targetContent));
     } catch {}
 
     try {
@@ -182,26 +185,29 @@ export default function AdminDashboard() {
           "Content-Type": "application/json",
           "Authorization": passcode,
         },
-        body: JSON.stringify(content),
+        body: JSON.stringify(targetContent),
       });
 
       const data = await res.json();
       if (res.ok && data.success) {
+        setContent(targetContent);
         setSaveStatus({ success: true, message: "Content updated successfully! Changes are live." });
-        showToast("Content updated successfully! Changes are live and saved locally.", "success");
+        showToast("Content saved permanently!", "success");
         
         // Sync passcode local state and localStorage if reset
-        if (content.passcode && content.passcode !== passcode) {
-          setPasscode(content.passcode);
-          localStorage.setItem("impano_admin_passcode", content.passcode);
+        if (targetContent.passcode && targetContent.passcode !== passcode) {
+          setPasscode(targetContent.passcode);
+          localStorage.setItem("impano_admin_passcode", targetContent.passcode);
         }
         
         setTimeout(() => setSaveStatus(null), 5000);
       } else {
+        setContent(targetContent);
         setSaveStatus({ success: false, message: data.error || "Failed to save content changes to server." });
         showToast("Saved locally, but server output: " + (data.error || "Failed server save"), "info");
       }
     } catch (err) {
+      setContent(targetContent);
       setSaveStatus({ success: true, message: "Changes saved to local browser cache." });
       showToast("Network error. Changes saved to local browser storage.", "info");
     } finally {
@@ -260,7 +266,7 @@ export default function AdminDashboard() {
 
   const handleImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    onUploadSuccess: (url: string) => void
+    getUpdatedContent: (url: string) => any
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -272,8 +278,10 @@ export default function AdminDashboard() {
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dztttzycr";
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "dztttzycr";
 
+    let uploadedUrl = "";
+
     try {
-      // 1. Direct High-Speed CDN Upload to Cloudinary (bypasses Next.js 4MB size limits)
+      // 1. Direct High-Speed CDN Upload to Cloudinary (bypasses Next.js size limits)
       const directFormData = new FormData();
       directFormData.append("file", file);
       directFormData.append("upload_preset", uploadPreset);
@@ -289,33 +297,39 @@ export default function AdminDashboard() {
       if (cloudinaryRes.ok) {
         const data = await cloudinaryRes.json();
         if (data.secure_url) {
-          onUploadSuccess(data.secure_url);
-          showToast("Image uploaded to Cloudinary successfully!", "success");
-          return;
+          uploadedUrl = data.secure_url;
         }
       }
 
       // 2. Fallback to /api/upload Route Handler if direct upload is blocked by network/CORS
-      const fallbackFormData = new FormData();
-      fallbackFormData.append("file", file);
+      if (!uploadedUrl) {
+        const fallbackFormData = new FormData();
+        fallbackFormData.append("file", file);
 
-      const apiRes = await fetch("/api/upload", {
-        method: "POST",
-        body: fallbackFormData,
-      });
+        const apiRes = await fetch("/api/upload", {
+          method: "POST",
+          body: fallbackFormData,
+        });
 
-      let apiData: any = {};
-      try {
-        apiData = await apiRes.json();
-      } catch {
-        throw new Error(`Server payload limit exceeded (Status ${apiRes.status})`);
+        let apiData: any = {};
+        try {
+          apiData = await apiRes.json();
+        } catch {
+          throw new Error(`Server payload limit exceeded (Status ${apiRes.status})`);
+        }
+
+        if (apiRes.ok && apiData.url) {
+          uploadedUrl = apiData.url;
+        } else {
+          showToast(apiData.error || `Upload error (Status ${apiRes.status})`, "error");
+          return;
+        }
       }
 
-      if (apiRes.ok && apiData.url) {
-        onUploadSuccess(apiData.url);
-        showToast("Image uploaded successfully!", "success");
-      } else {
-        showToast(apiData.error || `Upload error (Status ${apiRes.status})`, "error");
+      if (uploadedUrl) {
+        const updatedContent = getUpdatedContent(uploadedUrl);
+        await handleSave(updatedContent);
+        showToast("Image uploaded and permanently saved!", "success");
       }
     } catch (err: any) {
       showToast(err.message || "Upload error. Please select a slightly smaller image file.", "error");
@@ -329,15 +343,17 @@ export default function AdminDashboard() {
   const updateWork = (index: number, key: string, value: string) => {
     const updatedWorks = [...content.works];
     updatedWorks[index] = { ...updatedWorks[index], [key]: value };
-    setContent({ ...content, works: updatedWorks });
+    const newContent = { ...content, works: updatedWorks };
+    setContent(newContent);
+    return newContent;
   };
-
-
 
   const updateClient = (index: number, key: string, value: string) => {
     const updatedClients = [...content.clients];
     updatedClients[index] = { ...updatedClients[index], [key]: value };
-    setContent({ ...content, clients: updatedClients });
+    const newContent = { ...content, clients: updatedClients };
+    setContent(newContent);
+    return newContent;
   };
 
   const addClient = () => {
@@ -355,7 +371,9 @@ export default function AdminDashboard() {
   const updateTeam = (index: number, key: string, value: string) => {
     const updatedTeam = [...content.team];
     updatedTeam[index] = { ...updatedTeam[index], [key]: value };
-    setContent({ ...content, team: updatedTeam });
+    const newContent = { ...content, team: updatedTeam };
+    setContent(newContent);
+    return newContent;
   };
 
   const addTeamMember = () => {
@@ -381,7 +399,9 @@ export default function AdminDashboard() {
   const updateService = (index: number, key: string, value: string) => {
     const updatedServices = [...content.services];
     updatedServices[index] = { ...updatedServices[index], [key]: value };
-    setContent({ ...content, services: updatedServices });
+    const newContent = { ...content, services: updatedServices };
+    setContent(newContent);
+    return newContent;
   };
 
   if (!isAuthenticated) {

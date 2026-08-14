@@ -1,63 +1,61 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./team.module.css";
 import GeometricPattern from "../../components/GeometricPattern";
-import fs from "fs/promises";
-import path from "path";
 
-export const dynamic = "force-dynamic";
+const defaultTeam = [
+  {
+    name: "ISHIMWE CHRISPIN",
+    role: "Founder & Drone Pilot",
+    bio: "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
+    image: "/images/chrispin.jpeg",
+  },
+  {
+    name: "UWASE SONIA",
+    role: "Co-Founder, Project Manager",
+    bio: "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
+    image: "/images/sonia.png",
+  },
+  {
+    name: "ISHIMWE FISTON",
+    role: "Editor",
+    bio: "Master of rhythm and pacing, weaving raw cinematic footage into cohesive, powerful stories with precision editing and dynamic audio integration.",
+    image: "/images/Fiston.jpeg",
+  },
+  {
+    name: "MUGISHA ALLY",
+    role: "Assistant Production",
+    bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
+    image: "/images/Ally.png",
+  },
+];
 
-export const metadata = {
-  title: "Our Team | Impano Entertainment",
-  description: "Meet the visionary directors, cinematographers, colorists, and VFX artists behind Impano Entertainment.",
-};
+export default function TeamPage() {
+  const [teamMembers, setTeamMembers] = useState(defaultTeam);
 
-async function getTeamData() {
-  try {
-    const tmpFilePath = "/tmp/content.json";
-    const originalFilePath = path.join(process.cwd(), "src/data/content.json");
-    let filePath = originalFilePath;
+  useEffect(() => {
     try {
-      await fs.access(tmpFilePath);
-      filePath = tmpFilePath;
-    } catch {
-      filePath = originalFilePath;
-    }
-    const fileContent = await fs.readFile(filePath, "utf8");
-    const data = JSON.parse(fileContent);
-    return data.team;
-  } catch (error) {
-    return [
-      {
-        name: "ISHIMWE CHRISPIN",
-        role: "Founder & Drone Pilot",
-        bio: "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
-        image: "/images/chrispin.jpeg",
-      },
-      {
-        name: "UWASE SONIA",
-        role: "Co-Founder, Project Manager",
-        bio: "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
-        image: "/images/sonia.png",
-      },
-      {
-        name: "ISHIMWE FISTON",
-        role: "Editor",
-        bio: "Master of rhythm and pacing, weaving raw cinematic footage into cohesive, powerful stories with precision editing and dynamic audio integration.",
-        image: "/images/Fiston.jpeg",
-      },
-      {
-        name: "MUGISHA ALLY",
-        role: "Assistant Production",
-        bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
-        image: "/images/Ally.png",
-      },
-    ];
-  }
-}
+      const cached = localStorage.getItem("impano_cms_content_cache");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.team && Array.isArray(parsed.team) && parsed.team.length > 0) {
+          setTeamMembers(parsed.team);
+        }
+      }
+    } catch {}
 
-export default async function TeamPage() {
-  const teamMembers = await getTeamData();
+    fetch("/api/content")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.team && Array.isArray(data.team) && data.team.length > 0) {
+          setTeamMembers(data.team);
+        }
+      })
+      .catch((err) => console.error("Failed to load dynamic team data", err));
+  }, []);
 
   return (
     <div>
@@ -90,7 +88,7 @@ export default async function TeamPage() {
               <div key={index} className={styles.teamCard}>
                 <div className={styles.imageWrapper}>
                   <Image
-                    src={member.image}
+                    src={member.image || "/images/sonia.png"}
                     alt={`${member.name} - ${member.role}`}
                     className={styles.teamImg}
                     fill
@@ -138,3 +136,4 @@ export default async function TeamPage() {
     </div>
   );
 }
+
