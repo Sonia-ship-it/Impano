@@ -11,25 +11,25 @@ const defaultTeam = [
     name: "ISHIMWE CHRISPIN",
     role: "Founder & Drone Pilot",
     bio: "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
-    image: "/images/chrispin.jpeg",
+    image: "",
   },
   {
     name: "UWASE SONIA",
     role: "Co-Founder, Project Manager",
     bio: "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
-    image: "/images/sonia.png",
+    image: "",
   },
   {
     name: "ISHIMWE FISTON",
     role: "Editor",
     bio: "Master of rhythm and pacing, weaving raw cinematic footage into cohesive, powerful stories with precision editing and dynamic audio integration.",
-    image: "/images/Fiston.jpeg",
+    image: "",
   },
   {
     name: "MUGISHA ALLY",
     role: "Assistant Production",
     bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
-    image: "/images/Ally.png",
+    image: "",
   },
 ];
 
@@ -87,14 +87,22 @@ export default function TeamPage() {
             {teamMembers.map((member: any, index: number) => (
               <div key={index} className={styles.teamCard}>
                 <div className={styles.imageWrapper}>
-                  <Image
-                    src={member.image || "/images/sonia.png"}
-                    alt={`${member.name} - ${member.role}`}
-                    className={styles.teamImg}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-                    priority={index < 2}
-                  />
+                  {member.image ? (
+                    <Image
+                      src={member.image}
+                      alt={`${member.name} - ${member.role}`}
+                      className={styles.teamImg}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                      priority={index < 2}
+                    />
+                  ) : (
+                    <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ fontSize: "2rem", fontWeight: 700, color: "#d4af37", opacity: 0.4 }}>
+                        {member.name ? member.name.charAt(0) : "I"}
+                      </span>
+                    </div>
+                  )}
                   <div className={styles.cardGradientOverlay} />
                 </div>
                 <div className={styles.info}>

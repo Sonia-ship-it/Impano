@@ -11,19 +11,19 @@ const defaultServices = [
     num: "01",
     name: "Production Services",
     desc: "From concept to capture, we manage the intricate choreography of cameras, lighting, and sound. Our creative crews combine cutting-edge technology and professionalism to deliver high-quality, world-class content tailored to your goals.",
-    image: "/images/lens_close_up.png",
+    image: "",
   },
   {
     num: "02",
     name: "Post-Production Services",
     desc: "We shape raw footage into cinematic masterworks. Our refined post-production suite is optimized to deliver exceptional results that serve the emotional depth of the narrative.",
-    image: "/images/grading_console.png",
+    image: "",
   },
   {
     num: "03",
     name: "Creative Development & Strategy",
     desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience. This allows us to transform raw information and abstract ideas into authentic, high-impact creative work.",
-    image: "/images/about_story.png",
+    image: "",
   },
 ];
 
@@ -121,14 +121,18 @@ export default function ServicesPage() {
           </div>
 
           <div className={styles.imageCol}>
-            <Image
-              src={service1.image || defaultServices[0].image}
-              alt={service1.name}
-              className={styles.sectionImg}
-              fill
-              sizes="(max-width: 992px) 100vw, 50vw"
-              priority
-            />
+            {service1.image ? (
+              <Image
+                src={service1.image}
+                alt={service1.name}
+                className={styles.sectionImg}
+                fill
+                sizes="(max-width: 992px) 100vw, 50vw"
+                priority
+              />
+            ) : (
+              <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
+            )}
             <div className={styles.badgesOverlay}>
               <span className={styles.badge}>RED V-RAPTOR</span>
               <span className={styles.badge}>ANAMORPHIC GLASS</span>
@@ -142,13 +146,17 @@ export default function ServicesPage() {
       <section className={styles.section} style={{ backgroundColor: "var(--bg-black)" }}>
         <div className={`${styles.sectionGridReverse} container`}>
           <div className={styles.imageCol}>
-            <Image
-              src={service2.image || defaultServices[1].image}
-              alt={service2.name}
-              className={styles.sectionImg}
-              fill
-              sizes="(max-width: 992px) 100vw, 50vw"
-            />
+            {service2.image ? (
+              <Image
+                src={service2.image}
+                alt={service2.name}
+                className={styles.sectionImg}
+                fill
+                sizes="(max-width: 992px) 100vw, 50vw"
+              />
+            ) : (
+              <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
+            )}
           </div>
 
           <div className={styles.contentCol}>
@@ -232,13 +240,17 @@ export default function ServicesPage() {
           </div>
 
           <div className={styles.imageCol}>
-            <Image
-              src={service3.image || defaultServices[2].image}
-              alt={service3.name}
-              className={styles.sectionImg}
-              fill
-              sizes="(max-width: 992px) 100vw, 50vw"
-            />
+            {service3.image ? (
+              <Image
+                src={service3.image}
+                alt={service3.name}
+                className={styles.sectionImg}
+                fill
+                sizes="(max-width: 992px) 100vw, 50vw"
+              />
+            ) : (
+              <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
+            )}
           </div>
         </div>
       </section>

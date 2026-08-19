@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // Vercel serverless environments provide a writable /tmp directory.
 const tmpFilePath = "/tmp/content.json";
 const originalFilePath = path.join(process.cwd(), "src/data/content.json");
@@ -87,12 +90,13 @@ async function getExpectedPasscode() {
 }
 
 export async function GET() {
+  const headers = { "Cache-Control": "no-store, max-age=0, must-revalidate" };
   try {
     // 1. Try Cloud KV Database first
     const kvData = await getKVContent();
     if (kvData) {
       delete kvData.passcode;
-      return NextResponse.json(kvData);
+      return NextResponse.json(kvData, { headers });
     }
 
     // 2. Fall back to local file system
@@ -103,9 +107,9 @@ export async function GET() {
     // SECURITY: Delete passcode before sending data publicly to visitors
     delete data.passcode;
     
-    return NextResponse.json(data);
+    return NextResponse.json(data, { headers });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to read content database." }, { status: 500 });
+    return NextResponse.json({ error: "Failed to read content database." }, { status: 500, headers });
   }
 }
 

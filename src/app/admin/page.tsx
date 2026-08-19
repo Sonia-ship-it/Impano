@@ -101,12 +101,12 @@ export default function AdminDashboard() {
       const source = (data && Object.keys(data).length > 0) ? data : (localCache || {});
 
       const defaultClients = [
-        { name: "Kigali Film Commission", logo: "/images/logo_kfc.png" },
-        { name: "Rwanda Broadcasting Agency", logo: "/images/logo_rba.png" },
-        { name: "Africa Screen Works", logo: "/images/logo_asw.png" },
-        { name: "Legacy Media Group", logo: "/images/logo_lmg.png" },
-        { name: "Vivid Ventures", logo: "/images/logo_vv.png" },
-        { name: "Volcano Creative Hub", logo: "/images/logo_vch.png" }
+        { name: "Kigali Film Commission", logo: "" },
+        { name: "Rwanda Broadcasting Agency", logo: "" },
+        { name: "Africa Screen Works", logo: "" },
+        { name: "Legacy Media Group", logo: "" },
+        { name: "Vivid Ventures", logo: "" },
+        { name: "Volcano Creative Hub", logo: "" }
       ];
 
       const defaultServices = [
@@ -114,19 +114,19 @@ export default function AdminDashboard() {
           num: "01",
           name: "Production Services",
           desc: "Producing and Directing, Camera Crews, Drone Visuals, Multi Cameras, Live Stream, Professional Interviews, Motion Graphics, 3D animation, Script Writing, StoryBoard.",
-          image: "/images/lens_close_up.png",
+          image: "",
         },
         {
           num: "02",
           name: "Post-Production Services",
           desc: "Offline / Online Edit, Color Correction, and Sound Design services optimizing raw captures into visual legacies.",
-          image: "/images/grading_console.png",
+          image: "",
         },
         {
           num: "03",
           name: "Creative Development & Strategy",
           desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience to transform information and ideas into authentic work.",
-          image: "/images/about_story.png",
+          image: "",
         }
       ];
 
@@ -135,25 +135,25 @@ export default function AdminDashboard() {
           name: "ISHIMWE CHRISPIN",
           role: "Founder & Drone Pilot",
           bio: "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
-          image: "/images/chrispin.jpeg",
+          image: "",
         },
         {
           name: "UWASE SONIA",
           role: "Co-Founder, Project Manager",
           bio: "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
-          image: "/images/sonia.png",
+          image: "",
         },
         {
           name: "ISHIMWE FISTON",
           role: "Editor",
           bio: "Master of rhythm and pacing, weaving raw cinematic footage into cohesive, powerful stories with precision editing and dynamic audio integration.",
-          image: "/images/Fiston.jpeg",
+          image: "",
         },
         {
           name: "MUGISHA ALLY",
           role: "Assistant Production",
           bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
-          image: "/images/Ally.png",
+          image: "",
         }
       ];
 
@@ -417,7 +417,7 @@ export default function AdminDashboard() {
   const addClient = () => {
     setContent({
       ...content,
-      clients: [...content.clients, { name: "New Client", logo: "/images/logo_placeholder.png" }],
+      clients: [...content.clients, { name: "New Client", logo: "" }],
     });
   };
 
@@ -443,7 +443,7 @@ export default function AdminDashboard() {
           name: "NEW MEMBER",
           role: "Co-Worker",
           bio: "Description of the member's professional expertise and details.",
-          image: "/images/sonia.png",
+          image: "",
         },
       ],
     });

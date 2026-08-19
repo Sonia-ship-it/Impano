@@ -62,51 +62,51 @@ export default function Home() {
       num: "01",
       name: "Production Services",
       desc: "Producing and Directing, Camera Crews, Drone Visuals, Multi Cameras, Live Stream, Professional Interviews, Motion Graphics, 3D animation, Script Writing, StoryBoard.",
-      image: "/images/hero_bg.png",
+      image: "",
     },
     {
       num: "02",
       name: "Post-Production Services",
       desc: "Offline / Online Edit, Color Correction, and Sound Design services optimizing raw captures into visual legacies.",
-      image: "/images/grading_console.png",
+      image: "",
     },
     {
       num: "03",
       name: "Creative Development & Strategy",
       desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience to transform information and ideas into authentic work.",
-      image: "/images/about_story.png",
+      image: "",
     },
   ];
 
   const initialClients = [
-    { name: "Kigali Film Commission", logo: "/images/logo_kfc.png" },
-    { name: "Rwanda Broadcasting Agency", logo: "/images/logo_rba.png" },
-    { name: "Africa Screen Works", logo: "/images/logo_asw.png" },
-    { name: "Legacy Media Group", logo: "/images/logo_lmg.png" },
-    { name: "Vivid Ventures", logo: "/images/logo_vv.png" },
-    { name: "Volcano Creative Hub", logo: "/images/logo_vch.png" },
+    { name: "Kigali Film Commission", logo: "" },
+    { name: "Rwanda Broadcasting Agency", logo: "" },
+    { name: "Africa Screen Works", logo: "" },
+    { name: "Legacy Media Group", logo: "" },
+    { name: "Vivid Ventures", logo: "" },
+    { name: "Volcano Creative Hub", logo: "" },
   ];
 
   const initialWorks = [
     {
       title: "The Echo of Hills",
       category: "Narrative Film",
-      image: "/images/echo_of_hills.png"
+      image: ""
     },
     {
       title: "Impano Entertainment",
       category: "Studio Showcase",
-      image: "/images/grading_console.png"
+      image: ""
     },
     {
       title: "Commercials",
       category: "Crafted",
-      image: "/images/about_story.png"
+      image: ""
     },
     {
       title: "VFX Composites",
       category: "Animation",
-      image: "/images/hero_bg.png"
+      image: ""
     }
   ];
 
@@ -223,13 +223,19 @@ export default function Home() {
                 >
                   <div className={styles.clientCardInner}>
                     <div className={styles.clientLogoContainer}>
-                      <Image
-                        src={client.logo}
-                        alt={`${client.name} Logo`}
-                        width={140}
-                        height={70}
-                        className={styles.clientLogoImg}
-                      />
+                      {client.logo ? (
+                        <Image
+                          src={client.logo}
+                          alt={`${client.name} Logo`}
+                          width={140}
+                          height={70}
+                          className={styles.clientLogoImg}
+                        />
+                      ) : (
+                        <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#d4af37", textAlign: "center" }}>
+                          {client.name}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -256,13 +262,15 @@ export default function Home() {
                 <span className={styles.serviceName}>{service.name}</span>
                 <span className={styles.serviceDesc}>{service.desc}</span>
                 <div className={styles.serviceImageCol}>
-                  <Image
-                    src={service.image}
-                    alt={service.name}
-                    className={styles.serviceThumbnail}
-                    width={160}
-                    height={100}
-                  />
+                  {service.image ? (
+                    <Image
+                      src={service.image}
+                      alt={service.name}
+                      className={styles.serviceThumbnail}
+                      width={160}
+                      height={100}
+                    />
+                  ) : null}
                 </div>
               </div>
             ))}
@@ -291,13 +299,17 @@ export default function Home() {
                 onMouseMove={handleCardMouseMove}
                 data-cursor="view"
               >
-                <Image
-                  src={works[0].image}
-                  alt={works[0].title}
-                  className={styles.workImg}
-                  fill
-                  sizes="(max-width: 992px) 100vw, 40vw"
-                />
+                {works[0].image ? (
+                  <Image
+                    src={works[0].image}
+                    alt={works[0].title}
+                    className={styles.workImg}
+                    fill
+                    sizes="(max-width: 992px) 100vw, 40vw"
+                  />
+                ) : (
+                  <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
+                )}
                 <div className={styles.workOverlay}>
                   <span className={styles.workCategory}>{works[0].category}</span>
                   <h3 className={styles.workTitle}>{works[0].title}</h3>
@@ -312,13 +324,17 @@ export default function Home() {
                 onMouseMove={handleCardMouseMove}
                 data-cursor="view"
               >
-                <Image
-                  src={works[1].image}
-                  alt={works[1].title}
-                  className={styles.workImg}
-                  fill
-                  sizes="(max-width: 992px) 100vw, 60vw"
-                />
+                {works[1].image ? (
+                  <Image
+                    src={works[1].image}
+                    alt={works[1].title}
+                    className={styles.workImg}
+                    fill
+                    sizes="(max-width: 992px) 100vw, 60vw"
+                  />
+                ) : (
+                  <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
+                )}
                 <div className={styles.workOverlay}>
                   <span className={styles.workCategory}>{works[1].category}</span>
                   <h3 className={styles.workTitle}>{works[1].title}</h3>
@@ -333,13 +349,17 @@ export default function Home() {
                 onMouseMove={handleCardMouseMove}
                 data-cursor="view"
               >
-                <Image
-                  src={works[2].image}
-                  alt={works[2].title}
-                  className={styles.workImg}
-                  fill
-                  sizes="(max-width: 992px) 100vw, 30vw"
-                />
+                {works[2].image ? (
+                  <Image
+                    src={works[2].image}
+                    alt={works[2].title}
+                    className={styles.workImg}
+                    fill
+                    sizes="(max-width: 992px) 100vw, 30vw"
+                  />
+                ) : (
+                  <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
+                )}
                 <div className={styles.workOverlay}>
                   <span className={styles.workCategory}>{works[2].category}</span>
                   <h3 className={styles.workTitle}>{works[2].title}</h3>
@@ -354,13 +374,17 @@ export default function Home() {
                 onMouseMove={handleCardMouseMove}
                 data-cursor="view"
               >
-                <Image
-                  src={works[3].image}
-                  alt={works[3].title}
-                  className={styles.workImg}
-                  fill
-                  sizes="(max-width: 992px) 100vw, 30vw"
-                />
+                {works[3].image ? (
+                  <Image
+                    src={works[3].image}
+                    alt={works[3].title}
+                    className={styles.workImg}
+                    fill
+                    sizes="(max-width: 992px) 100vw, 30vw"
+                  />
+                ) : (
+                  <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
+                )}
                 <div className={styles.workOverlay}>
                   <span className={styles.workCategory}>{works[3].category}</span>
                   <h3 className={styles.workTitle}>{works[3].title}</h3>
