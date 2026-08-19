@@ -124,14 +124,26 @@ export default function Home() {
   });
 
   useEffect(() => {
+    const stripLegacyImage = (url: string) =>
+      url && typeof url === "string" && url.startsWith("/images/") ? "" : url || "";
+
+    const applyData = (data: any) => {
+      if (data.hero) setHero(data.hero);
+      if (Array.isArray(data.services)) {
+        setServices(data.services.map((s: any) => ({ ...s, image: stripLegacyImage(s.image) })));
+      }
+      if (Array.isArray(data.clients)) {
+        setClients(data.clients.map((c: any) => ({ ...c, logo: stripLegacyImage(c.logo) })));
+      }
+      if (Array.isArray(data.works)) {
+        setWorks(data.works.map((w: any) => ({ ...w, image: stripLegacyImage(w.image) })));
+      }
+    };
+
     try {
       const cached = localStorage.getItem("impano_cms_content_cache");
       if (cached) {
-        const data = JSON.parse(cached);
-        if (data.hero) setHero(data.hero);
-        if (data.services) setServices(data.services);
-        if (data.clients) setClients(data.clients);
-        if (data.works) setWorks(data.works);
+        applyData(JSON.parse(cached));
       }
     } catch {}
 
@@ -141,10 +153,7 @@ export default function Home() {
         return res.json();
       })
       .then((data) => {
-        if (data.hero) setHero(data.hero);
-        if (data.services) setServices(data.services);
-        if (data.clients) setClients(data.clients);
-        if (data.works) setWorks(data.works);
+        applyData(data);
       })
       .catch((err) => console.warn("Failed to load CMS content, using static fallback."));
   }, []);

@@ -31,12 +31,19 @@ export default function ServicesPage() {
   const [services, setServices] = useState(defaultServices);
 
   useEffect(() => {
+    const stripLegacyImage = (url: string) =>
+      url && typeof url === "string" && url.startsWith("/images/") ? "" : url || "";
+
+    const applyServices = (list: any[]) => {
+      setServices(list.map((s: any) => ({ ...s, image: stripLegacyImage(s.image) })));
+    };
+
     try {
       const cached = localStorage.getItem("impano_cms_content_cache");
       if (cached) {
         const parsed = JSON.parse(cached);
         if (parsed.services && Array.isArray(parsed.services) && parsed.services.length > 0) {
-          setServices(parsed.services);
+          applyServices(parsed.services);
         }
       }
     } catch {}
@@ -45,7 +52,7 @@ export default function ServicesPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.services && Array.isArray(data.services) && data.services.length > 0) {
-          setServices(data.services);
+          applyServices(data.services);
         }
       })
       .catch((err) => console.error("Failed to load dynamic content for Services page", err));

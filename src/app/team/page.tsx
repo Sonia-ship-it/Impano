@@ -37,12 +37,19 @@ export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState(defaultTeam);
 
   useEffect(() => {
+    const stripLegacyImage = (url: string) =>
+      url && typeof url === "string" && url.startsWith("/images/") ? "" : url || "";
+
+    const applyTeam = (list: any[]) => {
+      setTeamMembers(list.map((m: any) => ({ ...m, image: stripLegacyImage(m.image) })));
+    };
+
     try {
       const cached = localStorage.getItem("impano_cms_content_cache");
       if (cached) {
         const parsed = JSON.parse(cached);
         if (parsed.team && Array.isArray(parsed.team) && parsed.team.length > 0) {
-          setTeamMembers(parsed.team);
+          applyTeam(parsed.team);
         }
       }
     } catch {}
@@ -51,7 +58,7 @@ export default function TeamPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.team && Array.isArray(data.team) && data.team.length > 0) {
-          setTeamMembers(data.team);
+          applyTeam(data.team);
         }
       })
       .catch((err) => console.error("Failed to load dynamic team data", err));

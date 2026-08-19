@@ -157,6 +157,20 @@ export default function AdminDashboard() {
         }
       ];
 
+      const stripLegacyImage = (url: string) => {
+        return (url && typeof url === "string" && url.startsWith("/images/")) ? "" : (url || "");
+      };
+
+      const rawWorks = (source.works && source.works.length > 0) ? source.works : [
+        { title: "The Echo of Hills", category: "Narrative Film", image: "" },
+        { title: "Impano Entertainment", category: "Studio Showcase", image: "" },
+        { title: "Commercials", category: "Crafted", image: "" },
+        { title: "VFX Composites", category: "Animation", image: "" }
+      ];
+      const rawServices = (source.services && source.services.length > 0) ? source.services : defaultServices;
+      const rawClients = (source.clients && source.clients.length > 0) ? source.clients : defaultClients;
+      const rawTeam = (source.team && source.team.length > 0) ? source.team : defaultTeam;
+
       const safeData = {
         passcode: source.passcode || passcode,
         hero: source.hero || {
@@ -168,31 +182,10 @@ export default function AdminDashboard() {
           playText: "WATCH SHOWREEL",
           videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
         },
-        works: (source.works && source.works.length > 0) ? source.works : [
-          {
-            title: "The Echo of Hills",
-            category: "Narrative Film",
-            image: "/images/echo_of_hills.png"
-          },
-          {
-            title: "Impano Entertainment",
-            category: "Studio Showcase",
-            image: "/images/grading_console.png"
-          },
-          {
-            title: "Commercials",
-            category: "Crafted",
-            image: "/images/about_story.png"
-          },
-          {
-            title: "VFX Composites",
-            category: "Animation",
-            image: "/images/hero_bg.png"
-          }
-        ],
-        services: (source.services && source.services.length > 0) ? source.services : defaultServices,
-        clients: (source.clients && source.clients.length > 0) ? source.clients : defaultClients,
-        team: (source.team && source.team.length > 0) ? source.team : defaultTeam
+        works: rawWorks.map((item: any) => ({ ...item, image: stripLegacyImage(item.image) })),
+        services: rawServices.map((item: any) => ({ ...item, image: stripLegacyImage(item.image) })),
+        clients: rawClients.map((item: any) => ({ ...item, logo: stripLegacyImage(item.logo) })),
+        team: rawTeam.map((item: any) => ({ ...item, image: stripLegacyImage(item.image) }))
       };
       
       setContent(safeData);
