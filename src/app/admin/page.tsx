@@ -80,6 +80,11 @@ export default function AdminDashboard() {
     }
   };
 
+  const [metaInfo, setMetaInfo] = useState<{ kvConnected: boolean; storageType: string; warning?: string }>({
+    kvConnected: false,
+    storageType: "checking...",
+  });
+
   const fetchContent = async () => {
     // 1. First check local browser cache for immediate persistent display
     let localCache: any = null;
@@ -95,6 +100,15 @@ export default function AdminDashboard() {
       let data: any = {};
       if (res.ok) {
         data = await res.json();
+      }
+
+      if (data && data._meta) {
+        setMetaInfo(data._meta);
+        if (data._meta.kvConnected) {
+          console.log("%c[Impano CMS Admin] Upstash KV Cloud Database Connected! Content is permanently synced.", "color: #10b981; font-weight: bold;");
+        } else {
+          console.warn("%c[Impano CMS Admin] Warning: Upstash KV unconfigured on Vercel. Saved in temporary server cache.", "color: #f59e0b; font-weight: bold;");
+        }
       }
 
       // Merge server response with local cache fallback to ensure no edits are lost
@@ -157,10 +171,6 @@ export default function AdminDashboard() {
         }
       ];
 
-      const stripLegacyImage = (url: string) => {
-        return (url && typeof url === "string" && url.startsWith("/images/")) ? "" : (url || "");
-      };
-
       const rawWorks = (source.works && source.works.length > 0) ? source.works : [
         { title: "The Echo of Hills", category: "Narrative Film", image: "" },
         { title: "Impano Entertainment", category: "Studio Showcase", image: "" },
@@ -182,10 +192,10 @@ export default function AdminDashboard() {
           playText: "WATCH SHOWREEL",
           videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
         },
-        works: rawWorks.map((item: any) => ({ ...item, image: stripLegacyImage(item.image) })),
-        services: rawServices.map((item: any) => ({ ...item, image: stripLegacyImage(item.image) })),
-        clients: rawClients.map((item: any) => ({ ...item, logo: stripLegacyImage(item.logo) })),
-        team: rawTeam.map((item: any) => ({ ...item, image: stripLegacyImage(item.image) }))
+        works: rawWorks,
+        services: rawServices,
+        clients: rawClients,
+        team: rawTeam
       };
       
       setContent(safeData);
@@ -243,8 +253,17 @@ export default function AdminDashboard() {
       if (res.ok && data.success) {
         setContent(targetContent);
         setSaveStatus({ success: true, message: "Content updated successfully! Changes are live." });
-        showToast("Content saved permanently!", "success");
         
+        if (data.kvSaved) {
+          setMetaInfo({ storageType: "kv", kvConnected: true });
+          showToast("Changes PERMANENTLY saved to Upstash Cloud Database!", "success");
+          console.log("%c[Impano CMS Admin] Save successful: Content permanently persisted to Upstash KV!", "color: #10b981; font-weight: bold;");
+        } else {
+          setMetaInfo({ storageType: "tmp", kvConnected: false, warning: data.warning });
+          showToast("Saved to temporary server cache. Note: Add KV_REST_API_URL to Vercel Settings.", "info");
+          console.warn("%c[Impano CMS Admin] Saved to temporary server cache. Missing KV credentials on Vercel.", "color: #f59e0b; font-weight: bold;");
+        }
+
         // Sync passcode local state and localStorage if reset
         if (targetContent.passcode && targetContent.passcode !== passcode) {
           setPasscode(targetContent.passcode);
@@ -554,7 +573,20 @@ export default function AdminDashboard() {
         {/* Header */}
         <header className={styles.dashboardHeader}>
           <div className={styles.titleSection}>
-            <h1>Impano CMS</h1>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+              <h1>Impano CMS</h1>
+              {metaInfo.kvConnected ? (
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "0.75rem", background: "rgba(16, 185, 129, 0.15)", color: "#10b981", padding: "4px 12px", borderRadius: "20px", border: "1px solid rgba(16, 185, 129, 0.3)", fontWeight: 600 }}>
+                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981", display: "inline-block" }}></span>
+                  Cloud Database Connected (Upstash KV)
+                </span>
+              ) : (
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "0.75rem", background: "rgba(245, 158, 11, 0.15)", color: "#f59e0b", padding: "4px 12px", borderRadius: "20px", border: "1px solid rgba(245, 158, 11, 0.3)", fontWeight: 600 }} title="To persist changes permanently across Vercel deployments, add KV_REST_API_URL and KV_REST_API_TOKEN in Vercel Project Settings -> Environment Variables.">
+                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#f59e0b", display: "inline-block" }}></span>
+                  Temporary Server Cache (Set Vercel Env Vars)
+                </span>
+              )}
+            </div>
             <p className={styles.subtitle}>Manage homepage sections, clients, and team profiles dynamically.</p>
           </div>
           <button className={styles.logoutBtn} onClick={handleLogout}>

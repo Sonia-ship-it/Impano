@@ -31,11 +31,14 @@ export default function ServicesPage() {
   const [services, setServices] = useState(defaultServices);
 
   useEffect(() => {
-    const stripLegacyImage = (url: string) =>
-      url && typeof url === "string" && url.startsWith("/images/") ? "" : url || "";
+    const resolveImage = (url: string, fallback: string) => (url && url.trim() ? url : fallback);
 
-    const applyServices = (list: any[]) => {
-      setServices(list.map((s: any) => ({ ...s, image: stripLegacyImage(s.image) })));
+    const applyServices = (list: any[], sourceName: string) => {
+      setServices(list.map((s: any, idx: number) => ({
+        ...s,
+        image: resolveImage(s.image, defaultServices[idx]?.image || "")
+      })));
+      console.log(`%c[Impano CMS Services] Content successfully loaded from ${sourceName}.`, "color: #10b981; font-weight: bold;");
     };
 
     try {
@@ -43,7 +46,7 @@ export default function ServicesPage() {
       if (cached) {
         const parsed = JSON.parse(cached);
         if (parsed.services && Array.isArray(parsed.services) && parsed.services.length > 0) {
-          applyServices(parsed.services);
+          applyServices(parsed.services, "Browser LocalCache");
         }
       }
     } catch {}
@@ -52,10 +55,11 @@ export default function ServicesPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.services && Array.isArray(data.services) && data.services.length > 0) {
-          applyServices(data.services);
+          const storageLabel = data._meta?.kvConnected ? "Upstash KV Database" : `Fallback (${data._meta?.storageType || "local"})`;
+          applyServices(data.services, storageLabel);
         }
       })
-      .catch((err) => console.error("Failed to load dynamic content for Services page", err));
+      .catch((err) => console.error("[Impano CMS Services] Failed to load dynamic content", err));
   }, []);
 
   const service1 = services[0] || defaultServices[0];

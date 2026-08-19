@@ -11,25 +11,25 @@ const defaultTeam = [
     name: "ISHIMWE CHRISPIN",
     role: "Founder & Drone Pilot",
     bio: "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
-    image: "",
+    image: "/images/chrispin.jpeg",
   },
   {
     name: "UWASE SONIA",
     role: "Co-Founder, Project Manager",
     bio: "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
-    image: "",
+    image: "/images/sonia.png",
   },
   {
     name: "ISHIMWE FISTON",
     role: "Editor",
     bio: "Master of rhythm and pacing, weaving raw cinematic footage into cohesive, powerful stories with precision editing and dynamic audio integration.",
-    image: "",
+    image: "/images/Fiston.jpeg",
   },
   {
     name: "MUGISHA ALLY",
     role: "Assistant Production",
     bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
-    image: "",
+    image: "/images/Ally.png",
   },
 ];
 
@@ -37,11 +37,14 @@ export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState(defaultTeam);
 
   useEffect(() => {
-    const stripLegacyImage = (url: string) =>
-      url && typeof url === "string" && url.startsWith("/images/") ? "" : url || "";
+    const resolveImage = (url: string, fallback: string) => (url && url.trim() ? url : fallback);
 
-    const applyTeam = (list: any[]) => {
-      setTeamMembers(list.map((m: any) => ({ ...m, image: stripLegacyImage(m.image) })));
+    const applyTeam = (list: any[], sourceName: string) => {
+      setTeamMembers(list.map((m: any, idx: number) => ({
+        ...m,
+        image: resolveImage(m.image, defaultTeam[idx]?.image || "")
+      })));
+      console.log(`%c[Impano CMS Team] Content successfully loaded from ${sourceName}.`, "color: #10b981; font-weight: bold;");
     };
 
     try {
@@ -49,7 +52,7 @@ export default function TeamPage() {
       if (cached) {
         const parsed = JSON.parse(cached);
         if (parsed.team && Array.isArray(parsed.team) && parsed.team.length > 0) {
-          applyTeam(parsed.team);
+          applyTeam(parsed.team, "Browser LocalCache");
         }
       }
     } catch {}
@@ -58,10 +61,11 @@ export default function TeamPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.team && Array.isArray(data.team) && data.team.length > 0) {
-          applyTeam(data.team);
+          const storageLabel = data._meta?.kvConnected ? "Upstash KV Database" : `Fallback (${data._meta?.storageType || "local"})`;
+          applyTeam(data.team, storageLabel);
         }
       })
-      .catch((err) => console.error("Failed to load dynamic team data", err));
+      .catch((err) => console.error("[Impano CMS Team] Failed to load dynamic team data", err));
   }, []);
 
   return (

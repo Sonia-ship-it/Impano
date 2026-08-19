@@ -95,20 +95,32 @@ export async function GET() {
     // 1. Try Cloud KV Database first
     const kvData = await getKVContent();
     if (kvData) {
+      console.log("[Impano CMS API] GET: Successfully retrieved content from Upstash KV Cloud Database.");
       delete kvData.passcode;
-      return NextResponse.json(kvData, { headers });
+      return NextResponse.json({ ...kvData, _meta: { storageType: "kv", kvConnected: true } }, { headers });
     }
+
+    console.warn("[Impano CMS API] GET WARNING: Upstash KV unconfigured or unavailable. Checking local file system fallbacks.");
 
     // 2. Fall back to local file system
     const filePath = await getContentFilePath();
+    const isTmp = filePath === tmpFilePath;
     const fileContent = await fs.readFile(filePath, "utf8");
     const data = JSON.parse(fileContent);
     
     // SECURITY: Delete passcode before sending data publicly to visitors
     delete data.passcode;
     
-    return NextResponse.json(data, { headers });
+    return NextResponse.json({
+      ...data,
+      _meta: {
+        storageType: isTmp ? "tmp" : "local",
+        kvConnected: false,
+        warning: isTmp ? "Loaded from temporary server cache (/tmp)" : "Loaded from local git source file"
+      }
+    }, { headers });
   } catch (error) {
+    console.error("[Impano CMS API] GET ERROR: Failed to read content database:", error);
     return NextResponse.json({ error: "Failed to read content database." }, { status: 500, headers });
   }
 }
@@ -122,6 +134,7 @@ export async function POST(request: Request) {
     const expectedPasscode = await getExpectedPasscode();
     
     if (passcode !== expectedPasscode) {
+      console.warn("[Impano CMS API] POST Unauthorized access attempt.");
       return NextResponse.json(
         { error: "Unauthorized access. Invalid passcode." },
         { status: 401 }
@@ -136,29 +149,44 @@ export async function POST(request: Request) {
       body.passcode = expectedPasscode;
     }
 
+    // Remove any transient _meta properties before storing
+    delete body._meta;
+
     const contentJson = JSON.stringify(body, null, 2);
 
     // 1. Save to Cloud KV Database (Permanent across Vercel / serverless deployments)
     const kvSaved = await setKVContent(body);
 
+    if (kvSaved) {
+      console.log("[Impano CMS API] POST: Content PERMANENTLY saved to Upstash KV Cloud Database.");
+    } else {
+      console.warn("[Impano CMS API] POST WARNING: Failed to save to Upstash KV. Ensure KV_REST_API_URL and KV_REST_API_TOKEN are configured in Vercel project settings!");
+    }
+
     // 2. Write to local file path when available
     try {
       await fs.writeFile(originalFilePath, contentJson, "utf8");
       try { await fs.writeFile(tmpFilePath, contentJson, "utf8"); } catch {}
-      return NextResponse.json({ success: true, kvSaved });
+      return NextResponse.json({ success: true, kvSaved, storageType: kvSaved ? "kv" : "local" });
     } catch (writeErr) {
       // Fallback for read-only serverless filesystems (e.g., Vercel)
       try {
         await fs.writeFile(tmpFilePath, contentJson, "utf8");
-        return NextResponse.json({ success: true, kvSaved, warning: "Saved to temporary server cache" });
+        return NextResponse.json({
+          success: true,
+          kvSaved,
+          storageType: kvSaved ? "kv" : "tmp",
+          warning: kvSaved ? undefined : "Saved only to temporary server cache. Missing KV_REST_API_URL on Vercel."
+        });
       } catch (tmpErr: any) {
         if (kvSaved) {
-          return NextResponse.json({ success: true, kvSaved: true });
+          return NextResponse.json({ success: true, kvSaved: true, storageType: "kv" });
         }
         return NextResponse.json({ error: "Failed to save content: " + tmpErr.message }, { status: 500 });
       }
     }
   } catch (error: any) {
+    console.error("[Impano CMS API] POST ERROR:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

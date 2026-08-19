@@ -57,56 +57,78 @@ export default function Home() {
     "Drone",
   ];
 
+  const defaultWorkImages = [
+    "/images/echo_of_hills.png",
+    "/images/grading_console.png",
+    "/images/about_story.png",
+    "/images/hero_bg.png"
+  ];
+
+  const defaultServiceImages = [
+    "/images/lens_close_up.png",
+    "/images/grading_console.png",
+    "/images/about_story.png"
+  ];
+
+  const defaultClientLogos = [
+    "/images/logo_kfc.png",
+    "/images/logo_rba.png",
+    "/images/logo_asw.png",
+    "/images/logo_lmg.png",
+    "/images/logo_vv.png",
+    "/images/logo_vch.png"
+  ];
+
   const initialServices = [
     {
       num: "01",
       name: "Production Services",
       desc: "Producing and Directing, Camera Crews, Drone Visuals, Multi Cameras, Live Stream, Professional Interviews, Motion Graphics, 3D animation, Script Writing, StoryBoard.",
-      image: "",
+      image: defaultServiceImages[0],
     },
     {
       num: "02",
       name: "Post-Production Services",
       desc: "Offline / Online Edit, Color Correction, and Sound Design services optimizing raw captures into visual legacies.",
-      image: "",
+      image: defaultServiceImages[1],
     },
     {
       num: "03",
       name: "Creative Development & Strategy",
       desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience to transform information and ideas into authentic work.",
-      image: "",
+      image: defaultServiceImages[2],
     },
   ];
 
   const initialClients = [
-    { name: "Kigali Film Commission", logo: "" },
-    { name: "Rwanda Broadcasting Agency", logo: "" },
-    { name: "Africa Screen Works", logo: "" },
-    { name: "Legacy Media Group", logo: "" },
-    { name: "Vivid Ventures", logo: "" },
-    { name: "Volcano Creative Hub", logo: "" },
+    { name: "Kigali Film Commission", logo: defaultClientLogos[0] },
+    { name: "Rwanda Broadcasting Agency", logo: defaultClientLogos[1] },
+    { name: "Africa Screen Works", logo: defaultClientLogos[2] },
+    { name: "Legacy Media Group", logo: defaultClientLogos[3] },
+    { name: "Vivid Ventures", logo: defaultClientLogos[4] },
+    { name: "Volcano Creative Hub", logo: defaultClientLogos[5] },
   ];
 
   const initialWorks = [
     {
       title: "The Echo of Hills",
       category: "Narrative Film",
-      image: ""
+      image: defaultWorkImages[0]
     },
     {
       title: "Impano Entertainment",
       category: "Studio Showcase",
-      image: ""
+      image: defaultWorkImages[1]
     },
     {
       title: "Commercials",
       category: "Crafted",
-      image: ""
+      image: defaultWorkImages[2]
     },
     {
       title: "VFX Composites",
       category: "Animation",
-      image: ""
+      image: defaultWorkImages[3]
     }
   ];
 
@@ -124,26 +146,38 @@ export default function Home() {
   });
 
   useEffect(() => {
-    const stripLegacyImage = (url: string) =>
-      url && typeof url === "string" && url.startsWith("/images/") ? "" : url || "";
+    const resolveImage = (url: string, fallback: string) => (url && url.trim() ? url : fallback);
 
-    const applyData = (data: any) => {
+    const applyData = (data: any, sourceName: string) => {
       if (data.hero) setHero(data.hero);
       if (Array.isArray(data.services)) {
-        setServices(data.services.map((s: any) => ({ ...s, image: stripLegacyImage(s.image) })));
+        setServices(data.services.map((s: any, idx: number) => ({
+          ...s,
+          image: resolveImage(s.image, defaultServiceImages[idx] || "")
+        })));
       }
       if (Array.isArray(data.clients)) {
-        setClients(data.clients.map((c: any) => ({ ...c, logo: stripLegacyImage(c.logo) })));
+        setClients(data.clients.map((c: any, idx: number) => ({
+          ...c,
+          logo: resolveImage(c.logo, defaultClientLogos[idx] || "")
+        })));
       }
       if (Array.isArray(data.works)) {
-        setWorks(data.works.map((w: any) => ({ ...w, image: stripLegacyImage(w.image) })));
+        setWorks(data.works.map((w: any, idx: number) => ({
+          ...w,
+          image: resolveImage(w.image, defaultWorkImages[idx] || "")
+        })));
       }
+      console.log(`%c[Impano CMS Home] Content successfully loaded from ${sourceName}.`, "color: #10b981; font-weight: bold;", {
+        storageType: data._meta?.storageType || "cache/local",
+        kvConnected: data._meta?.kvConnected || false,
+      });
     };
 
     try {
       const cached = localStorage.getItem("impano_cms_content_cache");
       if (cached) {
-        applyData(JSON.parse(cached));
+        applyData(JSON.parse(cached), "Browser LocalCache");
       }
     } catch {}
 
@@ -153,9 +187,10 @@ export default function Home() {
         return res.json();
       })
       .then((data) => {
-        applyData(data);
+        const storageLabel = data._meta?.kvConnected ? "Upstash KV Database" : `Fallback (${data._meta?.storageType || "local"})`;
+        applyData(data, storageLabel);
       })
-      .catch((err) => console.warn("Failed to load CMS content, using static fallback."));
+      .catch((err) => console.warn("[Impano CMS Home] Failed to fetch dynamic content from API, using local fallbacks.", err));
   }, []);
 
   return (
