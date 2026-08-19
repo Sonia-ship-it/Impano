@@ -114,13 +114,42 @@ export default function AdminDashboard() {
       // Merge server response with local cache fallback to ensure no edits are lost
       const source = (data && Object.keys(data).length > 0) ? data : (localCache || {});
 
+      const defaultWorkImages = [
+        "/images/echo_of_hills.png",
+        "/images/grading_console.png",
+        "/images/about_story.png",
+        "/images/hero_bg.png"
+      ];
+
+      const defaultServiceImages = [
+        "/images/lens_close_up.png",
+        "/images/grading_console.png",
+        "/images/about_story.png"
+      ];
+
+      const defaultClientLogos = [
+        "/images/logo_kfc.png",
+        "/images/logo_rba.png",
+        "/images/logo_asw.png",
+        "/images/logo_lmg.png",
+        "/images/logo_vv.png",
+        "/images/logo_vch.png"
+      ];
+
+      const defaultTeamImages = [
+        "/images/chrispin.jpeg",
+        "/images/sonia.png",
+        "/images/Fiston.jpeg",
+        "/images/Ally.png"
+      ];
+
       const defaultClients = [
-        { name: "Kigali Film Commission", logo: "" },
-        { name: "Rwanda Broadcasting Agency", logo: "" },
-        { name: "Africa Screen Works", logo: "" },
-        { name: "Legacy Media Group", logo: "" },
-        { name: "Vivid Ventures", logo: "" },
-        { name: "Volcano Creative Hub", logo: "" }
+        { name: "Kigali Film Commission", logo: defaultClientLogos[0] },
+        { name: "Rwanda Broadcasting Agency", logo: defaultClientLogos[1] },
+        { name: "Africa Screen Works", logo: defaultClientLogos[2] },
+        { name: "Legacy Media Group", logo: defaultClientLogos[3] },
+        { name: "Vivid Ventures", logo: defaultClientLogos[4] },
+        { name: "Volcano Creative Hub", logo: defaultClientLogos[5] }
       ];
 
       const defaultServices = [
@@ -128,19 +157,19 @@ export default function AdminDashboard() {
           num: "01",
           name: "Production Services",
           desc: "Producing and Directing, Camera Crews, Drone Visuals, Multi Cameras, Live Stream, Professional Interviews, Motion Graphics, 3D animation, Script Writing, StoryBoard.",
-          image: "",
+          image: defaultServiceImages[0],
         },
         {
           num: "02",
           name: "Post-Production Services",
           desc: "Offline / Online Edit, Color Correction, and Sound Design services optimizing raw captures into visual legacies.",
-          image: "",
+          image: defaultServiceImages[1],
         },
         {
           num: "03",
           name: "Creative Development & Strategy",
           desc: "Our reputable approach to design thinking combines creative, critical thinking, and experience to transform information and ideas into authentic work.",
-          image: "",
+          image: defaultServiceImages[2],
         }
       ];
 
@@ -149,33 +178,35 @@ export default function AdminDashboard() {
           name: "ISHIMWE CHRISPIN",
           role: "Founder & Drone Pilot",
           bio: "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
-          image: "",
+          image: defaultTeamImages[0],
         },
         {
           name: "UWASE SONIA",
           role: "Co-Founder, Project Manager",
           bio: "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
-          image: "",
+          image: defaultTeamImages[1],
         },
         {
           name: "ISHIMWE FISTON",
           role: "Editor",
           bio: "Master of rhythm and pacing, weaving raw cinematic footage into cohesive, powerful stories with precision editing and dynamic audio integration.",
-          image: "",
+          image: defaultTeamImages[2],
         },
         {
           name: "MUGISHA ALLY",
           role: "Assistant Production",
           bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
-          image: "",
+          image: defaultTeamImages[3],
         }
       ];
 
+      const resolveImage = (url: string, fallback: string) => (url && url.trim() ? url : fallback);
+
       const rawWorks = (source.works && source.works.length > 0) ? source.works : [
-        { title: "The Echo of Hills", category: "Narrative Film", image: "" },
-        { title: "Impano Entertainment", category: "Studio Showcase", image: "" },
-        { title: "Commercials", category: "Crafted", image: "" },
-        { title: "VFX Composites", category: "Animation", image: "" }
+        { title: "The Echo of Hills", category: "Narrative Film", image: defaultWorkImages[0] },
+        { title: "Impano Entertainment", category: "Studio Showcase", image: defaultWorkImages[1] },
+        { title: "Commercials", category: "Crafted", image: defaultWorkImages[2] },
+        { title: "VFX Composites", category: "Animation", image: defaultWorkImages[3] }
       ];
       const rawServices = (source.services && source.services.length > 0) ? source.services : defaultServices;
       const rawClients = (source.clients && source.clients.length > 0) ? source.clients : defaultClients;
@@ -192,10 +223,22 @@ export default function AdminDashboard() {
           playText: "WATCH SHOWREEL",
           videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
         },
-        works: rawWorks,
-        services: rawServices,
-        clients: rawClients,
-        team: rawTeam
+        works: rawWorks.map((item: any, i: number) => ({
+          ...item,
+          image: resolveImage(item.image, defaultWorkImages[i] || "")
+        })),
+        services: rawServices.map((item: any, i: number) => ({
+          ...item,
+          image: resolveImage(item.image, defaultServiceImages[i] || "")
+        })),
+        clients: rawClients.map((item: any, i: number) => ({
+          ...item,
+          logo: resolveImage(item.logo, defaultClientLogos[i] || "")
+        })),
+        team: rawTeam.map((item: any, i: number) => ({
+          ...item,
+          image: resolveImage(item.image, defaultTeamImages[i] || "")
+        }))
       };
       
       setContent(safeData);

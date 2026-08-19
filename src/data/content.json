@@ -13,22 +13,22 @@
     {
       "title": "The Echo of Hills",
       "category": "Narrative Film",
-      "image": ""
+      "image": "/images/echo_of_hills.png"
     },
     {
       "title": "Impano Entertainment",
       "category": "Studio Showcase",
-      "image": ""
+      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787167398/ofhgdntjju6kvxbryvyu.jpg"
     },
     {
       "title": "Commercials",
       "category": "Crafted",
-      "image": ""
+      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787167415/ojybrpv4aeefqxbqfpfx.jpg"
     },
     {
       "title": "VFX Composites",
       "category": "Animation",
-      "image": ""
+      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787167462/fne39rjkritbbfrag0zq.jpg"
     }
   ],
   "services": [
@@ -36,45 +36,45 @@
       "num": "01",
       "name": "Production Services",
       "desc": "Producing and Directing, Camera Crews, Drone Visuals, Multi Cameras, Live Stream, Professional Interviews, Motion Graphics, 3D animation, Script Writing, StoryBoard.",
-      "image": ""
+      "image": "/images/lens_close_up.png"
     },
     {
       "num": "02",
       "name": "Post-Production Services",
       "desc": "Offline / Online Edit, Color Correction, and Sound Design services optimizing raw captures into visual legacies.",
-      "image": ""
+      "image": "/images/grading_console.png"
     },
     {
       "num": "03",
       "name": "Creative Development & Strategy",
       "desc": "Our reputable approach to design thinking combines creative, critical thinking, and experience to transform information and ideas into authentic work.",
-      "image": ""
+      "image": "/images/about_story.png"
     }
   ],
   "clients": [
     {
       "name": "Kigali Film Commission",
-      "logo": ""
+      "logo": "/images/logo_kfc.png"
     },
     {
       "name": "Rwanda Broadcasting Agency",
-      "logo": ""
+      "logo": "/images/logo_rba.png"
     },
     {
       "name": "Africa Screen Works",
-      "logo": ""
+      "logo": "/images/logo_asw.png"
     },
     {
       "name": "Legacy Media Group",
-      "logo": ""
+      "logo": "/images/logo_lmg.png"
     },
     {
       "name": "Vivid Ventures",
-      "logo": ""
+      "logo": "/images/logo_vv.png"
     },
     {
       "name": "Volcano Creative Hub",
-      "logo": ""
+      "logo": "/images/logo_vch.png"
     }
   ],
   "team": [
@@ -82,25 +82,25 @@
       "name": "ISHIMWE CHRISPIN",
       "role": "Founder & Drone Pilot",
       "bio": "Visionary leader and executive producer managing Impano's strategic growth, pioneering international partnerships, and scaling Rwanda's cinematic footprint globally.",
-      "image": ""
+      "image": "/images/chrispin.jpeg"
     },
     {
       "name": "UWASE SONIA",
       "role": "Co-Founder, Project Manager",
       "bio": "Technical anchor managing studio systems, high-speed storage pipelines, render farms, and secure media servers to ensure seamless production workflow.",
-      "image": ""
+      "image": "/images/sonia.png"
     },
     {
       "name": "ISHIMWE FISTON",
       "role": "Editor",
       "bio": "Master of rhythm and pacing, weaving raw cinematic footage into cohesive, powerful stories with precision editing and dynamic audio integration.",
-      "image": ""
+      "image": "/images/Fiston.jpeg"
     },
     {
       "name": "MUGISHA ALLY",
       "role": "Assistant Production",
-      "bio": "On-set coordinating force managing logistical operations, scheduling precision, equipment flow, and team coordination to support directorial vision.",
-      "image": ""
+      "bio": "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
+      "image": "/images/Ally.png"
     }
   ]
 }
