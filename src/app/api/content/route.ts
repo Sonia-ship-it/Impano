@@ -25,7 +25,18 @@ async function getKVContent() {
     if (res.ok) {
       const data = await res.json();
       if (data && data.result) {
-        return typeof data.result === "string" ? JSON.parse(data.result) : data.result;
+        let parsed = data.result;
+        // Recursively unwrap stringified JSON in case of nested encoding
+        while (typeof parsed === "string") {
+          try {
+            parsed = JSON.parse(parsed);
+          } catch {
+            break;
+          }
+        }
+        if (typeof parsed === "object" && parsed !== null) {
+          return parsed;
+        }
       }
     }
   } catch (err) {
@@ -41,13 +52,14 @@ async function setKVContent(data: any) {
   if (!url || !token) return false;
 
   try {
+    const payload = typeof data === "string" ? data : JSON.stringify(data);
     const res = await fetch(`${url.replace(/\/$/, "")}/set/impano_cms_content`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(JSON.stringify(data)),
+      body: JSON.stringify(payload),
     });
 
     return res.ok;
