@@ -85,7 +85,7 @@ export default function AdminDashboard() {
     storageType: "checking...",
   });
 
-  const fetchContent = async () => {
+  const fetchContent = async (showNotification = false) => {
     // 1. First check local browser cache for immediate persistent display
     let localCache: any = null;
     try {
@@ -96,7 +96,10 @@ export default function AdminDashboard() {
     } catch {}
 
     try {
-      const res = await fetch("/api/content");
+      const res = await fetch(`/api/content?t=${Date.now()}`, {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache, no-store, must-revalidate" },
+      });
       let data: any = {};
       if (res.ok) {
         data = await res.json();
@@ -111,8 +114,9 @@ export default function AdminDashboard() {
         }
       }
 
-      // Merge server response with local cache fallback to ensure no edits are lost
-      const source = (data && Object.keys(data).length > 0) ? data : (localCache || {});
+      // If server returned valid data with works/services/hero, use server data directly
+      const hasValidServerData = data && (data.works || data.services || data.clients || data.team || data.hero);
+      const source = hasValidServerData ? data : (localCache || {});
 
       const defaultWorkImages = [
         "/images/echo_of_hills.png",
@@ -245,6 +249,9 @@ export default function AdminDashboard() {
       try {
         localStorage.setItem("impano_cms_content_cache", JSON.stringify(safeData));
       } catch {}
+      if (showNotification) {
+        showToast("Synchronized with latest cloud database!", "success");
+      }
     } catch (err) {
       if (localCache) {
         setContent(localCache);
@@ -632,9 +639,23 @@ export default function AdminDashboard() {
             </div>
             <p className={styles.subtitle}>Manage homepage sections, clients, and team profiles dynamically.</p>
           </div>
-          <button className={styles.logoutBtn} onClick={handleLogout}>
-            Logout
-          </button>
+          <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+            <button 
+              type="button" 
+              className={styles.logoutBtn} 
+              style={{ background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", gap: "6px" }}
+              onClick={() => fetchContent(true)}
+              title="Pull latest live data from cloud database"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+              </svg>
+              Sync Database
+            </button>
+            <button className={styles.logoutBtn} onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </header>
 
         {/* Workspace Layout */}
