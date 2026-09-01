@@ -46,11 +46,29 @@ export default function TeamPage() {
     const resolveImage = (url: string, fallback: string) => (url && url.trim() ? url : fallback);
 
     const applyTeam = (list: any[], sourceName: string) => {
-      setTeamMembers(list.map((m: any, idx: number) => ({
-        ...m,
-        image: resolveImage(m.image, defaultTeam[idx]?.image || "")
-      })));
-      console.log(`%c[Impano CMS Team] Content successfully loaded from ${sourceName}.`, "color: #10b981; font-weight: bold;");
+      const defaultTeamMap = new Map(defaultTeam.map((m) => [m.name.toLowerCase().trim(), m]));
+
+      let mergedList = list.map((m: any, idx: number) => {
+        const matchedDefault = defaultTeamMap.get(m.name?.toLowerCase()?.trim()) || defaultTeam[idx];
+        return {
+          ...m,
+          image: resolveImage(m.image, matchedDefault?.image || "/images/ntwali.jpg")
+        };
+      });
+
+      // Ensure NTWALI ANDERSEN Moise is always present in the team roster
+      const hasNtwali = mergedList.some((m: any) => 
+        m.name?.toLowerCase().includes("ntwali") || m.name?.toLowerCase().includes("andersen")
+      );
+      if (!hasNtwali) {
+        const ntwaliDefault = defaultTeam.find((m) => m.name.includes("NTWALI"));
+        if (ntwaliDefault) {
+          mergedList.push(ntwaliDefault);
+        }
+      }
+
+      setTeamMembers(mergedList);
+      console.log(`%c[Impano CMS Team] Content successfully loaded from ${sourceName} (${mergedList.length} members).`, "color: #10b981; font-weight: bold;");
     };
 
     try {
@@ -63,7 +81,7 @@ export default function TeamPage() {
       }
     } catch {}
 
-    fetch("/api/content")
+    fetch(`/api/content?t=${Date.now()}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (data.team && Array.isArray(data.team) && data.team.length > 0) {

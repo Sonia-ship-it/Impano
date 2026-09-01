@@ -109,6 +109,23 @@ export async function GET() {
     if (kvData) {
       console.log("[Impano CMS API] GET: Successfully retrieved content from Upstash KV Cloud Database.");
       delete kvData.passcode;
+
+      if (Array.isArray(kvData.team)) {
+        const hasNtwali = kvData.team.some((m: any) => 
+          m.name?.toLowerCase().includes("ntwali") || m.name?.toLowerCase().includes("andersen")
+        );
+        if (!hasNtwali) {
+          kvData.team.push({
+            name: "NTWALI ANDERSEN Moise",
+            role: "Camera Operator",
+            bio: "Expert visual technician dedicated to precise framing, fluid camera movements, and capturing stunning cinematography on set.",
+            image: "/images/ntwali.jpg"
+          });
+          // Update KV database in background to persist
+          setKVContent(kvData).catch(() => {});
+        }
+      }
+
       return NextResponse.json({ ...kvData, _meta: { storageType: "kv", kvConnected: true } }, { headers });
     }
 
