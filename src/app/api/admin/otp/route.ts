@@ -125,7 +125,7 @@ export async function POST(request: Request) {
     const { action, passcode, otp } = body;
     const expectedPasscode = await getExpectedPasscode();
 
-    const targetEmail = "uwasesonia43@gmail.com";
+    const targetEmail = process.env.ADMIN_2FA_EMAIL || "impanoent@gmail.com";
 
     // 1. ACTION: SEND / RESEND OTP (1 Minute Expiration)
     if (action === "send" || action === "resend") {

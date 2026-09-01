@@ -5,7 +5,7 @@ export async function POST(request: Request) {
     const { name, email, projectType, budget, message } = await request.json();
 
     const resendApiKey = process.env.RESEND_API_KEY;
-    const toEmail = process.env.CONTACT_TO_EMAIL || "uwasesonia43@gmail.com";
+    const toEmail = process.env.CONTACT_TO_EMAIL || "impanoent@gmail.com";
 
     if (!resendApiKey) {
       return NextResponse.json(

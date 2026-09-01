@@ -45,7 +45,7 @@ export default function AdminDashboard() {
   // 2FA Authentication States
   const [authStep, setAuthStep] = useState<"passcode" | "otp">("passcode");
   const [otpCode, setOtpCode] = useState("");
-  const [otpEmailHint, setOtpEmailHint] = useState("uwasesonia43@gmail.com");
+  const [otpEmailHint, setOtpEmailHint] = useState("impanoent@gmail.com");
   const [resendTimer, setResendTimer] = useState(0);
 
   // Countdown timer for 2FA Resend button
