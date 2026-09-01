@@ -111,7 +111,7 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (res.ok && data.success) {
         setAuthStep("otp");
-        setResendTimer(30);
+        setResendTimer(60);
         showToast("2FA security code sent to your email.", "success");
       } else {
         setAuthError(data.error || "Incorrect admin passcode.");
@@ -168,7 +168,7 @@ export default function AdminDashboard() {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setResendTimer(30);
+        setResendTimer(60);
         showToast("New verification code dispatched to your email.", "info");
       } else {
         setAuthError(data.error || "Failed to resend verification code.");
@@ -883,20 +883,7 @@ export default function AdminDashboard() {
         {/* Header */}
         <header className={styles.dashboardHeader}>
           <div className={styles.titleSection}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-              <h1>Impano CMS</h1>
-              {metaInfo.kvConnected ? (
-                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "0.75rem", background: "rgba(16, 185, 129, 0.15)", color: "#10b981", padding: "4px 12px", borderRadius: "20px", border: "1px solid rgba(16, 185, 129, 0.3)", fontWeight: 600 }}>
-                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981", display: "inline-block" }}></span>
-                  Cloud Database Connected (Upstash KV)
-                </span>
-              ) : (
-                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "0.75rem", background: "rgba(245, 158, 11, 0.15)", color: "#f59e0b", padding: "4px 12px", borderRadius: "20px", border: "1px solid rgba(245, 158, 11, 0.3)", fontWeight: 600 }} title="To persist changes permanently across Vercel deployments, add KV_REST_API_URL and KV_REST_API_TOKEN in Vercel Project Settings -> Environment Variables.">
-                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#f59e0b", display: "inline-block" }}></span>
-                  Temporary Server Cache (Set Vercel Env Vars)
-                </span>
-              )}
-            </div>
+            <h1>Impano CMS</h1>
             <p className={styles.subtitle}>Manage homepage sections, clients, and team profiles dynamically.</p>
           </div>
           <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
