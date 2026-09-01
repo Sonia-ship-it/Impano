@@ -68,7 +68,7 @@ async function setKVContent(key: string, data: any) {
   }
 }
 
-// In-memory fallback in case of single node lifecycle
+// In-memory fallback
 let memoryOtpStore: { code: string; expiresAt: number; passcode: string } | null = null;
 
 async function saveOTP(otpData: { code: string; expiresAt: number; passcode: string }) {
@@ -127,7 +127,7 @@ export async function POST(request: Request) {
 
     const targetEmail = "uwasesonia43@gmail.com";
 
-    // 1. ACTION: SEND / RESEND OTP
+    // 1. ACTION: SEND / RESEND OTP (1 Minute Expiration)
     if (action === "send" || action === "resend") {
       if (!passcode || passcode !== expectedPasscode) {
         return NextResponse.json(
@@ -136,25 +136,25 @@ export async function POST(request: Request) {
         );
       }
 
-      // Generate secure 6-digit OTP
+      // Generate secure 6-digit numeric OTP
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
+      // STRICT: Valid for only 1 minute (60,000 ms)
+      const expiresAt = Date.now() + 60 * 1000;
 
       await saveOTP({ code: generatedOtp, expiresAt, passcode });
 
       const resendApiKey = process.env.RESEND_API_KEY;
 
       if (!resendApiKey) {
-        console.warn("[2FA OTP API] Resend API key missing in environment. Using dev console code:", generatedOtp);
+        console.warn("[2FA OTP API] Resend API key missing in environment. Using dev code:", generatedOtp);
         return NextResponse.json({
           success: true,
-          message: `2FA security code generated (Resend API key unconfigured; Dev Code: ${generatedOtp})`,
-          emailHint: targetEmail,
+          message: "2FA security code generated.",
           devCode: generatedOtp,
         });
       }
 
-      // Send email via Resend
+      // Send email via Resend with Outfit typography & dark gold theme
       const emailRes = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -164,35 +164,58 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           from: "Impano Security <onboarding@resend.dev>",
           to: targetEmail,
-          subject: `🔐 ${generatedOtp} is your Impano Admin Verification Code`,
+          subject: "Your Impano Admin Verification Code",
           html: `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 540px; margin: 0 auto; background-color: #0d0c0c; color: #ffffff; border-radius: 16px; border: 1px solid rgba(255, 173, 17, 0.25); overflow: hidden; padding: 0;">
-              <div style="background: linear-gradient(135deg, #181717 0%, #0d0c0c 100%); padding: 30px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-                <h1 style="color: #ffad11; margin: 0 0 6px; font-size: 24px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;">Impano Entertainment</h1>
-                <p style="color: #999999; margin: 0; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase;">Two-Factor Authentication (2FA)</p>
-              </div>
-
-              <div style="padding: 35px 30px; text-align: center;">
-                <p style="color: #e0e0e0; font-size: 15px; margin: 0 0 25px; line-height: 1.6;">
-                  You requested an administrative login to the <strong>Impano CMS Dashboard</strong>. Use the 6-digit one-time passcode below to verify your session:
-                </p>
-
-                <div style="background: rgba(255, 173, 17, 0.08); border: 1.5px dashed #ffad11; border-radius: 12px; padding: 20px; display: inline-block; margin: 0 auto 25px; letter-spacing: 0.35em; font-size: 38px; font-weight: 900; color: #ffad11; font-family: monospace;">
-                  ${generatedOtp}
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <style>
+                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+              </style>
+            </head>
+            <body style="margin: 0; padding: 20px; background-color: #080707; font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+              <div style="max-width: 520px; margin: 20px auto; background-color: #0d0c0c; color: #ffffff; border-radius: 16px; border: 1px solid rgba(255, 173, 17, 0.28); overflow: hidden; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);">
+                
+                <!-- Header -->
+                <div style="background: linear-gradient(135deg, #181717 0%, #0d0c0c 100%); padding: 32px 25px 24px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+                  <span style="display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: #ffad11; background: rgba(255, 173, 17, 0.1); border: 1px solid rgba(255, 173, 17, 0.3); padding: 4px 14px; border-radius: 100px; margin-bottom: 14px;">
+                    TWO-FACTOR SECURITY
+                  </span>
+                  <h1 style="color: #ffffff; margin: 0 0 6px; font-size: 22px; font-weight: 800; letter-spacing: -0.01em; font-family: 'Outfit', sans-serif;">
+                    Your Impano Admin Verification Code
+                  </h1>
                 </div>
 
-                <p style="color: #888888; font-size: 13px; margin: 0 0 10px;">
-                  ⏳ This security code is valid for <strong>10 minutes</strong>.
-                </p>
-                <p style="color: #666666; font-size: 12px; margin: 0;">
-                  If you did not request this login, please ignore this message or change your admin passcode immediately.
-                </p>
-              </div>
+                <!-- Body -->
+                <div style="padding: 35px 30px; text-align: center;">
+                  <p style="color: #cfcece; font-size: 15px; margin: 0 0 25px; line-height: 1.6; font-weight: 400;">
+                    Please use the following 6-digit one-time passcode to complete your administrator login:
+                  </p>
 
-              <div style="background-color: #080707; padding: 18px 30px; border-top: 1px solid rgba(255, 255, 255, 0.06); text-align: center; font-size: 11px; color: #555555;">
-                Protected by Impano Security Core &bull; Kigali, Rwanda
+                  <!-- 6-digit Code Box -->
+                  <div style="background: rgba(255, 173, 17, 0.08); border: 1.5px dashed #ffad11; border-radius: 12px; padding: 18px 24px; display: inline-block; margin: 0 auto 25px; letter-spacing: 0.35em; font-size: 38px; font-weight: 900; color: #ffad11; font-family: 'Outfit', monospace;">
+                    ${generatedOtp}
+                  </div>
+
+                  <div style="background: rgba(255, 77, 77, 0.08); border: 1px solid rgba(255, 77, 77, 0.2); border-radius: 8px; padding: 10px 15px; margin: 0 auto 20px; max-width: 380px;">
+                    <p style="color: #ff8888; font-size: 13px; margin: 0; font-weight: 600;">
+                      ⏳ Valid for only 1 minute (60 seconds)
+                    </p>
+                  </div>
+
+                  <p style="color: #777777; font-size: 12px; margin: 0; line-height: 1.5;">
+                    If you did not initiate this login request, please disregard this email or update your administrative passcode immediately.
+                  </p>
+                </div>
+
+                <!-- Footer -->
+                <div style="background-color: #060505; padding: 16px 25px; border-top: 1px solid rgba(255, 255, 255, 0.05); text-align: center; font-size: 11px; color: #555555; letter-spacing: 0.05em;">
+                  Impano Entertainment &bull; Studio CMS Portal &bull; Kigali, Rwanda
+                </div>
               </div>
-            </div>
+            </body>
+            </html>
           `,
         }),
       });
@@ -208,12 +231,11 @@ export async function POST(request: Request) {
 
       return NextResponse.json({
         success: true,
-        message: `Security code sent to ${targetEmail}`,
-        emailHint: targetEmail,
+        message: "Verification code dispatched to email.",
       });
     }
 
-    // 2. ACTION: VERIFY OTP
+    // 2. ACTION: VERIFY OTP (Strict 1-Minute Expiry Check)
     if (action === "verify") {
       if (!passcode || passcode !== expectedPasscode) {
         return NextResponse.json(
@@ -238,10 +260,11 @@ export async function POST(request: Request) {
         );
       }
 
+      // STRICT EXPIRY CHECK: If expired, immediately clear and reject
       if (Date.now() > stored.expiresAt) {
         await clearStoredOTP();
         return NextResponse.json(
-          { error: "Verification code has expired. Please request a new code." },
+          { error: "This verification code has expired (exceeded 1 minute limit). Please click Resend Code." },
           { status: 400 }
         );
       }
@@ -253,7 +276,7 @@ export async function POST(request: Request) {
         );
       }
 
-      // Valid OTP: Clear stored OTP and grant access
+      // Valid OTP: Clear stored OTP so it cannot be reused, and grant access
       await clearStoredOTP();
 
       return NextResponse.json({

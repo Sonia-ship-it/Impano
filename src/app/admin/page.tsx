@@ -111,9 +111,8 @@ export default function AdminDashboard() {
       const data = await res.json();
       if (res.ok && data.success) {
         setAuthStep("otp");
-        setOtpEmailHint(data.emailHint || "uwasesonia43@gmail.com");
         setResendTimer(30);
-        showToast(`2FA security code sent to ${data.emailHint || "uwasesonia43@gmail.com"}`, "success");
+        showToast("2FA security code sent to your email.", "success");
       } else {
         setAuthError(data.error || "Incorrect admin passcode.");
       }
@@ -796,14 +795,16 @@ export default function AdminDashboard() {
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
-                Two-Factor Authentication
+                Two-Factor Security
               </div>
 
-              <h2 className={styles.lockTitle}>Verify Code</h2>
-              <p className={styles.lockDesc} style={{ marginBottom: "1.5rem" }}>
-                A 6-digit security verification code has been dispatched to:
+              <h2 className={styles.lockTitle}>Enter OTP Code</h2>
+              <p className={styles.lockDesc} style={{ marginBottom: "1.75rem" }}>
+                Please enter the 6-digit verification code sent to your email to complete sign-in.
                 <br />
-                <span className={styles.twoFaEmailText}>{otpEmailHint}</span>
+                <span style={{ fontSize: "0.8rem", color: "#e09010", marginTop: "4px", display: "inline-block" }}>
+                  ⏳ Code is valid for 1 minute
+                </span>
               </p>
 
               <input
