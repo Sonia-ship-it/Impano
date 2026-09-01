@@ -249,7 +249,8 @@ export default function AdminDashboard() {
         "/images/chrispin.jpeg",
         "/images/sonia.png",
         "/images/Fiston.jpeg",
-        "/images/Ally.png"
+        "/images/Ally.png",
+        "/images/ntwali.jpg"
       ];
 
       const defaultClients = [
@@ -306,6 +307,12 @@ export default function AdminDashboard() {
           role: "Assistant Production",
           bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
           image: defaultTeamImages[3],
+        },
+        {
+          name: "NTWALI ANDERSEN Moise",
+          role: "Camera Operator",
+          bio: "Expert visual technician dedicated to precise framing, fluid camera movements, and capturing stunning cinematography on set.",
+          image: defaultTeamImages[4],
         }
       ];
 

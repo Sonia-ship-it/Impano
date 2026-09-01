@@ -31,6 +31,12 @@ const defaultTeam = [
     bio: "Key coordinator handling logistics, scheduling, and on-set operations, ensuring our complex film productions run smoothly and on schedule.",
     image: "/images/Ally.png",
   },
+  {
+    name: "NTWALI ANDERSEN Moise",
+    role: "Camera Operator",
+    bio: "Expert visual technician dedicated to precise framing, fluid camera movements, and capturing stunning cinematography on set.",
+    image: "/images/ntwali.jpg",
+  },
 ];
 
 export default function TeamPage() {
