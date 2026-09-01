@@ -421,12 +421,6 @@
   text-transform: uppercase;
 }
 
-.lockSubmitBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 173, 17, 0.35);
-  background: #ffb82e;
-}
-
 .lockSubmitBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -444,6 +438,97 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+.otpInput {
+  width: 100%;
+  background: rgba(255, 173, 17, 0.04);
+  border: 1.5px solid rgba(255, 173, 17, 0.4);
+  border-radius: 8px;
+  padding: 1.1rem 1rem;
+  color: #ffad11;
+  font-family: monospace;
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.35em;
+  transition: var(--transition-smooth);
+  margin-bottom: 1.5rem;
+}
+
+.otpInput:focus {
+  outline: none;
+  border-color: #ffad11;
+  background: rgba(255, 173, 17, 0.08);
+  box-shadow: 0 0 30px rgba(255, 173, 17, 0.25);
+}
+
+.twoFaBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 173, 17, 0.1);
+  border: 1px solid rgba(255, 173, 17, 0.3);
+  color: #ffad11;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.9rem;
+  border-radius: 100px;
+  margin-bottom: 1.25rem;
+}
+
+.twoFaEmailText {
+  color: #ffffff;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: inline-block;
+  margin: 0.3rem 0;
+  word-break: break-all;
+}
+
+.resendRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+}
+
+.resendBtn {
+  background: transparent;
+  border: none;
+  color: var(--accent-gold);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: var(--transition-smooth);
+}
+
+.resendBtn:disabled {
+  color: var(--text-grey);
+  cursor: not-allowed;
+  text-decoration: none;
+  opacity: 0.6;
+}
+
+.backToPasscodeBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-grey);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: var(--transition-smooth);
+}
+
+.backToPasscodeBtn:hover {
+  color: #ffffff;
 }
 
 .fileUploadWrapper {

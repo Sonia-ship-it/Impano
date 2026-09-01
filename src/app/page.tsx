@@ -199,12 +199,12 @@ export default function Home() {
   // Selected Works for 3D Carousel (First 4 Projects)
   const selected4Works = works.slice(0, 4);
 
-  // Automated 3D Rotating Showcase (responsive 4.8 seconds switching)
+  // Automated 3D Rotating Showcase (responsive 3.5 seconds switching)
   useEffect(() => {
     if (isRotatingHovered || selected4Works.length <= 1) return;
     const interval = setInterval(() => {
       setWorkRotationIndex((prev) => (prev + 1) % selected4Works.length);
-    }, 4800);
+    }, 3500);
     return () => clearInterval(interval);
   }, [isRotatingHovered, selected4Works.length]);
 

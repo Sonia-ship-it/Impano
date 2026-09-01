@@ -42,6 +42,22 @@ export default function AdminDashboard() {
   const [showNewPasscode, setShowNewPasscode] = useState(false);
   const [showConfirmPasscode, setShowConfirmPasscode] = useState(false);
 
+  // 2FA Authentication States
+  const [authStep, setAuthStep] = useState<"passcode" | "otp">("passcode");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpEmailHint, setOtpEmailHint] = useState("uwasesonia43@gmail.com");
+  const [resendTimer, setResendTimer] = useState(0);
+
+  // Countdown timer for 2FA Resend button
+  useEffect(() => {
+    if (resendTimer > 0) {
+      const interval = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [resendTimer]);
+
   // Check if passcode is saved in localStorage
   useEffect(() => {
     const savedPasscode = localStorage.getItem("impano_admin_passcode");
@@ -70,11 +86,96 @@ export default function AdminDashboard() {
         setPasscode(codeToVerify);
         fetchContent();
       } else {
-        setAuthError(data.error || "Invalid passcode.");
         localStorage.removeItem("impano_admin_passcode");
       }
-    } catch (err) {
+    } catch {
+      localStorage.removeItem("impano_admin_passcode");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePasscodeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!passcode.trim()) return;
+
+    setIsLoading(true);
+    setAuthError("");
+    try {
+      const res = await fetch("/api/admin/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "send", passcode: passcode.trim() }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setAuthStep("otp");
+        setOtpEmailHint(data.emailHint || "uwasesonia43@gmail.com");
+        setResendTimer(30);
+        showToast(`2FA security code sent to ${data.emailHint || "uwasesonia43@gmail.com"}`, "success");
+      } else {
+        setAuthError(data.error || "Incorrect admin passcode.");
+      }
+    } catch {
       setAuthError("Failed to connect to authentication server.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOtpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!otpCode.trim() || otpCode.trim().length !== 6) {
+      setAuthError("Please enter the 6-digit verification code.");
+      return;
+    }
+
+    setIsLoading(true);
+    setAuthError("");
+    try {
+      const res = await fetch("/api/admin/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "verify", passcode: passcode.trim(), otp: otpCode.trim() }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.verified) {
+        setIsAuthenticated(true);
+        localStorage.setItem("impano_admin_passcode", passcode.trim());
+        showToast("Identity verified! Welcome to Impano CMS.", "success");
+        fetchContent();
+      } else {
+        setAuthError(data.error || "Invalid or expired 2FA code.");
+      }
+    } catch {
+      setAuthError("Failed to verify security code.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (resendTimer > 0 || isLoading) return;
+    setIsLoading(true);
+    setAuthError("");
+    try {
+      const res = await fetch("/api/admin/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "resend", passcode: passcode.trim() }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setResendTimer(30);
+        showToast("New verification code dispatched to your email.", "info");
+      } else {
+        setAuthError(data.error || "Failed to resend verification code.");
+      }
+    } catch {
+      setAuthError("Failed to send verification code.");
     } finally {
       setIsLoading(false);
     }
@@ -614,79 +715,152 @@ export default function AdminDashboard() {
       <div className={styles.adminWrapper} style={{ position: "relative", minHeight: "100vh", overflow: "hidden" }}>
         <GeometricPattern />
         <div className={styles.lockScreen} style={{ position: "relative", zIndex: 10 }}>
-          <form className={styles.lockCard} onSubmit={handleLoginSubmit}>
-            <div className={styles.lockLogoWrapper}>
-              <Logo size={64} />
-            </div>
-            <h2 className={styles.lockTitle}>IMPANO CMS</h2>
-            <p className={styles.lockDesc}>Enter administrative passcode to unlock editing controls.</p>
-            
-            <div className={styles.passcodeFieldWrapper}>
-              <input
-                type={showPasscode ? "text" : "password"}
-                placeholder="Enter Passcode"
-                className={styles.lockInput}
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                required
-                disabled={isLoading}
-              />
-              <button 
-                type="button" 
-                className={styles.toggleVisibilityBtn}
-                onClick={() => setShowPasscode(!showPasscode)}
-                aria-label="Toggle passcode visibility"
-              >
-                {showPasscode ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
-                    <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
-                    <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
-                    <line x1="2" y1="2" x2="22" y2="22" />
-                  </svg>
+          {authStep === "passcode" ? (
+            <form className={styles.lockCard} onSubmit={handlePasscodeSubmit}>
+              <div className={styles.lockLogoWrapper}>
+                <Logo size={64} />
+              </div>
+              <h2 className={styles.lockTitle}>IMPANO CMS</h2>
+              <p className={styles.lockDesc}>Enter administrative passcode to initiate 2FA authentication.</p>
+              
+              <div className={styles.passcodeFieldWrapper}>
+                <input
+                  type={showPasscode ? "text" : "password"}
+                  placeholder="Enter Passcode"
+                  className={styles.lockInput}
+                  value={passcode}
+                  onChange={(e) => setPasscode(e.target.value)}
+                  required
+                  disabled={isLoading}
+                  autoFocus
+                />
+                <button 
+                  type="button" 
+                  className={styles.toggleVisibilityBtn}
+                  onClick={() => setShowPasscode(!showPasscode)}
+                  aria-label="Toggle passcode visibility"
+                >
+                  {showPasscode ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                      <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                      <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                      <line x1="2" y1="2" x2="22" y2="22" />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+
+              <button type="submit" className={styles.lockSubmitBtn} disabled={isLoading || !passcode.trim()}>
+                {isLoading ? (
+                  <span className={styles.spinner}></span>
                 ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
+                  "Continue to 2FA ➔"
                 )}
               </button>
-            </div>
-
-            <button type="submit" className={styles.lockSubmitBtn} disabled={isLoading}>
-              {isLoading ? (
-                <span className={styles.spinner}></span>
-              ) : (
-                "Unlock Dashboard"
+              
+              {authError && (
+                <div className={`${styles.statusMessage} ${styles.statusError}`} style={{ justifyContent: "center" }}>
+                  ⚠️ {authError}
+                </div>
               )}
-            </button>
-            
-            {authError && (
-              <div className={`${styles.statusMessage} ${styles.statusError}`} style={{ justifyContent: "center" }}>
-                ⚠️ {authError}
+            </form>
+          ) : (
+            <form className={styles.lockCard} onSubmit={handleOtpSubmit}>
+              <div className={styles.twoFaBadge}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                Two-Factor Authentication
               </div>
-            )}
-          </form>
+
+              <h2 className={styles.lockTitle}>Verify Code</h2>
+              <p className={styles.lockDesc} style={{ marginBottom: "1.5rem" }}>
+                A 6-digit security verification code has been dispatched to:
+                <br />
+                <span className={styles.twoFaEmailText}>{otpEmailHint}</span>
+              </p>
+
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                placeholder="000000"
+                className={styles.otpInput}
+                value={otpCode}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, "");
+                  setOtpCode(val);
+                }}
+                required
+                autoFocus
+                disabled={isLoading}
+              />
+
+              <button type="submit" className={styles.lockSubmitBtn} disabled={isLoading || otpCode.length !== 6}>
+                {isLoading ? (
+                  <span className={styles.spinner}></span>
+                ) : (
+                  "Verify & Unlock Dashboard"
+                )}
+              </button>
+
+              <div className={styles.resendRow}>
+                <button
+                  type="button"
+                  className={styles.backToPasscodeBtn}
+                  onClick={() => {
+                    setAuthStep("passcode");
+                    setAuthError("");
+                    setOtpCode("");
+                  }}
+                >
+                  ← Back to Passcode
+                </button>
+
+                <button
+                  type="button"
+                  className={styles.resendBtn}
+                  onClick={handleResendOtp}
+                  disabled={resendTimer > 0 || isLoading}
+                >
+                  {resendTimer > 0 ? `Resend code (${resendTimer}s)` : "Resend Code"}
+                </button>
+              </div>
+
+              {authError && (
+                <div className={`${styles.statusMessage} ${styles.statusError}`} style={{ justifyContent: "center", marginTop: "1.2rem" }}>
+                  ⚠️ {authError}
+                </div>
+              )}
+            </form>
+          )}
         </div>
       </div>
     );
