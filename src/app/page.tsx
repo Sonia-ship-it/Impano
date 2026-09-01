@@ -8,6 +8,11 @@ import Logo from "../components/Logo";
 
 export default function Home() {
   const [showreelOpen, setShowreelOpen] = useState(false);
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+
+  // 3D Rotating Cards Carousel State (Automated)
+  const [workRotationIndex, setWorkRotationIndex] = useState(0);
+  const [isRotatingHovered, setIsRotatingHovered] = useState(false);
 
   useEffect(() => {
     if (showreelOpen) {
@@ -20,41 +25,26 @@ export default function Home() {
     };
   }, [showreelOpen]);
 
-  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    card.style.setProperty("--mouse-x", `${x}px`);
-    card.style.setProperty("--mouse-y", `${y}px`);
-
-    // Calculate 3D tilt angles based on cursor offset from card center
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg tilt
-    const rotateY = ((x - centerX) / centerX) * 10;  // Max 10 deg tilt
-
-    card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
-  };
-
-  const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget;
-    card.style.transform = `perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-  };
-
   const marqueeItems = [
     "Cinematography",
     "Production Design",
     "Creative Direction",
     "Post-Production",
     "VFX",
-    "Drone",
-    "Cinematography",
-    "Production Design",
-    "Creative Direction",
-    "Post-Production",
-    "VFX",
-    "Drone",
+    "Drone Visuals",
+    "Color Grading",
+    "Sound Design",
+    "Commercials",
+    "Documentaries",
+    "Narrative Films",
+    "4K / 8K Cinema",
+  ];
+
+  const defaultHeroImages = [
+    "/images/hero_bg.png",
+    "/images/echo_of_hills.png",
+    "/images/grading_console.png",
+    "/images/lens_close_up.png"
   ];
 
   const defaultWorkImages = [
@@ -113,36 +103,37 @@ export default function Home() {
     {
       title: "The Echo of Hills",
       category: "Narrative Film",
-      image: defaultWorkImages[0]
+      image: defaultWorkImages[0],
     },
     {
       title: "Impano Entertainment",
       category: "Studio Showcase",
-      image: defaultWorkImages[1]
+      image: defaultWorkImages[1],
     },
     {
       title: "Commercials",
-      category: "Crafted",
-      image: defaultWorkImages[2]
+      category: "Crafted Brands",
+      image: defaultWorkImages[2],
     },
     {
       title: "VFX Composites",
-      category: "Animation",
-      image: defaultWorkImages[3]
+      category: "Animation & 3D",
+      image: defaultWorkImages[3],
     }
   ];
 
   const [services, setServices] = useState(initialServices);
   const [clients, setClients] = useState(initialClients);
   const [works, setWorks] = useState(initialWorks);
-  const [hero, setHero] = useState({
+  const [hero, setHero] = useState<any>({
     tagline: "Connect with us",
     titlePart1: "Crafting",
     titleOutline: "Visual",
     titleGold: "Legacies.",
     description: "From the heart of Kigali, we craft premium commercial films, documentaries, and post-production experiences. We translate bold concepts into memorable cinematic assets.",
     playText: "Watch Showreel",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
+    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4",
+    images: defaultHeroImages
   });
 
   useEffect(() => {
@@ -164,14 +155,12 @@ export default function Home() {
       }
       if (Array.isArray(data.works)) {
         setWorks(data.works.map((w: any, idx: number) => ({
-          ...w,
-          image: resolveImage(w.image, defaultWorkImages[idx] || "")
+          title: w.title || `Project ${idx + 1}`,
+          category: w.category || "Film",
+          image: resolveImage(w.image, defaultWorkImages[idx % defaultWorkImages.length] || "")
         })));
       }
-      console.log(`%c[Impano CMS Home] Content successfully loaded from ${sourceName}.`, "color: #10b981; font-weight: bold;", {
-        storageType: data._meta?.storageType || "cache/local",
-        kvConnected: data._meta?.kvConnected || false,
-      });
+      console.log(`%c[Impano CMS Home] Content successfully loaded from ${sourceName}.`, "color: #10b981; font-weight: bold;");
     };
 
     try {
@@ -179,7 +168,7 @@ export default function Home() {
       if (cached) {
         applyData(JSON.parse(cached), "Browser LocalCache");
       }
-    } catch {}
+    } catch { }
 
     fetch("/api/content")
       .then((res) => {
@@ -193,13 +182,85 @@ export default function Home() {
       .catch((err) => console.warn("[Impano CMS Home] Failed to fetch dynamic content from API, using local fallbacks.", err));
   }, []);
 
+  // Hero Background Slides configured from CMS
+  const heroSlideImages = (hero.images && Array.isArray(hero.images) && hero.images.length > 0)
+    ? hero.images
+    : defaultHeroImages;
+
+  // Automated Hero Background Slides Transitions (smooth 7.0 seconds)
+  useEffect(() => {
+    if (showreelOpen || heroSlideImages.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroSlideImages.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [showreelOpen, heroSlideImages.length]);
+
+  // Selected Works for 3D Carousel (First 4 Projects)
+  const selected4Works = works.slice(0, 4);
+
+  // Automated 3D Rotating Showcase (responsive 4.8 seconds switching)
+  useEffect(() => {
+    if (isRotatingHovered || selected4Works.length <= 1) return;
+    const interval = setInterval(() => {
+      setWorkRotationIndex((prev) => (prev + 1) % selected4Works.length);
+    }, 4800);
+    return () => clearInterval(interval);
+  }, [isRotatingHovered, selected4Works.length]);
+
+  // Card Mouse 3D Tilt handler
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -12;
+    const rotateY = ((x - centerX) / centerX) * 12;
+
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+  };
+
+  const handleCardMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+  };
+
   return (
-    <div style={{ overflow: "hidden" }}>
+    <div>
       {/* Hero Section */}
       <section className={styles.hero}>
+        {/* Automated Background Slideshow */}
+        <div className={styles.heroBgWrapper}>
+          {heroSlideImages.map((slideImg: string, idx: number) => {
+            const isActive = idx === currentHeroSlide;
+            return (
+              <div
+                key={idx}
+                className={`${styles.heroSlideLayer} ${isActive ? styles.heroSlideLayerActive : ""}`}
+              >
+                <img
+                  src={slideImg}
+                  alt={`Hero Scene ${idx + 1}`}
+                  className={styles.heroSlideImg}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Ambient Clean Subtle Gradient Overlay */}
+        <div className={styles.heroOverlay} />
+
+        {/* Original 2-Column Hero Content Layout */}
         <div className={`${styles.heroContainer} container`}>
+          {/* Left Column: Tagline & Stacked Headline */}
           <div className={styles.heroLeft}>
-            <span className={styles.heroTag}>{hero.tagline}</span>
+            <span className={styles.heroTag}>{hero.tagline || "Connect with us"}</span>
             <h1 className={styles.heroTitle}>
               {hero.titlePart1}
               <br />
@@ -208,29 +269,87 @@ export default function Home() {
               <span className={styles.goldText}>{hero.titleGold}</span>
             </h1>
           </div>
+
+          {/* Right Column: Description & Action Buttons */}
           <div className={styles.heroRight}>
-            <p className={styles.heroDesc}>
-              {hero.description}
-            </p>
-            <div
-              className={styles.playBtn}
-              onClick={() => setShowreelOpen(true)}
-              data-cursor="play"
-            >
-              <div className={styles.playCircle}>
-                <div className={styles.playArrow}></div>
+            <p className={styles.heroDesc}>{hero.description}</p>
+            <div className={styles.heroActionsRow}>
+              <div
+                className={styles.playBtn}
+                onClick={() => setShowreelOpen(true)}
+                data-cursor="play"
+              >
+                <div className={styles.playCircle}>
+                  <div className={styles.playArrow} />
+                </div>
+                <span className={styles.playText}>{hero.playText || "Watch Showreel"}</span>
               </div>
-              <span className={styles.playText}>{hero.playText}</span>
+
+              <Link href="/contact" className="btn-primary" data-cursor="pointer">
+                <span>Initiate Project</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Infinite Scrolling Marquee */}
-      <div className="marquee-container">
-        <div className="marquee-content">
-          {marqueeItems.map((item, idx) => (
-            <span key={idx} className="marquee-item">
+      {/* Showreel Modal */}
+      {showreelOpen && (
+        <div
+          className={styles.showreelOverlay}
+          onClick={() => setShowreelOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className={styles.showreelContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className={styles.showreelClose}
+              onClick={() => setShowreelOpen(false)}
+              aria-label="Close Showreel"
+            >
+              ✕
+            </button>
+            <div className={styles.showreelPlayerWrapper}>
+              <video
+                src={hero.videoUrl || "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"}
+                autoPlay
+                controls
+                playsInline
+                className={styles.showreelVideo}
+              />
+              <div className={styles.showreelHud}>
+                <div className={styles.hudHeader}>
+                  <span className={styles.hudLive}>● RAW PREVIEW MONITOR</span>
+                  <span className={styles.hudResolution}>RED RAPTOR 8K</span>
+                </div>
+                <div className={styles.hudFooter}>
+                  <span className={styles.hudTime}>TC 01:24:09:12</span>
+                  <div className={styles.hudWaveform}>
+                    <div className={styles.waveBar} style={{ height: "40%" }} />
+                    <div className={styles.waveBar} style={{ height: "70%" }} />
+                    <div className={styles.waveBar} style={{ height: "90%" }} />
+                    <div className={styles.waveBar} style={{ height: "50%" }} />
+                    <div className={styles.waveBar} style={{ height: "30%" }} />
+                    <div className={styles.waveBar} style={{ height: "80%" }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dynamic Infinite Marquee Strip */}
+      <div className={styles.marquee}>
+        <div className={styles.marqueeInner}>
+          {marqueeItems.concat(marqueeItems).map((item, idx) => (
+            <span key={idx} className={styles.marqueeItem}>
               {item}
             </span>
           ))}
@@ -242,16 +361,15 @@ export default function Home() {
         <div className="container">
           <div className={styles.clientsSectionHeader}>
             <span className="section-tag">Our Clients</span>
+            <h2 className="section-title">Trusted By Industry Leaders</h2>
           </div>
 
           <div className={styles.orbitContainer}>
-            {/* Ambient Background Circles */}
             <div className={styles.orbitBackground}>
               <div className={styles.orbitCircleLine} style={{ width: "360px", height: "360px" }} />
               <div className={styles.orbitCircleLine} style={{ width: "520px", height: "520px" }} />
             </div>
 
-            {/* Rotating Cards */}
             {clients.map((client, index) => {
               const startAngle = `${(360 / clients.length) * index}deg`;
               return (
@@ -292,14 +410,23 @@ export default function Home() {
       {/* Production Services Preview */}
       <section className={styles.servicesSection}>
         <div className="container">
-          <span className="section-tag">Expertise</span>
-          <h2 className="section-title">Production Services</h2>
+          <div className={styles.servicesHeader}>
+            <div>
+              <span className="section-tag">Expertise</span>
+              <h2 className="section-title" style={{ marginBottom: 0 }}>Production Services</h2>
+            </div>
+            <Link href="/services" className="btn-outline">
+              All Capabilities
+            </Link>
+          </div>
+
           <div className={styles.servicesList}>
             {services.map((service, index) => (
               <div
                 key={index}
                 className={styles.serviceItem}
                 onMouseMove={handleCardMouseMove}
+                onMouseLeave={handleCardMouseLeave}
                 data-cursor="view"
               >
                 <span className={styles.serviceNum}>{service.num}</span>
@@ -311,8 +438,8 @@ export default function Home() {
                       src={service.image}
                       alt={service.name}
                       className={styles.serviceThumbnail}
-                      width={160}
-                      height={100}
+                      width={180}
+                      height={110}
                     />
                   ) : null}
                 </div>
@@ -322,186 +449,110 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Selected Works Grid */}
+      {/* Selected Works: Fully Automated 3D Rotating Showcase */}
       <section className={styles.works}>
         <div className="container">
+          {/* Header */}
           <div className={styles.worksHeader}>
-            <div>
-              <span className="section-tag">Portfolio</span>
+            <div className={styles.worksHeaderContent}>
+              <span className="section-tag">Curated Portfolio</span>
               <h2 className="section-title" style={{ marginBottom: 0 }}>Selected Works</h2>
+              <p className={styles.worksSubtext}>
+                A 3D perspective into our featured masterworks. Discover how we turn bold visions into iconic cinematic assets.
+              </p>
             </div>
-            <Link href="/services" className="btn-outline">
-              View All Services
+            <Link href="/works" className={styles.viewAllHeaderBtn}>
+              Explore Our Works
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </Link>
           </div>
 
-          <div className={styles.worksGrid}>
-            {/* Column Left (Vertical) */}
-            {works[0] && (
-              <div
-                className={`${styles.workCard} ${styles.verticalCard}`}
-                onMouseMove={handleCardMouseMove}
-                data-cursor="view"
-              >
-                {works[0].image ? (
-                  <Image
-                    src={works[0].image}
-                    alt={works[0].title}
-                    className={styles.workImg}
-                    fill
-                    sizes="(max-width: 992px) 100vw, 40vw"
-                  />
-                ) : (
-                  <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
-                )}
-                <div className={styles.workOverlay}>
-                  <span className={styles.workCategory}>{works[0].category}</span>
-                  <h3 className={styles.workTitle}>{works[0].title}</h3>
-                </div>
-              </div>
-            )}
-
-            {/* Column Right Top (Horizontal) */}
-            {works[1] && (
-              <div
-                className={`${styles.workCard} ${styles.horizontalCard}`}
-                onMouseMove={handleCardMouseMove}
-                data-cursor="view"
-              >
-                {works[1].image ? (
-                  <Image
-                    src={works[1].image}
-                    alt={works[1].title}
-                    className={styles.workImg}
-                    fill
-                    sizes="(max-width: 992px) 100vw, 60vw"
-                  />
-                ) : (
-                  <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
-                )}
-                <div className={styles.workOverlay}>
-                  <span className={styles.workCategory}>{works[1].category}</span>
-                  <h3 className={styles.workTitle}>{works[1].title}</h3>
-                </div>
-              </div>
-            )}
-
-            {/* Column Right Bottom Left (Square) */}
-            {works[2] && (
-              <div
-                className={`${styles.workCard} ${styles.squareCard1}`}
-                onMouseMove={handleCardMouseMove}
-                data-cursor="view"
-              >
-                {works[2].image ? (
-                  <Image
-                    src={works[2].image}
-                    alt={works[2].title}
-                    className={styles.workImg}
-                    fill
-                    sizes="(max-width: 992px) 100vw, 30vw"
-                  />
-                ) : (
-                  <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
-                )}
-                <div className={styles.workOverlay}>
-                  <span className={styles.workCategory}>{works[2].category}</span>
-                  <h3 className={styles.workTitle}>{works[2].title}</h3>
-                </div>
-              </div>
-            )}
-
-            {/* Column Right Bottom Right (Square) */}
-            {works[3] && (
-              <div
-                className={`${styles.workCard} ${styles.squareCard2}`}
-                onMouseMove={handleCardMouseMove}
-                data-cursor="view"
-              >
-                {works[3].image ? (
-                  <Image
-                    src={works[3].image}
-                    alt={works[3].title}
-                    className={styles.workImg}
-                    fill
-                    sizes="(max-width: 992px) 100vw, 30vw"
-                  />
-                ) : (
-                  <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
-                )}
-                <div className={styles.workOverlay}>
-                  <span className={styles.workCategory}>{works[3].category}</span>
-                  <h3 className={styles.workTitle}>{works[3].title}</h3>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Closing CTA */}
-      <section className={styles.cta}>
-        <div className={`${styles.ctaContainer} container`}>
-          <h2 className={styles.ctaTitle}>
-            Ready to Capture
-            <br />
-            the Extraordinary?
-          </h2>
-          <div className={styles.ctaButtons}>
-            <Link href="/contact" className="btn-primary">
-              Start A Project
-            </Link>
-            <Link href="/services" className="btn-outline">
-              View Portfolio
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Showreel Cinematic Modal */}
-      {showreelOpen && (
-        <div className={styles.showreelOverlay} onClick={() => setShowreelOpen(false)}>
-          <div className={styles.showreelContent} onClick={(e) => e.stopPropagation()}>
-            <button
-              className={styles.showreelClose}
-              onClick={() => setShowreelOpen(false)}
-              aria-label="Close Showreel"
+          {/* Automated 3D Rotating Stage */}
+          <div
+            className={styles.rotatingStage3D}
+            onMouseEnter={() => setIsRotatingHovered(true)}
+            onMouseLeave={() => setIsRotatingHovered(false)}
+          >
+            <div
+              className={styles.rotatingCarousel}
+              style={{
+                transform: `rotateY(${workRotationIndex * -90}deg)`,
+              }}
             >
-              &times;
-            </button>
+              {selected4Works.map((work, index) => {
+                const angle = index * 90;
+                const isCurrentActive = index === workRotationIndex;
+                return (
+                  <div
+                    key={index}
+                    className={styles.rotatingCardItem}
+                    style={{
+                      transform: `rotateY(${angle}deg) translateZ(360px)`,
+                      opacity: isCurrentActive ? 1 : 0.65,
+                    }}
+                    onClick={() => setWorkRotationIndex(index)}
+                  >
+                    <Link href="/works" style={{ display: "block", width: "100%", height: "100%" }}>
+                      <div className={styles.rotatingCardImgWrapper}>
+                        {work.image ? (
+                          <img
+                            src={work.image}
+                            alt={work.title}
+                            className={styles.rotatingCardImg}
+                          />
+                        ) : (
+                          <div style={{ position: "absolute", inset: 0, backgroundColor: "#181717" }} />
+                        )}
+                      </div>
 
-            <div className={styles.showreelPlayerWrapper}>
-              <video
-                src={hero.videoUrl}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className={styles.showreelVideo}
-              />
+                      {/* Category Pill on Card Top */}
+                      <div className={styles.rotatingCardTop}>
+                        <span className={styles.rotatingCategoryPill}>{work.category}</span>
+                      </div>
 
-              <div className={styles.showreelHud}>
-                <div className={styles.hudHeader}>
-                  <span className={styles.hudLive}>● RAW PREVIEW MONITOR</span>
-                  <span className={styles.hudResolution}>RED RAPTOR 8K</span>
-                </div>
-
-                <div className={styles.hudFooter}>
-                  <span className={styles.hudTime}>TC 01:24:09:12</span>
-                  <div className={styles.hudWaveform}>
-                    <div className={styles.waveBar} style={{ height: "40%" }} />
-                    <div className={styles.waveBar} style={{ height: "70%" }} />
-                    <div className={styles.waveBar} style={{ height: "90%" }} />
-                    <div className={styles.waveBar} style={{ height: "50%" }} />
-                    <div className={styles.waveBar} style={{ height: "30%" }} />
-                    <div className={styles.waveBar} style={{ height: "80%" }} />
+                      {/* Bottom Title & Action */}
+                      <div className={styles.rotatingCardBottom}>
+                        <h3 className={styles.rotatingCardTitle}>{work.title}</h3>
+                        <span className={styles.rotatingCardAction}>
+                          View in Portfolio ➔
+                        </span>
+                      </div>
+                    </Link>
                   </div>
-                </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className={styles.ctaSection}>
+        <div className="container">
+          <div className={styles.ctaCard}>
+            <div className={styles.ctaContent}>
+              <span className="section-tag">Let&apos;s Create Together</span>
+              <h2 className={styles.ctaTitle}>
+                Have a Vision That Demands <span className="gold-text">Cinematic Scale</span>?
+              </h2>
+              <p className={styles.ctaDesc}>
+                Whether it is a feature narrative, corporate brand piece, or high-end commercial, our team is ready to execute with world-class standard.
+              </p>
+              <div className={styles.ctaBtnRow}>
+                <Link href="/contact" className="btn-primary" data-cursor="pointer">
+                  <span>Start a Conversation</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </Link>
+                <Link href="/about" className="btn-outline" data-cursor="pointer">
+                  <span>Explore Capabilities</span>
+                </Link>
               </div>
             </div>
           </div>
         </div>
-      )}
+      </section>
     </div>
   );
 }

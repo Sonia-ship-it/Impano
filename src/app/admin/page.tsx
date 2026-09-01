@@ -6,7 +6,7 @@ import styles from "./admin.module.css";
 import Logo from "../../components/Logo";
 import GeometricPattern from "../../components/GeometricPattern";
 
-type Tab = "works" | "clients" | "team" | "services";
+type Tab = "hero" | "works" | "services" | "clients" | "team";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   const [authError, setAuthError] = useState("");
   const [showPasscode, setShowPasscode] = useState(false);
   
-  const [activeTab, setActiveTab] = useState<Tab>("works");
+  const [activeTab, setActiveTab] = useState<Tab>("hero");
   const [content, setContent] = useState<any>(null);
   const [saveStatus, setSaveStatus] = useState<{ success?: boolean; message?: string } | null>(null);
 
@@ -85,8 +85,14 @@ export default function AdminDashboard() {
     storageType: "checking...",
   });
 
+  const defaultHeroImages = [
+    "/images/hero_bg.png",
+    "/images/echo_of_hills.png",
+    "/images/grading_console.png",
+    "/images/lens_close_up.png"
+  ];
+
   const fetchContent = async (showNotification = false) => {
-    // 1. First check local browser cache for immediate persistent display
     let localCache: any = null;
     try {
       const cachedStr = localStorage.getItem("impano_cms_content_cache");
@@ -114,7 +120,6 @@ export default function AdminDashboard() {
         }
       }
 
-      // If server returned valid data with works/services/hero, use server data directly
       const hasValidServerData = data && (data.works || data.services || data.clients || data.team || data.hero);
       const source = hasValidServerData ? data : (localCache || {});
 
@@ -216,20 +221,27 @@ export default function AdminDashboard() {
       const rawClients = (source.clients && source.clients.length > 0) ? source.clients : defaultClients;
       const rawTeam = (source.team && source.team.length > 0) ? source.team : defaultTeam;
 
+      const heroImages = (source.hero?.images && Array.isArray(source.hero.images) && source.hero.images.length > 0)
+        ? source.hero.images
+        : defaultHeroImages;
+
       const safeData = {
         passcode: source.passcode || passcode,
-        hero: source.hero || {
+        hero: {
           tagline: "Connect with us",
           titlePart1: "Crafting",
           titleOutline: "Visual",
           titleGold: "Legacies.",
           description: "From the heart of Kigali, we craft premium commercial films, documentaries, and post-production experiences. We translate bold concepts into memorable cinematic assets.",
           playText: "WATCH SHOWREEL",
-          videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
+          videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4",
+          images: heroImages,
+          ...(source.hero || {})
         },
         works: rawWorks.map((item: any, i: number) => ({
-          ...item,
-          image: resolveImage(item.image, defaultWorkImages[i] || "")
+          title: item.title || `Project ${i + 1}`,
+          category: item.category || "Film",
+          image: resolveImage(item.image, defaultWorkImages[i % defaultWorkImages.length] || "")
         })),
         services: rawServices.map((item: any, i: number) => ({
           ...item,
@@ -284,7 +296,6 @@ export default function AdminDashboard() {
     setIsLoading(true);
     setSaveStatus(null);
     
-    // Save to local storage cache immediately
     try {
       localStorage.setItem("impano_cms_content_cache", JSON.stringify(targetContent));
     } catch {}
@@ -307,14 +318,11 @@ export default function AdminDashboard() {
         if (data.kvSaved) {
           setMetaInfo({ storageType: "kv", kvConnected: true });
           showToast("Changes PERMANENTLY saved to Upstash Cloud Database!", "success");
-          console.log("%c[Impano CMS Admin] Save successful: Content permanently persisted to Upstash KV!", "color: #10b981; font-weight: bold;");
         } else {
           setMetaInfo({ storageType: "tmp", kvConnected: false, warning: data.warning });
-          showToast("Saved to temporary server cache. Note: Add KV_REST_API_URL to Vercel Settings.", "info");
-          console.warn("%c[Impano CMS Admin] Saved to temporary server cache. Missing KV credentials on Vercel.", "color: #f59e0b; font-weight: bold;");
+          showToast("Saved to server cache. Changes are active!", "info");
         }
 
-        // Sync passcode local state and localStorage if reset
         if (targetContent.passcode && targetContent.passcode !== passcode) {
           setPasscode(targetContent.passcode);
           localStorage.setItem("impano_admin_passcode", targetContent.passcode);
@@ -401,7 +409,6 @@ export default function AdminDashboard() {
     let uploadedUrl = "";
 
     try {
-      // 1. Direct High-Speed CDN Upload to Cloudinary (bypasses Next.js size limits)
       const directFormData = new FormData();
       directFormData.append("file", file);
       directFormData.append("upload_preset", uploadPreset);
@@ -421,7 +428,6 @@ export default function AdminDashboard() {
         }
       }
 
-      // 2. Fallback to /api/upload Route Handler if direct upload is blocked by network/CORS
       if (!uploadedUrl) {
         const fallbackFormData = new FormData();
         fallbackFormData.append("file", file);
@@ -459,10 +465,89 @@ export default function AdminDashboard() {
     }
   };
 
-  // Content state mutators
-  const updateWork = (index: number, key: string, value: string) => {
+  // Hero section mutators
+  const updateHero = (key: string, value: any) => {
+    const updatedHero = { ...content.hero, [key]: value };
+    const newContent = { ...content, hero: updatedHero };
+    setContent(newContent);
+    return newContent;
+  };
+
+  const updateHeroImage = (index: number, url: string) => {
+    const currentImages = Array.isArray(content.hero?.images) ? [...content.hero.images] : [...defaultHeroImages];
+    currentImages[index] = url;
+    return updateHero("images", currentImages);
+  };
+
+  const addHeroImage = () => {
+    const currentImages = Array.isArray(content.hero?.images) ? [...content.hero.images] : [...defaultHeroImages];
+    const newImages = [...currentImages, ""];
+    updateHero("images", newImages);
+    showToast("Added new hero background image slot!", "info");
+  };
+
+  const removeHeroImage = (index: number) => {
+    const currentImages = Array.isArray(content.hero?.images) ? [...content.hero.images] : [...defaultHeroImages];
+    if (currentImages.length <= 1) {
+      showToast("Hero slideshow must have at least 1 image.", "error");
+      return;
+    }
+    const newImages = currentImages.filter((_: any, i: number) => i !== index);
+    updateHero("images", newImages);
+    showToast("Hero image removed.", "info");
+  };
+
+  const moveHeroImage = (index: number, direction: "up" | "down") => {
+    const currentImages = Array.isArray(content.hero?.images) ? [...content.hero.images] : [...defaultHeroImages];
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= currentImages.length) return;
+    const temp = currentImages[index];
+    currentImages[index] = currentImages[targetIndex];
+    currentImages[targetIndex] = temp;
+    updateHero("images", currentImages);
+  };
+
+  // Content state mutators for Works (NO DESCRIPTION)
+  const updateWork = (index: number, key: string, value: any) => {
     const updatedWorks = [...content.works];
     updatedWorks[index] = { ...updatedWorks[index], [key]: value };
+    const newContent = { ...content, works: updatedWorks };
+    setContent(newContent);
+    return newContent;
+  };
+
+  const addWork = () => {
+    const newProject = {
+      title: `Project ${content.works.length + 1}`,
+      category: "Cinematic Film",
+      image: "",
+    };
+    const updatedWorks = [...content.works, newProject];
+    const newContent = { ...content, works: updatedWorks };
+    setContent(newContent);
+    showToast("New project added! Click Save Changes when ready.", "info");
+    return newContent;
+  };
+
+  const removeWork = (index: number) => {
+    if (content.works.length <= 1) {
+      showToast("Portfolio must have at least 1 project.", "error");
+      return;
+    }
+    const updatedWorks = content.works.filter((_: any, i: number) => i !== index);
+    const newContent = { ...content, works: updatedWorks };
+    setContent(newContent);
+    showToast("Project removed. Click Save Changes to apply.", "info");
+    return newContent;
+  };
+
+  const moveWork = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= content.works.length) return;
+    const updatedWorks = [...content.works];
+    const temp = updatedWorks[index];
+    updatedWorks[index] = updatedWorks[targetIndex];
+    updatedWorks[targetIndex] = temp;
     const newContent = { ...content, works: updatedWorks };
     setContent(newContent);
     return newContent;
@@ -663,6 +748,17 @@ export default function AdminDashboard() {
           {/* Sidebar */}
           <aside className={styles.tabList}>
             <button
+              className={`${styles.tabBtn} ${activeTab === "hero" ? styles.tabBtnActive : ""}`}
+              onClick={() => setActiveTab("hero")}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+              Hero Slides
+            </button>
+            <button
               className={`${styles.tabBtn} ${activeTab === "works" ? styles.tabBtnActive : ""}`}
               onClick={() => setActiveTab("works")}
             >
@@ -715,21 +811,282 @@ export default function AdminDashboard() {
 
           {/* Panel Card */}
           <main className={styles.panelCard}>
+            {activeTab === "hero" && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "1rem" }}>
+                  <div>
+                    <h3 className={styles.panelTitle} style={{ marginBottom: "0.25rem", borderBottom: "none", paddingBottom: 0 }}>Hero Slideshow Pictures</h3>
+                    <p style={{ color: "var(--text-grey)", fontSize: "0.85rem", marginTop: "0.25rem" }}>
+                      Upload and manage the background images that switch with animation effects on the homepage Hero section.
+                    </p>
+                  </div>
+                  <button 
+                    type="button" 
+                    className={styles.addBtn} 
+                    style={{ width: "auto", margin: 0, padding: "0.6rem 1.4rem", display: "inline-flex", alignItems: "center", gap: "6px" }} 
+                    onClick={addHeroImage}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    + Add Hero Picture
+                  </button>
+                </div>
+
+                <div className={styles.listGrid}>
+                  {(content.hero?.images || defaultHeroImages).map((imgUrl: string, index: number) => (
+                    <div key={index} className={styles.itemCard}>
+                      <div className={styles.cardHeader}>
+                        <span className={styles.cardTitle}>Hero Picture #{index + 1}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <button
+                            type="button"
+                            title="Move Up"
+                            disabled={index === 0}
+                            onClick={() => moveHeroImage(index, "up")}
+                            style={{
+                              background: "rgba(255, 255, 255, 0.05)",
+                              border: "1px solid rgba(255, 255, 255, 0.1)",
+                              color: index === 0 ? "var(--text-muted)" : "var(--text-white)",
+                              cursor: index === 0 ? "not-allowed" : "pointer",
+                              padding: "0.35rem 0.6rem",
+                              borderRadius: "4px",
+                              fontSize: "0.75rem",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            ▲
+                          </button>
+                          <button
+                            type="button"
+                            title="Move Down"
+                            disabled={index === (content.hero?.images || defaultHeroImages).length - 1}
+                            onClick={() => moveHeroImage(index, "down")}
+                            style={{
+                              background: "rgba(255, 255, 255, 0.05)",
+                              border: "1px solid rgba(255, 255, 255, 0.1)",
+                              color: index === (content.hero?.images || defaultHeroImages).length - 1 ? "var(--text-muted)" : "var(--text-white)",
+                              cursor: index === (content.hero?.images || defaultHeroImages).length - 1 ? "not-allowed" : "pointer",
+                              padding: "0.35rem 0.6rem",
+                              borderRadius: "4px",
+                              fontSize: "0.75rem",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            ▼
+                          </button>
+                          <button 
+                            type="button" 
+                            className={styles.removeBtn} 
+                            onClick={() => removeHeroImage(index)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className={styles.formGrid}>
+                        <div className={`${styles.logoUploadGroup} ${styles.formGroupFull}`}>
+                          <label className={styles.label}>Hero Background Picture</label>
+                          <div className={styles.logoUploadContainer}>
+                            {imgUrl ? (
+                              <div className={styles.logoPreviewWrapper} style={{ width: "200px", height: "110px" }}>
+                                <img
+                                  src={imgUrl}
+                                  alt={`Hero Slide ${index + 1}`}
+                                  className={styles.logoPreview}
+                                  style={{ objectFit: "cover" }}
+                                />
+                              </div>
+                            ) : (
+                              <div className={styles.logoPlaceholder} style={{ width: "200px", height: "110px" }}>
+                                No Picture
+                              </div>
+                            )}
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", flex: 1 }}>
+                              <input
+                                type="text"
+                                className={styles.input}
+                                placeholder="Image URL or upload file..."
+                                value={imgUrl || ""}
+                                onChange={(e) => updateHeroImage(index, e.target.value)}
+                              />
+                              <label className={styles.uploadLabel}>
+                                {imgUrl ? "Change Picture File" : "Upload Picture File"}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  style={{ display: "none" }}
+                                  onChange={(e) => handleImageUpload(e, (url) => {
+                                    const updated = Array.isArray(content.hero?.images) ? [...content.hero.images] : [...defaultHeroImages];
+                                    updated[index] = url;
+                                    return { ...content, hero: { ...content.hero, images: updated } };
+                                  })}
+                                />
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <button 
+                  type="button" 
+                  className={styles.addBtn} 
+                  onClick={addHeroImage}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "1.5rem" }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  + Add Another Hero Picture
+                </button>
+
+                {/* Hero Headlines Settings */}
+                <div style={{ borderTop: "1px solid var(--border-color-light)", paddingTop: "2.5rem", marginTop: "3rem" }}>
+                  <h4 className={styles.panelTitle} style={{ fontSize: "1.1rem", borderBottom: "none", marginBottom: "0.25rem", paddingBottom: 0 }}>Hero Text & Showreel</h4>
+                  <p style={{ color: "var(--text-grey)", fontSize: "0.85rem", marginBottom: "1.5rem" }}>
+                    Edit the main headline, tagline, and showreel video modal.
+                  </p>
+                  <div className={styles.formGrid}>
+                    <div className={styles.formGroup}>
+                      <label className={styles.label}>Tagline</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        value={content.hero?.tagline || ""}
+                        onChange={(e) => updateHero("tagline", e.target.value)}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.label}>Title Part 1 (e.g. Crafting)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        value={content.hero?.titlePart1 || ""}
+                        onChange={(e) => updateHero("titlePart1", e.target.value)}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.label}>Title Outline Text (e.g. Visual)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        value={content.hero?.titleOutline || ""}
+                        onChange={(e) => updateHero("titleOutline", e.target.value)}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label className={styles.label}>Title Gold Accent (e.g. Legacies.)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        value={content.hero?.titleGold || ""}
+                        onChange={(e) => updateHero("titleGold", e.target.value)}
+                      />
+                    </div>
+                    <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                      <label className={styles.label}>Hero Description</label>
+                      <textarea
+                        className={styles.textarea}
+                        value={content.hero?.description || ""}
+                        onChange={(e) => updateHero("description", e.target.value)}
+                      />
+                    </div>
+                    <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                      <label className={styles.label}>Showreel Video URL (MP4 / Stream)</label>
+                      <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="https://...video.mp4"
+                        value={content.hero?.videoUrl || ""}
+                        onChange={(e) => updateHero("videoUrl", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeTab === "works" && (
               <div>
-                <h3 className={styles.panelTitle}>Manage Selected Works</h3>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "1rem" }}>
+                  <div>
+                    <h3 className={styles.panelTitle} style={{ marginBottom: "0.25rem", borderBottom: "none", paddingBottom: 0 }}>Manage Portfolio Works</h3>
+                    <p style={{ color: "var(--text-grey)", fontSize: "0.85rem", marginTop: "0.25rem" }}>
+                      Total Projects: <strong style={{ color: "var(--accent-gold)" }}>{content.works.length}</strong> (First 4 featured on Home in 3D rotation & all on Portfolio page).
+                    </p>
+                  </div>
+                  <button 
+                    type="button" 
+                    className={styles.addBtn} 
+                    style={{ width: "auto", margin: 0, padding: "0.6rem 1.4rem", display: "inline-flex", alignItems: "center", gap: "6px" }} 
+                    onClick={addWork}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    + Add New Project
+                  </button>
+                </div>
+
                 <div className={styles.listGrid}>
                   {content.works.map((work: any, index: number) => (
                     <div key={index} className={styles.itemCard}>
                       <div className={styles.cardHeader}>
-                        <span className={styles.cardTitle}>Project #{index + 1}: {work.title || "Untitled"}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                          <span className={styles.cardTitle}>Project #{index + 1}: {work.title || "Untitled"}</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <button
+                            type="button"
+                            title="Move Up"
+                            disabled={index === 0}
+                            onClick={() => moveWork(index, "up")}
+                            style={{
+                              background: "rgba(255, 255, 255, 0.05)",
+                              border: "1px solid rgba(255, 255, 255, 0.1)",
+                              color: index === 0 ? "var(--text-muted)" : "var(--text-white)",
+                              cursor: index === 0 ? "not-allowed" : "pointer",
+                              padding: "0.35rem 0.6rem",
+                              borderRadius: "4px",
+                              fontSize: "0.75rem",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            ▲
+                          </button>
+                          <button
+                            type="button"
+                            title="Move Down"
+                            disabled={index === content.works.length - 1}
+                            onClick={() => moveWork(index, "down")}
+                            style={{
+                              background: "rgba(255, 255, 255, 0.05)",
+                              border: "1px solid rgba(255, 255, 255, 0.1)",
+                              color: index === content.works.length - 1 ? "var(--text-muted)" : "var(--text-white)",
+                              cursor: index === content.works.length - 1 ? "not-allowed" : "pointer",
+                              padding: "0.35rem 0.6rem",
+                              borderRadius: "4px",
+                              fontSize: "0.75rem",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            ▼
+                          </button>
+                          <button 
+                            type="button" 
+                            className={styles.removeBtn} 
+                            onClick={() => removeWork(index)}
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </div>
+
                       <div className={styles.formGrid}>
                         <div className={styles.formGroup}>
                           <label className={styles.label}>Project Title</label>
                           <input
                             type="text"
                             className={styles.input}
+                            placeholder="e.g. The Echo of Hills"
                             value={work.title || ""}
                             onChange={(e) => updateWork(index, "title", e.target.value)}
                           />
@@ -739,6 +1096,7 @@ export default function AdminDashboard() {
                           <input
                             type="text"
                             className={styles.input}
+                            placeholder="e.g. Narrative Film, Commercial, VFX, Documentary"
                             value={work.category || ""}
                             onChange={(e) => updateWork(index, "category", e.target.value)}
                           />
@@ -783,6 +1141,16 @@ export default function AdminDashboard() {
                     </div>
                   ))}
                 </div>
+
+                <button 
+                  type="button" 
+                  className={styles.addBtn} 
+                  onClick={addWork}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginTop: "1.5rem" }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  + Add Another Project to Portfolio
+                </button>
 
                 <div className={`${styles.formGroup} ${styles.formGroupFull}`} style={{ borderTop: "1px solid var(--border-color-light)", paddingTop: "2.5rem", marginTop: "2.5rem" }}>
                   <h4 className={styles.panelTitle} style={{ fontSize: "1.1rem", borderBottom: "none", marginBottom: "0.25rem", paddingBottom: 0 }}>Reset Admin Passcode</h4>

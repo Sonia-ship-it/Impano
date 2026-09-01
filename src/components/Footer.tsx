@@ -42,6 +42,9 @@ export default function Footer() {
                   <Link href="/">Home</Link>
                 </li>
                 <li>
+                  <Link href="/works">Works</Link>
+                </li>
+                <li>
                   <Link href="/services">Services</Link>
                 </li>
                 <li>
@@ -79,17 +82,17 @@ export default function Footer() {
               <h4 className={styles.colTitle}>Connect</h4>
               <ul className={styles.linksList}>
                 <li>
-                  <a href="https://instagram.com/Impano_Entertainment" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.instagram.com/impano_ent/" target="_blank" rel="noopener noreferrer">
                     Instagram
                   </a>
                 </li>
                 <li>
-                  <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-                    Twitter/X
+                  <a href="https://vimeo.com/user262775372" target="_blank" rel="noopener noreferrer">
+                    Vimeo
                   </a>
                 </li>
                 <li>
-                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.linkedin.com/in/impano-ent-751bb924a/" target="_blank" rel="noopener noreferrer">
                     LinkedIn
                   </a>
                 </li>
@@ -120,17 +123,14 @@ export default function Footer() {
             © {new Date().getFullYear()} Impano Entertainment. All Rights Reserved.
           </div>
           <div className={styles.socialsRow}>
-            <a href="https://instagram.com" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
+            <a href="https://www.instagram.com/impano_ent/" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
               Instagram
             </a>
-            <a href="https://vimeo.com" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
+            <a href="https://vimeo.com/user262775372" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
               Vimeo
             </a>
-            <a href="https://linkedin.com" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
+            <a href="https://www.linkedin.com/in/impano-ent-751bb924a/" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
               LinkedIn
-            </a>
-            <a href="https://twitter.com" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
-              Twitter
             </a>
           </div>
         </div>

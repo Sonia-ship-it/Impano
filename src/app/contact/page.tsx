@@ -235,7 +235,7 @@ export default function ContactPage() {
                 
                 {/* Instagram */}
                 <a 
-                  href="https://instagram.com/Impano_Entertainment" 
+                  href="https://www.instagram.com/impano_ent/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className={styles.socialLinkItem}
@@ -250,13 +250,13 @@ export default function ContactPage() {
                   </span>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <span style={{ fontSize: "0.75rem", color: "var(--text-grey)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Instagram</span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "var(--accent-gold)" }}>@Impano_Entertainment</span>
+                    <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "var(--accent-gold)" }}>@impano_ent</span>
                   </div>
                 </a>
 
-                {/* X / Twitter */}
+                {/* Vimeo */}
                 <a 
-                  href="https://x.com" 
+                  href="https://vimeo.com/user262775372" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className={styles.socialLinkItem}
@@ -264,19 +264,18 @@ export default function ContactPage() {
                 >
                   <span className={styles.iconButton} style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.02)" }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
-                      <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                      <path d="M2.5 7.5C2.5 7.5 4.5 7 5.5 8.5C6.5 10 8 16 8.5 17.5C9 19 10 19 10.5 18C11 17 14.5 10.5 15 9C15.5 7.5 14 7.5 13 8C13 8 13.5 5 17.5 4.5C21.5 4 21.5 7.5 21 10C20.5 12.5 17.5 18.5 15.5 20C13.5 21.5 11 21 9.5 18.5L7.5 12L5 16L2.5 7.5Z" />
                     </svg>
                   </span>
                   <div style={{ display: "flex", flexDirection: "column" }}>
-                    <span style={{ fontSize: "0.75rem", color: "var(--text-grey)", textTransform: "uppercase", letterSpacing: "0.1em" }}>X (Twitter)</span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "var(--accent-gold)" }}>@Impano Entertainment</span>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-grey)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Vimeo</span>
+                    <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "var(--accent-gold)" }}>Impano Entertainment</span>
                   </div>
                 </a>
 
                 {/* LinkedIn */}
                 <a 
-                  href="https://linkedin.com" 
+                  href="https://www.linkedin.com/in/impano-ent-751bb924a/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className={styles.socialLinkItem}
@@ -291,7 +290,7 @@ export default function ContactPage() {
                   </span>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <span style={{ fontSize: "0.75rem", color: "var(--text-grey)", textTransform: "uppercase", letterSpacing: "0.1em" }}>LinkedIn</span>
-                    <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "var(--accent-gold)" }}>@impano ent</span>
+                    <span style={{ fontSize: "0.95rem", fontWeight: "600", color: "var(--accent-gold)" }}>Impano Entertainment</span>
                   </div>
                 </a>
 

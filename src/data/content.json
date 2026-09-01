@@ -7,28 +7,33 @@
     "titleGold": "Legacies.",
     "description": "From the heart of Kigali, we craft premium commercial films, documentaries, and post-production experiences. We translate bold concepts into memorable cinematic assets.",
     "playText": "WATCH SHOWREEL",
-    "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4"
+    "videoUrl": "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4",
+    "images": [
+      "https://res.cloudinary.com/dztttzycr/image/upload/v1788291974/j67kvyarytivs68vavp3.jpg",
+      "https://res.cloudinary.com/dztttzycr/image/upload/v1788291993/ybvuc9xhjrjjd2aorpgy.jpg",
+      "https://res.cloudinary.com/dztttzycr/image/upload/v1788292025/vpezhojadpsfhtz9xj98.jpg"
+    ]
   },
   "works": [
     {
-      "title": "The Echo of Hills",
+      "title": "Project 1",
       "category": "Narrative Film",
-      "image": "/images/echo_of_hills.png"
+      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787511087/mudxaqaprf7gkedlkdj7.jpg"
     },
     {
       "title": "Impano Entertainment",
-      "category": "Studio Showcase",
-      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787167398/ofhgdntjju6kvxbryvyu.jpg"
+      "category": "Production Showcase",
+      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787492298/kulfhl5q90rkmv80eh0k.jpg"
     },
     {
       "title": "Commercials",
       "category": "Crafted",
-      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787167415/ojybrpv4aeefqxbqfpfx.jpg"
+      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787511070/pyl1r3banfn99fbqo1ux.jpg"
     },
     {
       "title": "VFX Composites",
       "category": "Animation",
-      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787167462/fne39rjkritbbfrag0zq.jpg"
+      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787511109/fzegwjtgrzu9wkh0quis.jpg"
     }
   ],
   "services": [
@@ -36,7 +41,7 @@
       "num": "01",
       "name": "Production Services",
       "desc": "Producing and Directing, Camera Crews, Drone Visuals, Multi Cameras, Live Stream, Professional Interviews, Motion Graphics, 3D animation, Script Writing, StoryBoard.",
-      "image": "/images/lens_close_up.png"
+      "image": "https://res.cloudinary.com/dztttzycr/image/upload/v1787492399/hgq4tkevcw2mqvb29mut.jpg"
     },
     {
       "num": "02",
@@ -53,28 +58,12 @@
   ],
   "clients": [
     {
-      "name": "Kigali Film Commission",
-      "logo": "/images/logo_kfc.png"
+      "name": "Flat Production",
+      "logo": "https://res.cloudinary.com/dztttzycr/image/upload/v1787495150/tovpypqw8duz5y4ddp3k.png"
     },
     {
-      "name": "Rwanda Broadcasting Agency",
-      "logo": "/images/logo_rba.png"
-    },
-    {
-      "name": "Africa Screen Works",
-      "logo": "/images/logo_asw.png"
-    },
-    {
-      "name": "Legacy Media Group",
-      "logo": "/images/logo_lmg.png"
-    },
-    {
-      "name": "Vivid Ventures",
-      "logo": "/images/logo_vv.png"
-    },
-    {
-      "name": "Volcano Creative Hub",
-      "logo": "/images/logo_vch.png"
+      "name": "Ganza Construction ",
+      "logo": "https://res.cloudinary.com/dztttzycr/image/upload/v1787510629/jbnpggmgsgfzvlcb28rm.png"
     }
   ],
   "team": [
