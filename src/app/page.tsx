@@ -131,7 +131,7 @@ export default function Home() {
     titleOutline: "Visual",
     titleGold: "Legacies.",
     description: "From the heart of Kigali, we craft premium commercial films, documentaries, and post-production experiences. We translate bold concepts into memorable cinematic assets.",
-    playText: "Watch Showreel",
+    playText: "Showreel",
     videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cinematic-shot-of-a-misty-forest-42475-large.mp4",
     images: defaultHeroImages
   });
@@ -258,7 +258,7 @@ export default function Home() {
 
         {/* Streamlined Hero Content Layout */}
         <div className={`${styles.heroContainer} container`}>
-          {/* Left Column: Stacked Headline */}
+          {/* Left Column: Stacked Headline + Showreel Button */}
           <div className={styles.heroLeft}>
             <h1 className={styles.heroTitle}>
               {hero.titlePart1}
@@ -267,28 +267,20 @@ export default function Home() {
               <br />
               <span className={styles.goldText}>{hero.titleGold}</span>
             </h1>
-          </div>
 
-          {/* Right Column: Action Buttons */}
-          <div className={styles.heroRight}>
-            <div className={styles.heroActionsRow}>
-              <div
-                className={styles.playBtn}
-                onClick={() => setShowreelOpen(true)}
-                data-cursor="play"
-              >
-                <div className={styles.playCircle}>
-                  <div className={styles.playArrow} />
-                </div>
-                <span className={styles.playText}>{hero.playText || "Watch Showreel"}</span>
+            <div
+              className={styles.playBtn}
+              onClick={() => setShowreelOpen(true)}
+              data-cursor="play"
+            >
+              <div className={styles.playCircle}>
+                <div className={styles.playArrow} />
               </div>
-
-              <Link href="/contact" className="btn-primary" data-cursor="pointer">
-                <span>Initiate Project</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
+              <span className={styles.playText}>
+                {hero.playText && !hero.playText.toLowerCase().includes("watch")
+                  ? hero.playText
+                  : "Showreel"}
+              </span>
             </div>
           </div>
         </div>
