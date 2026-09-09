@@ -256,11 +256,10 @@ export default function Home() {
         {/* Ambient Clean Subtle Gradient Overlay */}
         <div className={styles.heroOverlay} />
 
-        {/* Original 2-Column Hero Content Layout */}
+        {/* Streamlined Hero Content Layout */}
         <div className={`${styles.heroContainer} container`}>
-          {/* Left Column: Tagline & Stacked Headline */}
+          {/* Left Column: Stacked Headline */}
           <div className={styles.heroLeft}>
-            <span className={styles.heroTag}>{hero.tagline || "Connect with us"}</span>
             <h1 className={styles.heroTitle}>
               {hero.titlePart1}
               <br />
@@ -270,9 +269,8 @@ export default function Home() {
             </h1>
           </div>
 
-          {/* Right Column: Description & Action Buttons */}
+          {/* Right Column: Action Buttons */}
           <div className={styles.heroRight}>
-            <p className={styles.heroDesc}>{hero.description}</p>
             <div className={styles.heroActionsRow}>
               <div
                 className={styles.playBtn}
