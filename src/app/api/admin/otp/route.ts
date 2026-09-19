@@ -155,6 +155,7 @@ export async function POST(request: Request) {
       }
 
       // Send email via Resend with Outfit typography & dark gold theme
+      const fromEmail = process.env.RESEND_FROM_EMAIL || "Impano Security <security@impanoentertainment.com>";
       const emailRes = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -162,7 +163,7 @@ export async function POST(request: Request) {
           Authorization: `Bearer ${resendApiKey}`,
         },
         body: JSON.stringify({
-          from: "Impano Security <onboarding@resend.dev>",
+          from: fromEmail,
           to: targetEmail,
           subject: "Your Impano Admin Verification Code",
           html: `

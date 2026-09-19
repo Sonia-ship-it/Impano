@@ -6,6 +6,7 @@ export async function POST(request: Request) {
 
     const resendApiKey = process.env.RESEND_API_KEY;
     const toEmail = process.env.CONTACT_TO_EMAIL || "impanoent@gmail.com";
+    const fromEmail = process.env.RESEND_FROM_EMAIL || "Impano Contact <contact@impanoentertainment.com>";
 
     if (!resendApiKey) {
       return NextResponse.json(
@@ -21,8 +22,9 @@ export async function POST(request: Request) {
         "Authorization": `Bearer ${resendApiKey}`,
       },
       body: JSON.stringify({
-        from: "onboarding@resend.dev",
+        from: fromEmail,
         to: toEmail,
+        reply_to: email || undefined,
         subject: `New Message from ${name} - Impano Contact`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #222; background-color: #0f0f0f; color: #ffffff; border-radius: 12px;">
